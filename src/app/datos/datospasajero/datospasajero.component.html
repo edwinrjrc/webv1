@@ -1,0 +1,77 @@
+<div class="container">
+    <form>
+        <div class="row g-3">
+            <div class="col-md-12">
+                <h4>Adulto</h4>
+                <hr>
+            </div>
+            <div class="col-md-6">
+                <label for="idTxtNombres" class="form-label" style="font-weight: bold;">Nombres</label>
+                <input type="text" class="form-control" id="idTxtNombres" placeholder="Nombre Pasajero" [(ngModel)]="datosPasajero.nombres" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div class="col-md-6">
+                <label for="idTxtPrimerApellido" class="form-label" style="font-weight: bold;">Primer Apellido</label>
+                <input type="text" class="form-control" id="idTxtPrimerApellido" placeholder="Primer Apellido" [(ngModel)]="datosPasajero.primerApellido" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div class="col-md-6">
+                <label for="idTxtSegundoApellido" class="form-label" style="font-weight: bold;">Segundo Apellido</label>
+                <input type="text" class="form-control" id="idTxtSegundoApellido" placeholder="Segundo Apellido" [(ngModel)]="datosPasajero.segundoApellido" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div class="col-md-3">
+                <label for="idSelPaisResidencia" class="form-label" style="font-weight: bold;">País Residencia</label>
+                <select class="form-select" aria-label="Default select example" id="idSelPaisResidencia" [(ngModel)]="datosPasajero.codigoPaisResidencia" [ngModelOptions]="{standalone: true}">
+                    <option value="0">Seleccione</option>
+                    <option value="1">Peru</option>
+                    <option value="2">Chile</option>
+                    <option value="3">Argentina</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="idTxtFechaNacimiento" class="form-label" style="font-weight: bold;">Fecha Nacimiento</label>
+                <input type="date" class="form-control" id="idTxtFechaNacimiento" placeholder="Fecha Nacimiento" [(ngModel)]="datosPasajero.fechaNacimiento" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div class="col-md-3">
+                <label for="idSelTipoDocumento" class="form-label" style="font-weight: bold;">Tipo Documento</label>
+                <select class="form-select" aria-label="Default select example" id="idSelTipoDocumento" [(ngModel)]="datosPasajero.tipoDocumento" [ngModelOptions]="{standalone: true}">
+                    <option value="0">Seleccione</option>
+                    <option value="1">DNI</option>
+                    <option value="2">Carné Extranjeria</option>
+                    <option value="3">Pasaporte</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="idTxtNumDocumento" class="form-label" style="font-weight: bold;">Número Documento</label>
+                <input type="text" class="form-control" id="idTxtNumDocumento" placeholder="Número Documento" [(ngModel)]="datosPasajero.numeroDocumento" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div class="col-md-3">
+                <label for="idSelTipoSexo" class="form-label" style="font-weight: bold;">Sexo</label>
+                <select class="form-select" aria-label="Default select example" id="idSelTipoSexo" [(ngModel)]="datosPasajero.sexo" [ngModelOptions]="{standalone: true}">
+                    <option value="0">Seleccione</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                </select>
+            </div>
+            <div class="col-md-12">
+                <h4 style="color: rgb(99, 38, 38);">Información Contacto</h4>
+                <hr style="color: red;">
+            </div>
+            <div class="col-md-4">
+                <label for="idTxtEmail" class="form-label" style="font-weight: bold;">Correo Electrónico</label>
+                <input type="email" class="form-control" id="idTxtEmail" placeholder="Correo Electrónico" [(ngModel)]="datosPasajero.correoElectronico" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div class="col-md-4">
+                <label for="idSelCoPais" class="form-label" style="font-weight: bold;">Código Pais</label>
+                <select class="form-select" aria-label="Default select example" id="idSelCoPais" [(ngModel)]="datosPasajero.codigoPais" [ngModelOptions]="{standalone: true}">
+                    <option value="0">Seleccione</option>
+                    <option value="1">(51) Peru</option>
+                    <option value="2">(54) Chile</option>
+                    <option value="3">(61) Argentina</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="idTxtNuTelefono" class="form-label" style="font-weight: bold;">Número Teléfono</label>
+                <input type="text" class="form-control" id="idTxtNuTelefono" placeholder="Número Teléfono" [(ngModel)]="datosPasajero.numeroTelefono" [ngModelOptions]="{standalone: true}">
+            </div>
+        </div>
+    </form>
+</div>

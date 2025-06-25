@@ -1,0 +1,85 @@
+<div class="container">
+    <form>
+        <div class="row">
+            <div class="col-md-12">
+                <h4 style="color: rgb(99, 38, 38);">Metodo de Pago</h4>
+                <hr style="color: red;">
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label for="idSelMetodoPago" class="form-label" style="font-weight: bold;">Forma Pago</label>
+                <select class="form-select" aria-label="Default select example" id="idSelMetodoPago">
+                    <option value="0">Seleccione</option>
+                    <option value="1">Tarjeta de Credito</option>
+                    <option value="2">Tarjeto de Debito</option>
+                    <option value="3">2 tarjetas</option>
+                    <option value="4">Pago desde Banca por Internet</option>
+                </select>
+            </div>
+        </div>
+        <div class="row" style="padding-top: 1rem;">
+            <div class="col-md-6">
+                <label for="idTxtNutarjeta" class="form-label" style="font-weight: bold;">Número Tarjeta</label>
+                <input type="text" class="form-control" id="idTxtNutarjeta" placeholder="Número Tarjeta">
+            </div>
+            <div class="col-md-6">
+                <label for="idTxtNoTitular" class="form-label" style="font-weight: bold;">Nombre Titular Tarjeta</label>
+                <input type="text" class="form-control" id="idTxtNoTitular" placeholder="Nombre Titular Tarjeta">
+            </div>
+        </div>
+        <div class="row" style="padding-top: 1rem;">
+            <div class="col-md-3">
+                <label for="idTxtVctoTarj" class="form-label" style="font-weight: bold;">Vcto Tarjeta</label>
+                <input type="text" class="form-control" id="idTxtVctoTarj" placeholder="MM/YY">
+            </div>
+            <div class="col-md-3">
+                <label for="idTxtVctoTarj" class="form-label" style="font-weight: bold;">Código Seguridad</label>
+                <input type="text" class="form-control" id="idTxtVctoTarj" placeholder="MM/YY">
+            </div>
+            <div class="col-md-6">
+                <label for="idTxtDocTitularTarjeta" class="form-label" style="font-weight: bold;">Numero Documento Titular Tarjeta</label>
+                <input type="text" class="form-control" id="idTxtDocTitularTarjeta" placeholder="Numero Documento Titular Tarjeta">
+            </div>
+        </div>
+        <div class="row" style="padding-top: 1rem;">
+            <div class="col-md-3">
+                <label for="idSelFactBole" class="form-label" style="font-weight: bold;">Tipo Comprobante</label>
+                <select class="form-select" aria-label="Default select example" id="idSelFactBole">
+                    <option value="0">Seleccione</option>
+                    <option value="1">Boleta</option>
+                    <option value="2">Factura</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="idSelTitularComprobante" class="form-label" style="font-weight: bold;">A nombre de</label>
+                <select class="form-select" aria-label="Default select example" id="idSelTitularComprobante">
+                    <option value="0">Seleccione</option>
+                    <option value="1">Adulto 1</option>
+                    <option value="2">Adulto 2</option>
+                    <option value="3">Otro</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                &nbsp;
+            </div>
+        </div>
+        <div class="row" style="padding-top: 1rem;">
+            <div class="col-md-3">
+                <label for="idSelTipoDocu" class="form-label" style="font-weight: bold;">Tipo Documento</label>
+                <select class="form-select" aria-label="Default select example" id="idSelTipoDocu">
+                    <option value="0">Seleccione</option>
+                    <option value="1">DOI</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="idNumDocu" class="form-label" style="font-weight: bold;">Número Documento</label>
+                <input type="text" class="form-control" id="idNumDocu" placeholder="Numero Documento" maxlength="12">
+            </div>
+            <div class="col-md-6">
+                <label for="idNompagante" class="form-label" style="font-weight: bold;">Nombre Cliente</label>
+                <input type="text" class="form-control" id="idNompagante" placeholder="Nombre Cliente" maxlength="200">
+            </div>
+        </div>
+    </form>
+</div>

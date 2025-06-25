@@ -1,0 +1,130 @@
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+<div class="container">
+    <mat-tab-group>
+        <mat-tab label="Vuelos">
+            <form>
+                <br>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="input-group mb-3">
+                                <select class="form-select" id="inputGroupSelect01">
+                                  <option selected>Choose...</option>
+                                  <option value="1">One</option>
+                                  <option value="2">Two</option>
+                                  <option value="3">Three</option>
+                                </select>
+                              </div>
+                        </div>
+
+                        <div class="col-md-5">
+                            <mat-form-field appearance="fill" style="width: 100%;">
+                                <mat-label>Origen</mat-label>
+                                <input type="text" matInput [formControl]="myControlOrigen"
+                                    [matAutocomplete]="autoOrigen">
+                                <mat-autocomplete #autoOrigen="matAutocomplete" [displayWith]="displayFnOrigen">
+                                    @for (option of filteredOptionsOrigen | async; track option) {
+                                    <mat-option [value]="option">{{option.nombreAeropuertoMostrar}}</mat-option>
+                                    }
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-5">
+                            <mat-form-field appearance="fill" style="width: 100%;">
+                                <mat-label>Destino</mat-label>
+                                <input type="text" matInput [formControl]="myControlDestino"
+                                    [matAutocomplete]="autoDestino">
+                                <mat-autocomplete #autoDestino="matAutocomplete" [displayWith]="displayFnDestino">
+                                    @for (option of filteredOptionsDestino | async; track option) {
+                                    <mat-option [value]="option">{{option.nombreAeropuertoMostrar}}</mat-option>
+                                    }
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <mat-form-field appearance="fill" style="width: 100%;">
+                                <mat-label>Clase</mat-label>
+                                <mat-select [(value)]="idClase">
+                                    <mat-option value="1">Economica</mat-option>
+                                    <mat-option value="2">Negocios</mat-option>
+                                    <mat-option value="3">Ejecutiva</mat-option>
+                                    <mat-option value="4">Economica Premiun</mat-option>
+                                    <mat-option value="5">Primera Clase</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field appearance="fill" style="width: 100%;">
+                                <mat-label>Fechas Ida - Vuelta</mat-label>
+                                <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                                    <input matStartDate formControlName="start" placeholder="Fecha Ida">
+                                    <input matEndDate formControlName="end" placeholder="Fecha Vuelta">
+                                </mat-date-range-input>
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-date-range-picker #picker></mat-date-range-picker>
+
+                                @if(true){
+                                <mat-error>Fecha de Ida
+                                    Invalida</mat-error>
+                                }
+                                @if(true){
+                                <!--*ngIf="range.controls.end.hasError('matEndDateInvalid')"-->
+                                <mat-error>Fecha de Vuelta
+                                    Invalida</mat-error>
+                                }
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-2">
+                            <mat-form-field class="example-full-width" appearance="fill" style="width: 100%;">
+                                <mat-label>Adultos</mat-label>
+                                <input matInput type="number" max="10" min="0" [formControl]="controlAdultos">
+                            </mat-form-field>
+                        </div>
+                        &nbsp;
+                        <div class="col-md-2">
+                            <mat-form-field class="example-full-width" appearance="fill" style="width: 100%;">
+                                <mat-label>Niños</mat-label>
+                                <input matInput type="number" max="10" min="0" [formControl]="controlNinos">
+                            </mat-form-field>
+                        </div>
+                        &nbsp;
+                        <div class="col-md-2">
+                            <mat-form-field class="example-full-width" appearance="fill" style="width: 100%;">
+                                <mat-label>Infantes</mat-label>
+                                <input matInput type="number" max="10" min="0" [formControl]="controlInfantes">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button name="buscar" class="btn btn-success" type="button" style="width: 100%;"
+                                (click)="consultarVuelo()"><span><span class="material-symbols-outlined">search</span>
+                                    &nbsp;<strong>Buscar</strong></span>&nbsp;</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <hr>
+                    <div class="row">
+                        <div class="col-2">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <app-ofertavuelo></app-ofertavuelo>
+                        </div>
+                    </div>
+                    <div class="col-2">&nbsp;</div>
+                </div>
+            </form>
+        </mat-tab>
+    </mat-tab-group>
+</div>

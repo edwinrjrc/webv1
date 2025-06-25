@@ -1,0 +1,171 @@
+<div class="row" style="padding-left: 15px;">
+    <div class="col-md-9"
+        style="border-left: 1px; border-left-style: solid; border-color: #f2f5f5; border-left-width: 1px; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #f2f5f5;">
+        @for (v_rutaTramo of ofertaEncontrada.listaRutaTramos; track v_rutaTramo){
+        <div class="row"
+            style="background-color: #f2f5f5; padding-top: 10px; padding-bottom: 10px; display: flex; align-items: center;">
+            <div class="col-sm-1">
+                @if(v_rutaTramo.tipoViaje == 1){
+                <span>Ida</span>
+                <br>
+                <span class="material-symbols-outlined" style="font-size: 13pt;">
+                    line_end_arrow
+                </span>
+                } @else {
+                <span>Vuelta</span>
+                <br>
+                <span class="material-symbols-outlined" style="font-size: 13pt;">
+                    line_start_arrow
+                </span>
+                }
+            </div>
+            <div class="col-sm-3">
+                <span>{{v_rutaTramo.fechaViaje | date:'dd/MM/yyyy'}}</span>
+            </div>
+            <div class="col-sm-2">
+                <span>{{v_rutaTramo.origen.codigoIata}}</span><br><span
+                    style="font-size: 8pt;">{{v_rutaTramo.origen.nombreCiudad}}</span>
+            </div>
+            <div class="col-sm-2">
+                <span>{{v_rutaTramo.destino.codigoIata}}</span><br><span
+                    style="font-size: 8pt;">{{v_rutaTramo.destino.nombreCiudad}}</span>
+            </div>
+            <div class="col-sm-2">
+                <span>&nbsp;</span>
+            </div>
+            <div class="col-sm-2">
+                <span>&nbsp;</span>
+            </div>
+        </div>
+        @for (v_horarioRuta of v_rutaTramo.horariosRuta; track v_horarioRuta){
+        <div class="row" style="padding-top: 10px; padding-bottom: 10px;">
+            <div class="col-md-1" style="display: flex; align-items: center;">
+                <input type="radio" name="radioRuta{{v_rutaTramo.tipoViaje}}" class="mat-form-field" value="{{v_horarioRuta.id}}">
+            </div>
+            <div class="col-md-3" style="display: flex; align-items: center;">
+                <img src="../../assets/resources/img/LA_sq.png"
+                    style="height: 20px;"><span ngbTooltip="Azerbaijan Airlines">{{v_horarioRuta.aerolineaDto.nombreCorto}}</span>
+            </div>
+            <div class="col-md-2" style="display: flex; align-items: center;">
+                <span class="material-symbols-outlined" style="font-size: 11pt;">flight_takeoff</span>
+                &nbsp;
+                <span>{{v_horarioRuta.fechaSalidaVuelo | date:'HH:mm'}}</span>
+            </div>
+            <div class="col-md-2" style="display: flex; align-items: center;"> <span class="material-symbols-outlined"
+                    style="font-size: 11pt;">flight_land</span>&nbsp;<span>{{v_horarioRuta.fechaLlegadaVuelo |
+                    date:'HH:mm'}}</span>
+            </div>
+            <div class="col-md-1" style="display: flex; align-items: center; padding-left: 0%;">
+                @if(v_horarioRuta.inEscalas == 0){
+                <span>Directo</span>
+                }
+                @else {
+                <span>Escala&nbsp;({{v_horarioRuta.numeroEscalas}})</span>
+                }
+            </div>
+            <div class="col-md-2" style="text-align: center;">
+                @if(v_horarioRuta.equipaMochila){
+                <span class="material-symbols-outlined" style="color: lime;">personal_bag</span>
+                }
+                @else{
+                <span class="material-symbols-outlined" style="color: lightgray;">personal_bag</span>
+                }
+                @if(v_horarioRuta.equipaCarrion){
+                <span class="material-symbols-outlined" style="color:lime;">trip</span>
+                }
+                @else{
+                <span class="material-symbols-outlined" style="color: lightgray">trip</span>
+                }
+                @if(v_horarioRuta.equipaBodega){
+                <span class="material-symbols-outlined" style="color: lime;">travel_luggage_and_bags</span>
+                }
+                @else{
+                <span class="material-symbols-outlined" style="color: lightgray;">travel_luggage_and_bags</span>
+                }
+            </div>
+            <div class="col-md-1">
+                <span class="material-symbols-outlined">visibility</span>
+            </div>
+        </div>
+        }
+        }
+    </div>
+    <div class="col-md-3" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #f2f5f5;">
+        <div class="row">
+            <div class="col-md-12" style="text-align: right; padding-top: 3px;">
+                <span><strong>Precios</strong></span>
+            </div>
+        </div>
+        <div class="row" style="text-align: right;">
+            <div class="col-md-12">
+                <span style="font-weight: bold;font-size: 15pt;">US$</span>&nbsp;<span
+                    style="font-size: 15pt;text-align: right;">{{
+                    ofertaEncontrada.precioOfertaDto.precioUnitarioClase.valueOf() | number:'3.2-2' }}</span>
+            </div>
+        </div>
+        <br>
+        <div class="row" style="text-align: right;">
+            <div class="col-md-6" style="text-align: left;">
+                <span style="font-size: 10pt;">Adultos ({{ ofertaEncontrada.precioOfertaDto.cantidadAdultos.valueOf()
+                    }})</span>
+            </div>
+            <div class="col-md-6">
+                <span style="font-size: 10pt; color: darkgray;">US$</span>&nbsp;<span
+                    style="font-size: 10pt; color: darkgray; text-align: right;">{{
+                    ofertaEncontrada.precioOfertaDto.totalPrecioAdultos.valueOf() | number:'2.2-2' }}</span>
+            </div>
+        </div>
+        <div class="row" style="text-align: right;">
+            <div class="col-md-6" style="text-align: left;">
+                <span style="font-size: 10pt;">Niños ({{ ofertaEncontrada.precioOfertaDto.cantidadNinos.valueOf()
+                    }})</span>
+            </div>
+            <div class="col-md-6">
+                <span style="font-size: 10pt; color: darkgray;">US$</span>&nbsp;<span
+                    style="font-size: 10pt; color: darkgray; text-align: right;">{{
+                    ofertaEncontrada.precioOfertaDto.totalPrecioNinos.valueOf() | number:'2.2-2' }}</span>
+            </div>
+        </div>
+        <div class="row" style="text-align: right;">
+            <div class="col-md-6" style="text-align: left;">
+                <span style="font-size: 10pt;">Infantes ({{ ofertaEncontrada.precioOfertaDto.cantidadInfantes.valueOf()
+                    }})</span>
+            </div>
+            <div class="col-md-6">
+                <span style="font-size: 10pt; color: darkgray;">US$</span>&nbsp;<span
+                    style="font-size: 10pt; color: darkgray; text-align: right;">{{
+                    ofertaEncontrada.precioOfertaDto.totalPrecioInfantes.valueOf() | number:'2.2-2' }}</span>
+            </div>
+        </div>
+        <div class="row" style="text-align: right;">
+            <div class="col-md-6" style="text-align: left;">
+                <span style="font-size: 10pt;">Imp y car.</span>
+            </div>
+            <div class="col-md-6">
+                <span style="font-size: 10pt; color: darkgray;">US$</span>&nbsp;<span
+                    style="font-size: 10pt; color: darkgray; text-align: right;">{{
+                    ofertaEncontrada.precioOfertaDto.totalImptosCargos.valueOf() | number:'2.2-2' }}</span>
+            </div>
+        </div>
+        <hr>
+        <div class="row" style="text-align: right;">
+            <div class="col-md-4" style="text-align: left;font-weight: bold;font-size: 14pt;">
+                <span style="font-size: 10pt;">Total</span>
+            </div>
+            <div class="col-md-8">
+                <span style="font-size: 10pt; font-weight: bold;font-size: 14pt;">US$</span>&nbsp;<span
+                    style="text-align: right; font-weight: bold;font-size: 14pt;">{{
+                    ofertaEncontrada.precioOfertaDto.totalRuta.valueOf() | number:'2.2-2' }}</span>
+            </div>
+        </div>
+        <br>
+        <div class="row" style="text-align: right;">
+            <div class="col-md-12">
+                <button name="btncomprar" class="btn btn-outline-info" type="button" style="width: 100%;" (click)="comprarOferta(ofertaEncontrada.id)" ><strong>Comprar</strong></button>
+            </div>
+        </div>
+        <div class="row">
+            <br>
+        </div>
+    </div>
+</div>
