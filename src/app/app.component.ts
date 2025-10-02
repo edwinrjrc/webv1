@@ -4,11 +4,12 @@ import { CabeceraComponent } from './cabecera/cabecera.component';
 import { DatosPasajeroComponent } from './datos/datospasajero/datospasajero.component';
 import { MetodopagoComponent } from './datos/metodopago/metodopago.component';
 import { FooterComponent } from './footer/footer.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [InicioComponent, CabeceraComponent, DatosPasajeroComponent, MetodopagoComponent, FooterComponent],
+  imports: [RouterOutlet, InicioComponent, CabeceraComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

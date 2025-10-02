@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -9,7 +9,6 @@ import { Clasevuelo } from '../modelo/clasevuelo';
 import { Observable, OperatorFunction } from 'rxjs';
 import {
   map,
-  startWith,
   debounceTime,
   distinctUntilChanged,
 } from 'rxjs/operators';
@@ -165,7 +164,6 @@ export class InicioComponent implements OnInit  {
     ofertaSeleccionada.FlgProceso = ofertaSelect.flgProceso;
 
     this.flgProceso = ofertaSelect.flgProceso;
-
   }
 
   cargarDestinos() {
@@ -319,7 +317,6 @@ export class InicioComponent implements OnInit  {
       this.isHovered(date)
     );
   }
-
 
   search: OperatorFunction<string, readonly InterDestino2[]> = (
     text$: Observable<String>

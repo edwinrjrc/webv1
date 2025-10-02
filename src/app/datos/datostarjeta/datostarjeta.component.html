@@ -1,0 +1,54 @@
+<form [formGroup]="datosTarjetaForm">
+    <div class="row" style="padding-top: 1rem;">
+        <div class="col-md-4">
+            <label for="idTxtNutarjeta" class="form-label" style="font-weight: bold;">Número Tarjeta</label>
+            <input type="text" class="form-control" id="idTxtNutarjeta" placeholder="Número Tarjeta" maxlength="16"
+                appDirNumeros style="text-align: right;" formControlName="numeroTarjeta">
+            @if (datosTarjetaForm.get(varFormNumTarjeta)?.invalid && datosTarjetaForm.get(varFormNumTarjeta)?.touched){
+            <div class="error-message">
+                @if (datosTarjetaForm.get(varFormNumTarjeta)?.errors?.['required']){
+                <p>El nombre es requerido.</p>
+                }
+            </div>
+            }
+        </div>
+        <div class="col-md-4">
+            <label for="idTxtVctoTarj" class="form-label" style="font-weight: bold;">Vcto Tarjeta</label>
+            <input type="text" class="form-control" id="idTxtVctoTarj" placeholder="MM/YY" maxlength="5"
+                formControlName="vctoTarjeta">
+            @if (datosTarjetaForm.get(varFormVctoTarjeta)?.invalid &&
+            datosTarjetaForm.get(varFormVctoTarjeta)?.touched){
+            <div class="error-message">
+                @if (datosTarjetaForm.get(varFormVctoTarjeta)?.errors?.['required']){
+                <p>El nombre es requerido.</p>
+                }
+            </div>
+            }
+        </div>
+        <div class="col-md-4">
+            <label for="idTxtVctoTarj" class="form-label" style="font-weight: bold;">Código Seguridad</label>
+            <input type="text" class="form-control" id="idTxtVctoTarj" maxlength="4" style="text-align: right;"
+                formControlName="codigoSeguridadTarjeta">
+        </div>
+    </div>
+    <div class="row" style="padding-top: 1rem;">
+        <div class="col-md-3">
+            <label for="idSelTipoDocTituTarj" class="form-label" style="font-weight: bold;">Tipo Documento</label>
+            <select class="form-select" id="idSelTipoDocTituTarj" formControlName="codigoTipoDocumentoTitular">
+                <option value="0">Seleccione</option>
+                <option value="1">Pasaporte</option>
+                <option value="2">DOI</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="idTxtDocTitularTarjeta" class="form-label" style="font-weight: bold;">Número Documento</label>
+            <input type="text" class="form-control" id="idTxtDocTitularTarjeta"
+                placeholder="Numero Documento Titular Tarjeta" maxlength="20" formControlName="numeroDocumentoTitular">
+        </div>
+        <div class="col-md-5">
+            <label for="idTxtNoTitular" class="form-label" style="font-weight: bold;">Nombre Titular Tarjeta</label>
+            <input type="text" class="form-control" id="idTxtNoTitular" placeholder="Nombre Titular Tarjeta"
+                maxlength="200" formControlName="nombreTitular">
+        </div>
+    </div>
+</form>

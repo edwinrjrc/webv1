@@ -1,5 +1,5 @@
 <div class="container">
-    <form>
+    <form [formGroup]="pasajeroForm">
         <div class="row g-3">
             <div class="col-md-12">
                 <h4>Adulto</h4>
@@ -7,49 +7,113 @@
             </div>
             <div class="col-md-6">
                 <label for="idTxtNombres" class="form-label" style="font-weight: bold;">Nombres</label>
-                <input type="text" class="form-control" id="idTxtNombres" placeholder="Nombre Pasajero" [(ngModel)]="datosPasajero.nombres" [ngModelOptions]="{standalone: true}">
+                <input type="text" class="form-control" id="idTxtNombres" placeholder="Nombre Pasajero"
+                    formControlName="nombres" maxlength="100">
+                @if (pasajeroForm.get('nombres')?.invalid && pasajeroForm.get('nombres')?.touched){
+                    <div class="error-message">
+                        @if (pasajeroForm.get('nombres')?.errors?.['required']){
+                            <p>El nombre es requerido.</p>
+                        }
+                    </div>
+                }
             </div>
             <div class="col-md-6">
                 <label for="idTxtPrimerApellido" class="form-label" style="font-weight: bold;">Primer Apellido</label>
-                <input type="text" class="form-control" id="idTxtPrimerApellido" placeholder="Primer Apellido" [(ngModel)]="datosPasajero.primerApellido" [ngModelOptions]="{standalone: true}">
+                <input type="text" class="form-control" id="idTxtPrimerApellido" placeholder="Primer Apellido"
+                    formControlName="primerApellido" maxlength="100">
+                @if (pasajeroForm.get('primerApellido')?.invalid && pasajeroForm.get('primerApellido')?.touched){
+                    <div class="error-message">
+                        @if (pasajeroForm.get('primerApellido')?.errors?.['required']){
+                            <p>El primer apellido es requerido.</p>
+                        }
+                    </div>
+                }
             </div>
             <div class="col-md-6">
                 <label for="idTxtSegundoApellido" class="form-label" style="font-weight: bold;">Segundo Apellido</label>
-                <input type="text" class="form-control" id="idTxtSegundoApellido" placeholder="Segundo Apellido" [(ngModel)]="datosPasajero.segundoApellido" [ngModelOptions]="{standalone: true}">
+                <input type="text" class="form-control" id="idTxtSegundoApellido" placeholder="Segundo Apellido"
+                    formControlName="segundoApellido" maxlength="100">
+                @if (pasajeroForm.get('segundoApellido')?.invalid && pasajeroForm.get('segundoApellido')?.touched){
+                    <div class="error-message">
+                        @if (pasajeroForm.get('segundoApellido')?.errors?.['required']){
+                            <p>El segundo apellido es requerido.</p>
+                        }
+                    </div>
+                }
             </div>
             <div class="col-md-3">
                 <label for="idSelPaisResidencia" class="form-label" style="font-weight: bold;">País Residencia</label>
-                <select class="form-select" aria-label="Default select example" id="idSelPaisResidencia" [(ngModel)]="datosPasajero.codigoPaisResidencia" [ngModelOptions]="{standalone: true}">
-                    <option value="0">Seleccione</option>
+                <select class="form-select" aria-label="Default select example" id="idSelPaisResidencia"
+                    formControlName="paisResidencia">
+                    <option value="0" selected>Seleccione</option>
                     <option value="1">Peru</option>
                     <option value="2">Chile</option>
                     <option value="3">Argentina</option>
                 </select>
+                @if (pasajeroForm.get('paisResidencia')?.invalid && pasajeroForm.get('paisResidencia')?.touched){
+                    <div class="error-message">
+                        @if (pasajeroForm.get('paisResidencia')?.errors?.['required'] || pasajeroForm.get('paisResidencia')?.errors?.['notZero']){
+                            <p>El pais residencia es requerido.</p>
+                        }
+                    </div>
+                }
             </div>
             <div class="col-md-3">
                 <label for="idTxtFechaNacimiento" class="form-label" style="font-weight: bold;">Fecha Nacimiento</label>
-                <input type="date" class="form-control" id="idTxtFechaNacimiento" placeholder="Fecha Nacimiento" [(ngModel)]="datosPasajero.fechaNacimiento" [ngModelOptions]="{standalone: true}">
+                <input type="date" class="form-control" id="idTxtFechaNacimiento" placeholder="Fecha Nacimiento" formControlName="fechaNacimiento">
+                @if (pasajeroForm.get('fechaNacimiento')?.invalid && pasajeroForm.get('fechaNacimiento')?.touched){
+                    <div class="error-message">
+                        @if (pasajeroForm.get('fechaNacimiento')?.errors?.['required']){
+                            <p>La fecha de nacimiento es requerido.</p>
+                        }
+                    </div>
+                }
             </div>
             <div class="col-md-3">
-                <label for="idSelTipoDocumento" class="form-label" style="font-weight: bold;">Tipo Documento</label>
-                <select class="form-select" aria-label="Default select example" id="idSelTipoDocumento" [(ngModel)]="datosPasajero.tipoDocumento" [ngModelOptions]="{standalone: true}">
-                    <option value="0">Seleccione</option>
-                    <option value="1">DNI</option>
-                    <option value="2">Carné Extranjeria</option>
-                    <option value="3">Pasaporte</option>
+                <label for="idSelTipoDocumento" class="form-label" style="font-weight: bold;">Tipo Documento
+                    <span *ngIf="isRequired('tipoDocumento')" class="required-asterisk">*</span>
+                </label>
+                <select class="form-select" id="idSelTipoDocumento" formControlName="tipoDocumento">
+                    @for(item of opcionesTipoDocumento; track item.id){
+                    <option [value]="item.id">
+                        {{ item.nombre }}
+                    </option>
+                    }
                 </select>
+                @if(pasajeroForm.get('tipoDocumento')?.invalid && pasajeroForm.get('tipoDocumento')?.touched){
+                    <div class="error-message">
+                        @if(pasajeroForm.get('tipoDocumento')?.errors?.['required'] || pasajeroForm.get('tipoDocumento')?.errors?.['notZero']){
+                            <p>El tipo de documento es requerido.</p>
+                        }
+                    </div>
+                }
             </div>
             <div class="col-md-3">
                 <label for="idTxtNumDocumento" class="form-label" style="font-weight: bold;">Número Documento</label>
-                <input type="text" class="form-control" id="idTxtNumDocumento" placeholder="Número Documento" [(ngModel)]="datosPasajero.numeroDocumento" [ngModelOptions]="{standalone: true}">
+                <input type="text" class="form-control" id="idTxtNumDocumento" placeholder="Número Documento"
+                    formControlName="numeroDocumento" maxlength="30">
+                @if (pasajeroForm.get('numeroDocumento')?.invalid && pasajeroForm.get('numeroDocumento')?.touched){
+                    <div class="error-message">
+                        @if (pasajeroForm.get('numeroDocumento')?.errors?.['required']){
+                            <p>El numero de documento es requerido.</p>
+                        }
+                    </div>
+                }
             </div>
             <div class="col-md-3">
                 <label for="idSelTipoSexo" class="form-label" style="font-weight: bold;">Sexo</label>
-                <select class="form-select" aria-label="Default select example" id="idSelTipoSexo" [(ngModel)]="datosPasajero.sexo" [ngModelOptions]="{standalone: true}">
+                <select class="form-select" id="idSelTipoSexo" formControlName="tipoSexo" aria-placeholder="Tipo Sexo">
                     <option value="0">Seleccione</option>
                     <option value="M">Masculino</option>
                     <option value="F">Femenino</option>
                 </select>
+                @if (pasajeroForm.get('tipoSexo')?.invalid && pasajeroForm.get('tipoSexo')?.touched){
+                    <div class="error-message">
+                        @if (pasajeroForm.get('tipoSexo')?.errors?.['required'] || pasajeroForm.get('tipoSexo')?.errors?.['notZero']){
+                            <p>El sexo es requerido.</p>
+                        }
+                    </div>
+                }
             </div>
             <div class="col-md-12">
                 <h4 style="color: rgb(99, 38, 38);">Información Contacto</h4>
@@ -57,21 +121,43 @@
             </div>
             <div class="col-md-4">
                 <label for="idTxtEmail" class="form-label" style="font-weight: bold;">Correo Electrónico</label>
-                <input type="email" class="form-control" id="idTxtEmail" placeholder="Correo Electrónico" [(ngModel)]="datosPasajero.correoElectronico" [ngModelOptions]="{standalone: true}">
+                <input type="email" class="form-control" id="idTxtEmail" placeholder="Correo Electrónico" formControlName="correoEletronico" maxlength="50">
+                @if (pasajeroForm.get('correoEletronico')?.invalid && pasajeroForm.get('correoEletronico')?.touched){
+                    <div class="error-message">
+                        @if (pasajeroForm.get('correoEletronico')?.errors?.['required'] || pasajeroForm.get('correoEletronico')?.errors?.['notZero']){
+                            <p>El correo eletronico es requerido.</p>
+                        }
+                    </div>
+                }
             </div>
             <div class="col-md-4">
                 <label for="idSelCoPais" class="form-label" style="font-weight: bold;">Código Pais</label>
-                <select class="form-select" aria-label="Default select example" id="idSelCoPais" [(ngModel)]="datosPasajero.codigoPais" [ngModelOptions]="{standalone: true}">
-                    <option value="0">Seleccione</option>
+                <select class="form-select" aria-label="Default select example" id="idSelCoPais" formControlName="codigoPaisTelefono">
+                    <option value="0" selected>Seleccione</option>
                     <option value="1">(51) Peru</option>
                     <option value="2">(54) Chile</option>
                     <option value="3">(61) Argentina</option>
                 </select>
+                @if (pasajeroForm.get('codigoPaisTelefono')?.invalid && pasajeroForm.get('codigoPaisTelefono')?.touched){
+                    <div class="error-message">
+                        @if (pasajeroForm.get('codigoPaisTelefono')?.errors?.['required'] || pasajeroForm.get('codigoPaisTelefono')?.errors?.['notZero']){
+                            <p>El código pais es requerido.</p>
+                        }
+                    </div>
+                }
             </div>
             <div class="col-md-4">
                 <label for="idTxtNuTelefono" class="form-label" style="font-weight: bold;">Número Teléfono</label>
-                <input type="text" class="form-control" id="idTxtNuTelefono" placeholder="Número Teléfono" [(ngModel)]="datosPasajero.numeroTelefono" [ngModelOptions]="{standalone: true}">
+                <input type="text" class="form-control" id="idTxtNuTelefono" placeholder="Número Teléfono" formControlName="numTelefonoContacto" maxlength="20">
+                @if (pasajeroForm.get('numTelefonoContacto')?.invalid && pasajeroForm.get('numTelefonoContacto')?.touched){
+                    <div class="error-message">
+                        @if (pasajeroForm.get('numTelefonoContacto')?.errors?.['required'] || pasajeroForm.get('numTelefonoContacto')?.errors?.['notZero']){
+                            <p>El telefono contacto es requerido.</p>
+                        }
+                    </div>
+                }
             </div>
         </div>
     </form>
+    <br><br>
 </div>

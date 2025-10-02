@@ -1,1 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+  }
+input.ng-invalid.ng-touched,
+input.ng-invalid.ng-dirty {
+  border-color: red; /* Make the border red */
+  box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25); /* Optional: add a subtle red glow */
+}
+select.ng-invalid.ng-touched, /* ¡Añade esta línea! */
+select.ng-invalid.ng-dirty   /* ¡Y esta! */
+{
+  border-color: red; /* Pone el borde de color rojo */
+  box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25); /* Opcional: añade un leve resplandor rojo */
+}
