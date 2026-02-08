@@ -1,0 +1,71 @@
+.flight-modal .modal-content {
+    border-radius: 15px;
+    border: none;
+    overflow: hidden;
+}
+
+.flight-header {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-bottom: 2px dashed #dee2e6;
+}
+
+.flight-number {
+    background: #007bff;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.airport-code {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 0;
+    color: #2c3e50;
+}
+
+.airport-name {
+    font-size: 0.75rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+.flight-duration {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.duration-line {
+    width: 100%;
+    height: 2px;
+    background: #dee2e6;
+    position: relative;
+    margin: 10px 0;
+}
+
+.duration-line::after {
+    content: '✈';
+    position: absolute;
+    top: -12px;
+    left: 45%;
+    background: white;
+    padding: 0 5px;
+    color: #007bff;
+}
+
+.time-label {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.date-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+}

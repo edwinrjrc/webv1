@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { InterDestino2 } from '../modelo/interDestino2';
 import { InterDataRptaDestino } from '../modelo/InterDataRptaDestino';
 
 @Injectable({

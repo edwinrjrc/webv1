@@ -11,7 +11,8 @@
                 <span class="material-symbols-outlined" style="font-size: 13pt;">
                     line_end_arrow
                 </span>
-                } @else {
+                }
+                @else {
                 <span>Vuelta</span>
                 <br>
                 <span class="material-symbols-outlined" style="font-size: 13pt;">
@@ -40,11 +41,13 @@
         @for (v_horarioRuta of v_rutaTramo.horariosRuta; track v_horarioRuta){
         <div class="row" style="padding-top: 10px; padding-bottom: 10px;">
             <div class="col-md-1" style="display: flex; align-items: center;">
-                <input type="radio" name="radioRuta{{v_rutaTramo.tipoViaje}}" class="mat-form-field" value="{{v_horarioRuta.id}}">
+                <input type="radio" class="mat-form-field" [name]="'radioRuta' + v_rutaTramo.tipoViaje"
+                    [value]="v_horarioRuta.id" [(ngModel)]="horariosSeleccionados[v_rutaTramo.tipoViaje]"
+                    (change)="onItemChange(v_horarioRuta.id)">
             </div>
             <div class="col-md-3" style="display: flex; align-items: center;">
-                <img src="../../assets/resources/img/LA_sq.png"
-                    style="height: 20px;"><span ngbTooltip="Azerbaijan Airlines">{{v_horarioRuta.aerolineaDto.nombreCorto}}</span>
+                <img src="../../assets/resources/img/LA_sq.png" style="height: 20px;"><span
+                    ngbTooltip="Azerbaijan Airlines">{{v_horarioRuta.aerolineaDto.nombreCorto}}</span>
             </div>
             <div class="col-md-2" style="display: flex; align-items: center;">
                 <span class="material-symbols-outlined" style="font-size: 11pt;">flight_takeoff</span>
@@ -84,7 +87,7 @@
                 }
             </div>
             <div class="col-md-1">
-                <span class="material-symbols-outlined">visibility</span>
+                <a href="#" (click)="open(content)"><span class="material-symbols-outlined">visibility</span></a>
             </div>
         </div>
         }
@@ -161,7 +164,8 @@
         <br>
         <div class="row" style="text-align: right;">
             <div class="col-md-12">
-                <button name="btncomprar" class="btn btn-outline-info" type="button" style="width: 100%;" (click)="comprarOferta(ofertaEncontrada.id)" ><strong>Comprar</strong></button>
+                <button name="btncomprar" class="btn btn-outline-info" type="button" style="width: 100%;"
+                    (click)="comprarOferta(ofertaEncontrada.id)"><strong>Comprar</strong></button>
             </div>
         </div>
         <div class="row">
@@ -169,3 +173,55 @@
         </div>
     </div>
 </div>
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="flight-modal">
+        <div class="modal-header border-0 pb-0">
+            <h5 class="modal-title fw-bold text-secondary">Detalle del Itinerario</h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+        </div>
+
+        <div class="modal-body">
+            <div class="d-flex justify-content-between align-items-center mb-4 flight-header rounded">
+                <div>
+                    <span class="text-muted small d-block">Identificador</span>
+                    <span class="flight-number">MO1234</span>
+                </div>
+                <div class="text-end">
+                    <span class="text-muted small d-block">Estado</span>
+                    <span class="badge bg-success">Confirmado</span>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row align-items-center text-center text-md-start">
+                    <div class="col-12 col-md-4 mb-4 mb-md-0">
+                        <p class="date-label mb-1 uppercase">{{ 'Lunes 20 Febrero' | uppercase }}</p>
+                        <p class="time-label mb-0">08:30 AM</p>
+                        <h3 class="airport-code">LIM</h3>
+                        <p class="airport-name">Aeropuerto Internacional Jorge Chávez</p>
+                    </div>
+
+                    <div class="col-12 col-md-4 mb-4 mb-md-0">
+                        <div class="flight-duration">
+                            <span class="small text-muted">Duración</span>
+                            <div class="duration-line"></div>
+                            <span class="fw-bold" style="color: #007bff;">4h 15min</span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-4 text-md-end">
+                        <p class="date-label mb-1">{{ 'Lunes 20 Marzo' | uppercase }}</p>
+                        <p class="time-label mb-0">08:30 AM</p>
+                        <h3 class="airport-code">AUA</h3>
+                        <p class="airport-name">Aeropuerto Reina Beatrix</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer border-0">
+            <button type="button" class="btn btn-light px-4" (click)="d()">Cerrar</button>
+            <button type="button" class="btn btn-primary px-4 shadow-sm">Guardar Itinerario</button>
+        </div>
+    </div>
+</ng-template>

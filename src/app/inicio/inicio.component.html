@@ -2,400 +2,355 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <div class="container-full" style="background-color: rgb(231, 229, 229)">
     @if(this.flgProceso == 'C'){
-    <div class="container" style="background-color: rgb(231, 229, 229);">
-        <br>
-        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
-            <li [ngbNavItem]="1">
-                <button ngbNavLink>Vuelos</button>
-                <ng-template ngbNavContent style="background-color: white;">
-                    <form style="background-color: white;">
-                        <br style="background-color: white;">
-                        <div class="container" style="background-color: white;">
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <div class="input-group mb-3">
+        <div class="container" style="background-color: rgb(231, 229, 229);">
+            <br>
+            <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+                <li [ngbNavItem]="1">
+                    <button ngbNavLink>Vuelos</button>
+                    <ng-template ngbNavContent style="background-color: white;">
+                        <form style="background-color: white;">
+                            <br style="background-color: white;">
+                            <div class="container" style="background-color: white;">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="input-group mb-3">
+                                            <div class="form-floating">
+                                                <select class="form-select" id="selTipoVuelo" [(ngModel)]="modelTipoVuelo"
+                                                    name="tipoVuelo">
+                                                    <option value="1">Ida y Vuelta</option>
+                                                    <option value="2">Solo Ida</option>
+                                                </select>
+                                                <label for="selTipoVuelo">Tipo Vuelo</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
                                         <div class="form-floating">
-                                            <select class="form-select" id="selTipoVuelo" [(ngModel)]="modelTipoVuelo"
-                                                name="tipoVuelo">
-                                                <option value="1">Ida y Vuelta</option>
-                                                <option value="2">Solo Ida</option>
+                                            <input id="txtOrigen" type="text" class="form-control col"
+                                                [(ngModel)]="modelOrigen" name="modeloOrigen" [ngbTypeahead]="search"
+                                                [inputFormatter]="formatter2" [resultFormatter]="formatter2"
+                                                [selectOnExact]="true" placeholder="Origen" />
+                                            <label for="txtOrigen">Origen</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-floating">
+                                            <input id="txtDestino" type="text" class="form-control col"
+                                                [(ngModel)]="modelDestino" name="modeloDestino" [ngbTypeahead]="search"
+                                                [inputFormatter]="formatter2" [resultFormatter]="formatter2"
+                                                [selectOnExact]="true" placeholder="Destino" />
+                                            <label for="txtDestino">Destino</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-floating">
+                                            <select class="form-select" id="selClaseVuelo" [(ngModel)]="modelClaseVuelo"
+                                                name="claseVuelo">
+                                                <option value="1" selected>Economica</option>
+                                                <option value="2">Negocios</option>
+                                                <option value="3">Ejecutiva</option>
+                                                <option value="4">Economica Premiun</option>
+                                                <option value="5">Primera Clase</option>
                                             </select>
-                                            <label for="selTipoVuelo">Tipo Vuelo</label>
+                                            <label for="selClaseVuelo">Destino</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-12">
+                                        <div class="form-floating">
+                                            <input type="date" class="form-control" placeholder="Fecha Ida"
+                                                aria-label="Fecha Ida" name="fechaIda" [(ngModel)]="modelFechaIda"
+                                                id="idFechaIda" />
+                                            <label for="idFechaIda">Fecha Ida</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-12">
+                                        <div class="form-floating">
+                                            <input type="date" class="form-control" placeholder="Fecha Vuelta"
+                                                aria-label="Fecha Vuelta" name="fechaVuelta" [(ngModel)]="modelFechaVuelta"
+                                                id="idFechaVuelta" />
+                                            <label for="idFechaVuelta">Fecha Vuelta</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-12">
+                                        <div class="form-floating">
+                                            <input type="number" class="form-control" placeholder="Numero Adultos"
+                                                aria-label="Adultos" max="10" min="1" name="nroAdultos"
+                                                [formControl]="myControlAdultos" id="idtxtNroAdultos">
+                                            <label for="idtxtNroAdultos">Numero Adultos</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-12">
+                                        <div class="form-floating">
+                                            <input type="number" class="form-control" placeholder="Numero Niños"
+                                                aria-label="Niños" max="9" min="0" name="nroNinos"
+                                                [formControl]="myControlNinos" id="idtxtNroNinos">
+                                            <label for="idtxtNroNinos">Numero Ninos</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-12">
+                                        <div class="form-floating">
+                                            <input type="number" class="form-control" placeholder="Numero Infantes"
+                                                aria-label="Infantes" max="9" min="0" name="nroInfantes"
+                                                [formControl]="myControlInfantes" id="idtxtNroInfantes">
+                                            <label for="idtxtNroInfantes">Numero Infantes</label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-5">
-                                    <div class="form-floating">
-                                        <input id="txtOrigen" type="text" class="form-control col"
-                                            [(ngModel)]="modelOrigen" name="modeloOrigen" [ngbTypeahead]="search"
-                                            [inputFormatter]="formatter2" [resultFormatter]="formatter2"
-                                            [selectOnExact]="true" placeholder="Origen" />
-                                        <label for="txtOrigen">Origen</label>
-                                    </div>
-
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="form-floating">
-                                        <input id="txtDestino" type="text" class="form-control col"
-                                            [(ngModel)]="modelDestino" name="modeloDestino" [ngbTypeahead]="search"
-                                            [inputFormatter]="formatter2" [resultFormatter]="formatter2"
-                                            [selectOnExact]="true" placeholder="Destino" />
-                                        <label for="txtDestino">Destino</label>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button name="buscar" class="btn btn-success" type="button" style="width: 100%;"
+                                            (click)="consultarVuelo()"><strong><i
+                                                    class="bi bi-search"></i>&nbsp;Buscar</strong>&nbsp;</button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <div class="form-floating">
-                                        <select class="form-select" id="selClaseVuelo" [(ngModel)]="modelClaseVuelo"
-                                            name="claseVuelo">
-                                            <option value="1" selected>Economica</option>
-                                            <option value="2">Negocios</option>
-                                            <option value="3">Ejecutiva</option>
-                                            <option value="4">Economica Premiun</option>
-                                            <option value="5">Primera Clase</option>
-                                        </select>
-                                        <label for="selClaseVuelo">Destino</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 col-sm-12">
-                                    <!--
-                                <div class="dp-hidden position-absolute">
-                                    <div class="input-group">
-                                        <input name="datepicker" class="form-control" ngbDatepicker
-                                            #datepicker="ngbDatepicker" [autoClose]="'outside'"
-                                            (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
-                                            outsideDays="hidden" [startDate]="fromDate!" tabindex="-1" id="idFechaDesde" >
-                                        <ng-template #t let-date let-focused="focused">
-                                            <span class="custom-day" [class.focused]="focused"
-                                                [class.range]="isRange(date)"
-                                                [class.faded]="isHovered(date) || isInside(date)"
-                                                (mouseenter)="hoveredDate = date" (mouseleave)="hoveredDate = null">
-                                                {{ date.day }}
-                                            </span>
-                                        </ng-template>
-                                    </div>
-                                </div>
-                                <div class="input-group">
-                                    <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd" name="dpFromDate"
-                                        [value]="formatter.format(fromDate)"
-                                        (input)="fromDate = validateInput(fromDate, dpFromDate.value)" />
-                                    <button class="btn btn-outline-secondary bi bi-calendar3"
-                                        (click)="datepicker.toggle()" type="button"></button>
-                                </div>-->
-                                    <div class="form-floating">
-                                        <input type="date" class="form-control" placeholder="Fecha Ida"
-                                            aria-label="Fecha Ida" name="fechaIda" [(ngModel)]="modelFechaIda"
-                                            id="idFechaIda" />
-                                        <label for="idFechaIda">Fecha Ida</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 col-sm-12">
-                                    <!--
-                                <div class="input-group">
-                                    <input #dpToDate class="form-control" placeholder="yyyy-mm-dd" name="dpToDate"
-                                        [value]="formatter.format(toDate)"
-                                        (input)="toDate = validateInput(toDate, dpToDate.value)" />
-                                    <button class="btn btn-outline-secondary bi bi-calendar3"
-                                        (click)="datepicker.toggle()" type="button"></button>
-                                </div>-->
-                                    <div class="form-floating">
-                                        <input type="date" class="form-control" placeholder="Fecha Vuelta"
-                                            aria-label="Fecha Vuelta" name="fechaVuelta" [(ngModel)]="modelFechaVuelta"
-                                            id="idFechaVuelta" />
-                                        <label for="idFechaVuelta">Fecha Vuelta</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 col-sm-12">
-                                    <div class="form-floating">
-                                        <input type="number" class="form-control" placeholder="Numero Adultos"
-                                            aria-label="Adultos" max="10" min="1" name="nroAdultos"
-                                            [formControl]="myControlAdultos" id="idtxtNroAdultos">
-                                        <label for="idtxtNroAdultos">Numero Adultos</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 col-sm-12">
-                                    <div class="form-floating">
-                                        <input type="number" class="form-control" placeholder="Numero Niños"
-                                            aria-label="Niños" max="9" min="0" name="nroNinos"
-                                            [formControl]="myControlNinos" id="idtxtNroNinos">
-                                        <label for="idtxtNroNinos">Numero Ninos</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 col-sm-12">
-                                    <div class="form-floating">
-                                        <input type="number" class="form-control" placeholder="Numero Infantes"
-                                            aria-label="Infantes" max="9" min="0" name="nroInfantes"
-                                            [formControl]="myControlInfantes" id="idtxtNroInfantes">
-                                        <label for="idtxtNroInfantes">Numero Infantes</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <button name="buscar" class="btn btn-success" type="button" style="width: 100%;"
-                                        (click)="consultarVuelo()"><strong><i
-                                                class="bi bi-search"></i>&nbsp;Buscar</strong>&nbsp;</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container">
-                            <hr>
-                            <div class="row">
-                                @if (resultadoBusqueda){
-                                <div class="col-md-2">
-                                    <label>
-                                        <h4><strong>Filtros</strong></h4>
-                                    </label>
-                                    <div ngbAccordion #accordion="ngbAccordion">
-                                        <div ngbAccordionItem="first">
-                                            <h2 ngbAccordionHeader style="margin-bottom: 0;">
-                                                <button ngbAccordionButton>Aerolinea</button>
-                                            </h2>
-                                            <div ngbAccordionCollapse>
-                                                <div ngbAccordionBody>
-                                                    <ng-template>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="flexCheckDefault">
-                                                            <label class="form-check-label" for="flexCheckDefault">
-                                                                LATAM
-                                                            </label>
+                            <div class="container">
+                                <hr>
+                                <div class="row">
+                                    @if (resultadoBusqueda){
+                                        <div class="col-md-2">
+                                            <label>
+                                                <h4><strong>Filtros</strong></h4>
+                                            </label>
+                                            <div ngbAccordion #accordion="ngbAccordion">
+                                                <div ngbAccordionItem="first">
+                                                    <h2 ngbAccordionHeader style="margin-bottom: 0;">
+                                                        <button ngbAccordionButton>Aerolinea</button>
+                                                    </h2>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                            <ng-template>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value=""
+                                                                        id="flexCheckDefault">
+                                                                    <label class="form-check-label" for="flexCheckDefault">
+                                                                        LATAM
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value=""
+                                                                        id="flexCheckChecked">
+                                                                    <label class="form-check-label" for="flexCheckChecked">
+                                                                        Avianca
+                                                                    </label>
+                                                                </div>
+                                                            </ng-template>
                                                         </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="flexCheckChecked">
-                                                            <label class="form-check-label" for="flexCheckChecked">
-                                                                Avianca
-                                                            </label>
-                                                        </div>
-                                                    </ng-template>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div ngbAccordion #accordion="ngbAccordion">
-                                        <div ngbAccordionItem="first">
-                                            <h2 ngbAccordionHeader style="margin-bottom: 0;">
-                                                <button ngbAccordionButton>Escalas</button>
-                                            </h2>
-                                            <div ngbAccordionCollapse>
-                                                <div ngbAccordionBody>
-                                                    <ng-template>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="flexCheckDefault">
-                                                            <label class="form-check-label" for="flexCheckDefault">
-                                                                Sin Escalas
-                                                            </label>
+                                            <div ngbAccordion #accordion="ngbAccordion">
+                                                <div ngbAccordionItem="first">
+                                                    <h2 ngbAccordionHeader style="margin-bottom: 0;">
+                                                        <button ngbAccordionButton>Escalas</button>
+                                                    </h2>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                            <ng-template>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value=""
+                                                                        id="flexCheckDefault">
+                                                                    <label class="form-check-label" for="flexCheckDefault">
+                                                                        Sin Escalas
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value=""
+                                                                        id="flexCheckChecked">
+                                                                    <label class="form-check-label" for="flexCheckChecked">
+                                                                        1 Escala
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value=""
+                                                                        id="flexCheckChecked">
+                                                                    <label class="form-check-label" for="flexCheckChecked">
+                                                                        2 Escalas
+                                                                    </label>
+                                                                </div>
+                                                            </ng-template>
                                                         </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="flexCheckChecked">
-                                                            <label class="form-check-label" for="flexCheckChecked">
-                                                                1 Escala
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="flexCheckChecked">
-                                                            <label class="form-check-label" for="flexCheckChecked">
-                                                                2 Escalas
-                                                            </label>
-                                                        </div>
-                                                    </ng-template>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div ngbAccordion #accordion="ngbAccordion">
-                                        <div ngbAccordionItem="first">
-                                            <h2 ngbAccordionHeader style="margin-bottom: 0;">
-                                                <button ngbAccordionButton>Precio</button>
-                                            </h2>
-                                            <div ngbAccordionCollapse>
-                                                <div ngbAccordionBody>
-                                                    <ng-template>
-                                                        <div class="form-floating">
-                                                            <input class="form-control" type="number" value=""
-                                                                id="idpreciodesde" min="532">
-                                                            <label for="idpreciodesde">Precio Desde</label>
+                                            <div ngbAccordion #accordion="ngbAccordion">
+                                                <div ngbAccordionItem="first">
+                                                    <h2 ngbAccordionHeader style="margin-bottom: 0;">
+                                                        <button ngbAccordionButton>Precio</button>
+                                                    </h2>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                            <ng-template>
+                                                                <div class="form-floating">
+                                                                    <input class="form-control" type="number" value=""
+                                                                        id="idpreciodesde" min="532">
+                                                                    <label for="idpreciodesde">Precio Desde</label>
+                                                                </div>
+                                                                <div class="form-floating">
+                                                                    <input class="form-control" type="number" value=""
+                                                                        id="idpreciohasta" min="532">
+                                                                    <label for="idpreciohasta">Precio Hasta</label>
+                                                                </div>
+                                                            </ng-template>
                                                         </div>
-                                                        <div class="form-floating">
-                                                            <input class="form-control" type="number" value=""
-                                                                id="idpreciohasta" min="532">
-                                                            <label for="idpreciohasta">Precio Hasta</label>
-                                                        </div>
-                                                    </ng-template>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div ngbAccordion #accordion="ngbAccordion">
-                                        <div ngbAccordionItem="first">
-                                            <h2 ngbAccordionHeader style="margin-bottom: 0;">
-                                                <button ngbAccordionButton>Horario Salida</button>
-                                            </h2>
-                                            <div ngbAccordionCollapse>
-                                                <div ngbAccordionBody>
-                                                    <ng-template>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="flexCheckDefault">
-                                                            <label class="form-check-label" for="flexCheckDefault">
-                                                                En la mañana
-                                                            </label>
+                                            <div ngbAccordion #accordion="ngbAccordion">
+                                                <div ngbAccordionItem="first">
+                                                    <h2 ngbAccordionHeader style="margin-bottom: 0;">
+                                                        <button ngbAccordionButton>Horario Salida</button>
+                                                    </h2>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                            <ng-template>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value=""
+                                                                        id="flexCheckDefault">
+                                                                    <label class="form-check-label" for="flexCheckDefault">
+                                                                        En la mañana
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value=""
+                                                                        id="flexCheckChecked">
+                                                                    <label class="form-check-label" for="flexCheckChecked">
+                                                                        En la medio dia
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value=""
+                                                                        id="flexCheckChecked">
+                                                                    <label class="form-check-label" for="flexCheckChecked">
+                                                                        En la tarde
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value=""
+                                                                        id="flexCheckChecked">
+                                                                    <label class="form-check-label" for="flexCheckChecked">
+                                                                        En la noche
+                                                                    </label>
+                                                                </div>
+                                                            </ng-template>
                                                         </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="flexCheckChecked">
-                                                            <label class="form-check-label" for="flexCheckChecked">
-                                                                En la medio dia
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="flexCheckChecked">
-                                                            <label class="form-check-label" for="flexCheckChecked">
-                                                                En la tarde
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="flexCheckChecked">
-                                                            <label class="form-check-label" for="flexCheckChecked">
-                                                                En la noche
-                                                            </label>
-                                                        </div>
-
-                                                    </ng-template>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div ngbAccordion #accordion="ngbAccordion">
-                                        <div ngbAccordionItem="first">
-                                            <h2 ngbAccordionHeader style="margin-bottom: 0;">
-                                                <button ngbAccordionButton>Horario Llegada</button>
-                                            </h2>
-                                            <div ngbAccordionCollapse>
-                                                <div ngbAccordionBody>
-                                                    <ng-template>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="flexCheckDefault">
-                                                            <label class="form-check-label" for="flexCheckDefault">
-                                                                En la mañana
-                                                            </label>
+                                            <div ngbAccordion #accordion="ngbAccordion">
+                                                <div ngbAccordionItem="first">
+                                                    <h2 ngbAccordionHeader style="margin-bottom: 0;">
+                                                        <button ngbAccordionButton>Horario Llegada</button>
+                                                    </h2>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                            <ng-template>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value=""
+                                                                        id="flexCheckDefault">
+                                                                    <label class="form-check-label" for="flexCheckDefault">
+                                                                        En la mañana
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value=""
+                                                                        id="flexCheckChecked">
+                                                                    <label class="form-check-label" for="flexCheckChecked">
+                                                                        En la medio dia
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value=""
+                                                                        id="flexCheckChecked">
+                                                                    <label class="form-check-label" for="flexCheckChecked">
+                                                                        En la tarde
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value=""
+                                                                        id="flexCheckChecked">
+                                                                    <label class="form-check-label" for="flexCheckChecked">
+                                                                        En la noche
+                                                                    </label>
+                                                                </div>
+                                                            </ng-template>
                                                         </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="flexCheckChecked">
-                                                            <label class="form-check-label" for="flexCheckChecked">
-                                                                En la medio dia
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="flexCheckChecked">
-                                                            <label class="form-check-label" for="flexCheckChecked">
-                                                                En la tarde
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="flexCheckChecked">
-                                                            <label class="form-check-label" for="flexCheckChecked">
-                                                                En la noche
-                                                            </label>
-                                                        </div>
-
-                                                    </ng-template>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div ngbAccordion #accordion="ngbAccordion">
-                                        <div ngbAccordionItem="first">
-                                            <h2 ngbAccordionHeader style="margin-bottom: 0;">
-                                                <button ngbAccordionButton>Equipaje</button>
-                                            </h2>
-                                            <div ngbAccordionCollapse>
-                                                <div ngbAccordionBody>
-                                                    <ng-template>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="idEquipajeMochila">
-                                                            <label class="form-check-label" for="idEquipajeMochila">
-                                                                Equipaje Mochila
-                                                            </label>
+                                            <div ngbAccordion #accordion="ngbAccordion">
+                                                <div ngbAccordionItem="first">
+                                                    <h2 ngbAccordionHeader style="margin-bottom: 0;">
+                                                        <button ngbAccordionButton>Equipaje</button>
+                                                    </h2>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                            <ng-template>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value=""
+                                                                        id="idEquipajeMochila">
+                                                                    <label class="form-check-label" for="idEquipajeMochila">
+                                                                        Equipaje Mochila
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value=""
+                                                                        id="idEquipajeMano">
+                                                                    <label class="form-check-label" for="idEquipajeMano">
+                                                                        Equipaje Mano
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value=""
+                                                                        id="idEquipajeBodega">
+                                                                    <label class="form-check-label" for="idEquipajeBodega">
+                                                                        Equipaje Bodega
+                                                                    </label>
+                                                                </div>
+                                                            </ng-template>
                                                         </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="idEquipajeMano">
-                                                            <label class="form-check-label" for="idEquipajeMano">
-                                                                Equipaje Mano
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="idEquipajeBodega">
-                                                            <label class="form-check-label" for="idEquipajeBodega">
-                                                                Equipaje Bodega
-                                                            </label>
-                                                        </div>
-                                                    </ng-template>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <button name="Aplicar" class="btn btn-success" type="button"
+                                                style="width: 100%;">Aplicar</button>
+                                            &nbsp;
                                         </div>
-                                    </div>
-                                    <button name="Aplicar" class="btn btn-success" type="button"
-                                        style="width: 100%;">Aplicar</button>
-                                    <!--div class="container">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            
+                                    }
+                                    @if (resultadoBusqueda){
+                                        <div class="col-md-9">
+                                            @for(v_oferEncontrada of vuelosEncontrados.ofertasEncontradas; track v_oferEncontrada){
+                                                <app-ofertavuelo [ofertaEncontrada]="v_oferEncontrada"
+                                                    (messageEvent)="recibeMensaje($event)"></app-ofertavuelo>
+                                            }
                                         </div>
-                                    </div>
-                                </div-->
-                                    &nbsp;
-                                </div>
-                                }
-                                @if (resultadoBusqueda){
-                                <div class="col-md-9">
-
-                                    @for(v_oferEncontrada of vuelosEncontrados.ofertasEncontradas; track
-                                    v_oferEncontrada){
-                                    <app-ofertavuelo [ofertaEncontrada]="v_oferEncontrada"
-                                        (messageEvent)="recibeMensaje($event)"></app-ofertavuelo>
+                                    }
+                                    @else if(busquedaRealizada){
+                                        <div class="col-md-9">
+                                            No se Encontraron resultados.
+                                        </div>
                                     }
                                 </div>
-                                }@else if(busquedaRealizada){
-                                <div class="col-md-9">
-                                    No se Encontraron resultados.
-                                </div>
-                                }
+                                <div class="col-md-1">&nbsp;</div>
                             </div>
-                            <div class="col-md-1">&nbsp;</div>
-                        </div>
-                    </form>
-                </ng-template>
-            </li>
-        </ul>
-        <div [ngbNavOutlet]="nav"></div>
-    </div>
+                        </form>
+                    </ng-template>
+                </li>
+            </ul>
+            <div [ngbNavOutlet]="nav"></div>
+        </div>
     }
     @else if (this.flgProceso == 'R') {
-    <div class="container">
-        <app-datos></app-datos>
-    </div>
+        <div class="container">
+            <app-datos [datosCotizacionVuelo]="consultaViaje" [ofertaSeleccionada]="ofertaSeleccionada"></app-datos>
+        </div>
     }
 </div>
 <ng-template #nTemplt let-r="result" let-t="term">
-
     <span style="padding-top: 8px; padding-bottom: 8px">
         {{ r.title }}
     </span>
-
 </ng-template>

@@ -21,8 +21,12 @@ import { ValidacionesPropias } from '../../validaciones/validacionespropias';
 export class DatostarjetaComponent implements OnInit {
   datosTarjetaForm!: FormGroup;
 
-  varFormNumTarjeta = 'numeroTarjeta';
-  varFormVctoTarjeta = 'vctoTarjeta';
+  varFormNumTarjeta        = 'numeroTarjeta';
+  varFormVctoTarjeta       = 'vctoTarjeta';
+  varFormCodSegTarjeta     = 'codigoSeguridadTarjeta';
+  varFormCodTipoDocTitular = 'codigoTipoDocumentoTitular';
+  varFormNumDocTitular     = 'numeroDocumentoTitular';
+  varFormNoTitular         = 'nombreTitular';
 
   @Output() formSubmit = new EventEmitter<any>();
 

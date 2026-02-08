@@ -1,6 +1,6 @@
 .error-message {
     color: red;
-    font-size: 0.9em;
+    font-size: 8pt;
     margin-top: 5px;
   }
 input.ng-invalid.ng-touched,

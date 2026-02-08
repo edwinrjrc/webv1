@@ -39,4 +39,28 @@ export class UtilconversionsService {
       throw error; // Rethrow the error for the caller to handle
     }
   }
+
+  async decryptData(encryptedData: string): Promise<string> {
+    try {
+      const dataBuffer = Uint8Array.from(atob(encryptedData), c => c.charCodeAt(0));  
+      const iv = dataBuffer.slice(0, 12);
+      const encryptedContent = dataBuffer.slice(12);
+      const keyBuffer = await crypto.subtle.importKey(
+        'raw',
+        new TextEncoder().encode(this.chapa),
+        { name: 'AES-GCM' },
+        true,
+        ['encrypt', 'decrypt']
+      );
+      const decryptedData = await crypto.subtle.decrypt(
+        { name: 'AES-GCM', iv: iv },
+        keyBuffer,
+        encryptedContent
+      );
+      return new TextDecoder().decode(decryptedData);
+    } catch (error) {
+      console.error('Decryption failed:', error);
+      throw error; // Rethrow the error for the caller to handle
+    }
+  }
 }

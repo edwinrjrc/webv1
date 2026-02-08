@@ -1,7 +1,7 @@
-import { InterDestino2 } from "./interDestino2";
+import { InterDestino } from "./interDestino";
 
 export interface InterDataRptaDestino{
     error: Boolean;
     mensaje: String;
-    dataRpta: InterDestino2[];
+    dataRpta: InterDestino[];
 }

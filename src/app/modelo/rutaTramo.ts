@@ -9,5 +9,5 @@ export interface RutaTramo{
     horariosRuta: HorarioRuta[];
     numeroOrden: Number;
     fechaViaje: Date;
-    tipoViaje: Number;
+    tipoViaje: number;
 }

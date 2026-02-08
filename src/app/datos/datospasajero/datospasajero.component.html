@@ -1,163 +1,245 @@
 <div class="container">
-    <form [formGroup]="pasajeroForm">
-        <div class="row g-3">
-            <div class="col-md-12">
-                <h4>Adulto</h4>
-                <hr>
-            </div>
-            <div class="col-md-6">
-                <label for="idTxtNombres" class="form-label" style="font-weight: bold;">Nombres</label>
-                <input type="text" class="form-control" id="idTxtNombres" placeholder="Nombre Pasajero"
-                    formControlName="nombres" maxlength="100">
-                @if (pasajeroForm.get('nombres')?.invalid && pasajeroForm.get('nombres')?.touched){
-                    <div class="error-message">
-                        @if (pasajeroForm.get('nombres')?.errors?.['required']){
-                            <p>El nombre es requerido.</p>
-                        }
-                    </div>
-                }
-            </div>
-            <div class="col-md-6">
-                <label for="idTxtPrimerApellido" class="form-label" style="font-weight: bold;">Primer Apellido</label>
-                <input type="text" class="form-control" id="idTxtPrimerApellido" placeholder="Primer Apellido"
-                    formControlName="primerApellido" maxlength="100">
-                @if (pasajeroForm.get('primerApellido')?.invalid && pasajeroForm.get('primerApellido')?.touched){
-                    <div class="error-message">
-                        @if (pasajeroForm.get('primerApellido')?.errors?.['required']){
-                            <p>El primer apellido es requerido.</p>
-                        }
-                    </div>
-                }
-            </div>
-            <div class="col-md-6">
-                <label for="idTxtSegundoApellido" class="form-label" style="font-weight: bold;">Segundo Apellido</label>
-                <input type="text" class="form-control" id="idTxtSegundoApellido" placeholder="Segundo Apellido"
-                    formControlName="segundoApellido" maxlength="100">
-                @if (pasajeroForm.get('segundoApellido')?.invalid && pasajeroForm.get('segundoApellido')?.touched){
-                    <div class="error-message">
-                        @if (pasajeroForm.get('segundoApellido')?.errors?.['required']){
-                            <p>El segundo apellido es requerido.</p>
-                        }
-                    </div>
-                }
-            </div>
-            <div class="col-md-3">
-                <label for="idSelPaisResidencia" class="form-label" style="font-weight: bold;">País Residencia</label>
-                <select class="form-select" aria-label="Default select example" id="idSelPaisResidencia"
-                    formControlName="paisResidencia">
-                    <option value="0" selected>Seleccione</option>
-                    <option value="1">Peru</option>
-                    <option value="2">Chile</option>
-                    <option value="3">Argentina</option>
-                </select>
-                @if (pasajeroForm.get('paisResidencia')?.invalid && pasajeroForm.get('paisResidencia')?.touched){
-                    <div class="error-message">
-                        @if (pasajeroForm.get('paisResidencia')?.errors?.['required'] || pasajeroForm.get('paisResidencia')?.errors?.['notZero']){
-                            <p>El pais residencia es requerido.</p>
-                        }
-                    </div>
-                }
-            </div>
-            <div class="col-md-3">
-                <label for="idTxtFechaNacimiento" class="form-label" style="font-weight: bold;">Fecha Nacimiento</label>
-                <input type="date" class="form-control" id="idTxtFechaNacimiento" placeholder="Fecha Nacimiento" formControlName="fechaNacimiento">
-                @if (pasajeroForm.get('fechaNacimiento')?.invalid && pasajeroForm.get('fechaNacimiento')?.touched){
-                    <div class="error-message">
-                        @if (pasajeroForm.get('fechaNacimiento')?.errors?.['required']){
-                            <p>La fecha de nacimiento es requerido.</p>
-                        }
-                    </div>
-                }
-            </div>
-            <div class="col-md-3">
-                <label for="idSelTipoDocumento" class="form-label" style="font-weight: bold;">Tipo Documento
-                    <span *ngIf="isRequired('tipoDocumento')" class="required-asterisk">*</span>
-                </label>
-                <select class="form-select" id="idSelTipoDocumento" formControlName="tipoDocumento">
-                    @for(item of opcionesTipoDocumento; track item.id){
-                    <option [value]="item.id">
-                        {{ item.nombre }}
-                    </option>
-                    }
-                </select>
-                @if(pasajeroForm.get('tipoDocumento')?.invalid && pasajeroForm.get('tipoDocumento')?.touched){
-                    <div class="error-message">
-                        @if(pasajeroForm.get('tipoDocumento')?.errors?.['required'] || pasajeroForm.get('tipoDocumento')?.errors?.['notZero']){
-                            <p>El tipo de documento es requerido.</p>
-                        }
-                    </div>
-                }
-            </div>
-            <div class="col-md-3">
-                <label for="idTxtNumDocumento" class="form-label" style="font-weight: bold;">Número Documento</label>
-                <input type="text" class="form-control" id="idTxtNumDocumento" placeholder="Número Documento"
-                    formControlName="numeroDocumento" maxlength="30">
-                @if (pasajeroForm.get('numeroDocumento')?.invalid && pasajeroForm.get('numeroDocumento')?.touched){
-                    <div class="error-message">
-                        @if (pasajeroForm.get('numeroDocumento')?.errors?.['required']){
-                            <p>El numero de documento es requerido.</p>
-                        }
-                    </div>
-                }
-            </div>
-            <div class="col-md-3">
-                <label for="idSelTipoSexo" class="form-label" style="font-weight: bold;">Sexo</label>
-                <select class="form-select" id="idSelTipoSexo" formControlName="tipoSexo" aria-placeholder="Tipo Sexo">
-                    <option value="0">Seleccione</option>
-                    <option value="M">Masculino</option>
-                    <option value="F">Femenino</option>
-                </select>
-                @if (pasajeroForm.get('tipoSexo')?.invalid && pasajeroForm.get('tipoSexo')?.touched){
-                    <div class="error-message">
-                        @if (pasajeroForm.get('tipoSexo')?.errors?.['required'] || pasajeroForm.get('tipoSexo')?.errors?.['notZero']){
-                            <p>El sexo es requerido.</p>
-                        }
-                    </div>
-                }
-            </div>
-            <div class="col-md-12">
-                <h4 style="color: rgb(99, 38, 38);">Información Contacto</h4>
-                <hr style="color: red;">
-            </div>
-            <div class="col-md-4">
-                <label for="idTxtEmail" class="form-label" style="font-weight: bold;">Correo Electrónico</label>
-                <input type="email" class="form-control" id="idTxtEmail" placeholder="Correo Electrónico" formControlName="correoEletronico" maxlength="50">
-                @if (pasajeroForm.get('correoEletronico')?.invalid && pasajeroForm.get('correoEletronico')?.touched){
-                    <div class="error-message">
-                        @if (pasajeroForm.get('correoEletronico')?.errors?.['required'] || pasajeroForm.get('correoEletronico')?.errors?.['notZero']){
-                            <p>El correo eletronico es requerido.</p>
-                        }
-                    </div>
-                }
-            </div>
-            <div class="col-md-4">
-                <label for="idSelCoPais" class="form-label" style="font-weight: bold;">Código Pais</label>
-                <select class="form-select" aria-label="Default select example" id="idSelCoPais" formControlName="codigoPaisTelefono">
-                    <option value="0" selected>Seleccione</option>
-                    <option value="1">(51) Peru</option>
-                    <option value="2">(54) Chile</option>
-                    <option value="3">(61) Argentina</option>
-                </select>
-                @if (pasajeroForm.get('codigoPaisTelefono')?.invalid && pasajeroForm.get('codigoPaisTelefono')?.touched){
-                    <div class="error-message">
-                        @if (pasajeroForm.get('codigoPaisTelefono')?.errors?.['required'] || pasajeroForm.get('codigoPaisTelefono')?.errors?.['notZero']){
-                            <p>El código pais es requerido.</p>
-                        }
-                    </div>
-                }
-            </div>
-            <div class="col-md-4">
-                <label for="idTxtNuTelefono" class="form-label" style="font-weight: bold;">Número Teléfono</label>
-                <input type="text" class="form-control" id="idTxtNuTelefono" placeholder="Número Teléfono" formControlName="numTelefonoContacto" maxlength="20">
-                @if (pasajeroForm.get('numTelefonoContacto')?.invalid && pasajeroForm.get('numTelefonoContacto')?.touched){
-                    <div class="error-message">
-                        @if (pasajeroForm.get('numTelefonoContacto')?.errors?.['required'] || pasajeroForm.get('numTelefonoContacto')?.errors?.['notZero']){
-                            <p>El telefono contacto es requerido.</p>
-                        }
-                    </div>
-                }
-            </div>
+    <div class="row g-3">
+        <div class="col-md-12">
+            <h4>{{ nombreTipoPasajero }}</h4>
+            <hr>
         </div>
-    </form>
+        <div class="col-md-6">
+            <label for="idTxtNombres" class="form-label" style="font-weight: bold;">Nombres
+                @if(isRequired(varFormNombres)) {
+                <span class="required-asterisk">*</span>
+                }
+            </label>
+            <input type="text" class="form-control" id="idTxtNombres" placeholder="Nombre Pasajero"
+                [formControlName]="varFormNombres" maxlength="100">
+            @if (pasajeroForm.get(varFormNombres)?.invalid && pasajeroForm.get(varFormNombres)?.touched){
+            <div class="error-message">
+                @if (pasajeroForm.get(varFormNombres)?.errors?.['required']){
+                <p>El nombre es requerido.</p>
+                }
+            </div>
+            }
+        </div>
+        <div class="col-md-6">
+            <label for="idTxtPrimerApellido" class="form-label" style="font-weight: bold;">Primer Apellido
+                @if(isRequired(varFormprimerApellido)) {
+                <span class="required-asterisk">*</span>
+                }
+            </label>
+            <input type="text" class="form-control" id="idTxtPrimerApellido" placeholder="Primer Apellido"
+                [formControlName]="varFormprimerApellido" maxlength="100">
+            @if (pasajeroForm.get(varFormprimerApellido)?.invalid && pasajeroForm.get(varFormprimerApellido)?.touched){
+            <div class="error-message">
+                @if (pasajeroForm.get(varFormprimerApellido)?.errors?.['required']){
+                <p>El primer apellido es requerido.</p>
+                }
+            </div>
+            }
+        </div>
+        <div class="col-md-6">
+            <label for="idTxtSegundoApellido" class="form-label" style="font-weight: bold;">Segundo Apellido
+                @if(isRequired(varFormsegundoApellido)) {
+                <span class="required-asterisk">*</span>
+                }</label>
+            <input type="text" class="form-control" id="idTxtSegundoApellido" placeholder="Segundo Apellido"
+                [formControlName]="varFormsegundoApellido" maxlength="100">
+            @if (pasajeroForm.get(varFormsegundoApellido)?.invalid &&
+            pasajeroForm.get(varFormsegundoApellido)?.touched){
+            <div class="error-message">
+                @if (pasajeroForm.get(varFormsegundoApellido)?.errors?.['required']){
+                <p>El segundo apellido es requerido.</p>
+                }
+            </div>
+            }
+        </div>
+        <div class="col-md-3">
+            <label for="idSelPaisResidencia" class="form-label" style="font-weight: bold;">País Residencia
+                @if(isRequired(varFormpaisResidencia)) {
+                <span class="required-asterisk">*</span>
+                }
+            </label>
+            <select class="form-select" aria-label="Default select example" id="idSelPaisResidencia"
+                [formControlName]="varFormpaisResidencia">
+                <option value="0" selected>Seleccione</option>
+                <option value="1">Peru</option>
+                <option value="2">Chile</option>
+                <option value="3">Argentina</option>
+            </select>
+            @if (pasajeroForm.get(varFormpaisResidencia)?.invalid && pasajeroForm.get(varFormpaisResidencia)?.touched){
+            <div class="error-message">
+                @if (pasajeroForm.get(varFormpaisResidencia)?.errors?.['required'] ||
+                pasajeroForm.get(varFormpaisResidencia)?.errors?.['notZero']){
+                <p>El pais residencia es requerido.</p>
+                }
+            </div>
+            }
+        </div>
+        <div class="col-md-3">
+            <label for="idTxtFechaNacimiento" class="form-label" style="font-weight: bold;">Fecha Nacimiento
+                @if(isRequired(varFormfechaNacimiento)) {
+                <span class="required-asterisk">*</span>
+                }
+            </label>
+            <input type="date" class="form-control" id="idTxtFechaNacimiento" placeholder="Fecha Nacimiento"
+                [formControlName]="varFormfechaNacimiento">
+            @if (pasajeroForm.get(varFormfechaNacimiento)?.invalid &&
+            pasajeroForm.get(varFormfechaNacimiento)?.touched){
+            <div class="error-message">
+                @if (pasajeroForm.get(varFormfechaNacimiento)?.errors?.['required']){
+                <p>La fecha de nacimiento es requerido.</p>
+                }
+            </div>
+            }
+        </div>
+        <div class="col-md-3">
+            <label for="idSelTipoDocumento" class="form-label" style="font-weight: bold;">Tipo Documento
+                @if(isRequired(varFormtipoDocumento)) {
+                <span class="required-asterisk">*</span>
+                }
+            </label>
+            <select class="form-select" id="idSelTipoDocumento" [formControlName]="varFormtipoDocumento">
+                @for(item of opcionesTipoDocumento; track item.id){
+                <option [value]="item.id">
+                    {{ item.nombre }}
+                </option>
+                }
+            </select>
+            @if(pasajeroForm.get(varFormtipoDocumento)?.invalid && pasajeroForm.get(varFormtipoDocumento)?.touched){
+            <div class="error-message">
+                @if(pasajeroForm.get(varFormtipoDocumento)?.errors?.['required'] ||
+                pasajeroForm.get(varFormtipoDocumento)?.errors?.['notZero']){
+                <p>El tipo de documento es requerido.</p>
+                }
+            </div>
+            }
+        </div>
+        <div class="col-md-3">
+            <label for="idTxtNumDocumento" class="form-label" style="font-weight: bold;">Número Documento
+                @if(isRequired(varFormnumeroDocumento)) {
+                <span class="required-asterisk">*</span>
+                }
+            </label>
+            <input type="text" class="form-control" id="idTxtNumDocumento" placeholder="Número Documento"
+                [formControlName]="varFormnumeroDocumento" maxlength="30">
+            @if (pasajeroForm.get(varFormnumeroDocumento)?.invalid &&
+            pasajeroForm.get(varFormnumeroDocumento)?.touched){
+            <div class="error-message">
+                @if (pasajeroForm.get(varFormnumeroDocumento)?.errors?.['required']){
+                <p>El numero de documento es requerido.</p>
+                }
+            </div>
+            }
+        </div>
+        <div class="col-md-3">
+            <label for="idSelTipoSexo" class="form-label" style="font-weight: bold;">Sexo
+                @if(isRequired(varFormtipoSexo)) {
+                <span class="required-asterisk">*</span>
+                }
+            </label>
+            <select class="form-select" id="idSelTipoSexo" [formControlName]="varFormtipoSexo"
+                aria-placeholder="Tipo Sexo">
+                <option value="0">Seleccione</option>
+                <option value="M">Masculino</option>
+                <option value="F">Femenino</option>
+            </select>
+            @if (pasajeroForm.get(varFormtipoSexo)?.invalid && pasajeroForm.get(varFormtipoSexo)?.touched){
+            <div class="error-message">
+                @if (pasajeroForm.get(varFormtipoSexo)?.errors?.['required'] ||
+                pasajeroForm.get(varFormtipoSexo)?.errors?.['notZero']){
+                <p>El sexo es requerido.</p>
+                }
+            </div>
+            }
+        </div>
+        <div class="col-md-3">
+            @if(tipoPasajero == tp_Nino || tipoPasajero == tp_Infante) {
+            <label for="idSelResponsableAdulto" class="form-label" style="font-weight: bold;">Adulto Responsable
+                @if(isRequired(varFormRespAdulto)) {
+                <span class="required-asterisk">*</span>
+                }
+            </label>
+            <select class="form-select" id="idSelResponsableAdulto" [formControlName]="varFormRespAdulto"
+                aria-placeholder="Adulto Responsable">
+                <option value="0">Seleccione</option>
+                <option value="A1">Adulto 1</option>
+                <option value="A2">Femenino</option>
+            </select>
+            @if (pasajeroForm.get(varFormRespAdulto)?.invalid && pasajeroForm.get(varFormRespAdulto)?.touched){
+            <div class="error-message">
+                @if (pasajeroForm.get(varFormRespAdulto)?.errors?.['required'] ||
+                pasajeroForm.get(varFormRespAdulto)?.errors?.['notZero']){
+                <p>El adulto responsable es requerido.</p>
+                }
+            </div>
+            }
+            }
+        </div>
+        <div class="col-md-12">
+            <h4 style="color: rgb(99, 38, 38);">Información Contacto</h4>
+            <hr style="color: red;">
+        </div>
+        <div class="col-md-4">
+            <label for="idTxtEmail" class="form-label" style="font-weight: bold;">
+                Correo Electrónico
+                @if(isRequired(varFormcorreoElectronico)) {
+                <span class="required-asterisk">*</span>
+                }
+            </label>
+            <input type="email" class="form-control" id="idTxtEmail" placeholder="Correo Electrónico"
+                [formControlName]="varFormcorreoElectronico" maxlength="50">
+            @if (pasajeroForm.get(varFormcorreoElectronico)?.invalid &&
+            pasajeroForm.get(varFormcorreoElectronico)?.touched){
+            <div class="error-message">
+                @if (pasajeroForm.get(varFormcorreoElectronico)?.errors?.['required']){
+                <p>El correo eletronico es requerido.</p>
+                }
+                @else if (pasajeroForm.get(varFormcorreoElectronico)?.errors?.['email']) {
+                <p>Por favor, ingrese un formato de correo electrónico válido.</p>
+                }
+            </div>
+            }
+        </div>
+        <div class="col-md-4">
+            <label for="idSelCoPais" class="form-label" style="font-weight: bold;">Código Pais
+                @if(isRequired(varFormcodigoPaisTelefono)) {
+                <span class="required-asterisk">*</span>
+                }
+            </label>
+            <select class="form-select" aria-label="Default select example" id="idSelCoPais"
+                [formControlName]="varFormcodigoPaisTelefono">
+                <option value="0" selected>Seleccione</option>
+                <option value="1">(51) Peru</option>
+                <option value="2">(54) Chile</option>
+                <option value="3">(61) Argentina</option>
+            </select>
+            @if (pasajeroForm.get(varFormcodigoPaisTelefono)?.invalid &&
+            pasajeroForm.get(varFormcodigoPaisTelefono)?.touched){
+            <div class="error-message">
+                @if (pasajeroForm.get(varFormcodigoPaisTelefono)?.errors?.['required'] ||
+                pasajeroForm.get(varFormcodigoPaisTelefono)?.errors?.['notZero']){
+                <p>El código pais es requerido.</p>
+                }
+            </div>
+            }
+        </div>
+        <div class="col-md-4">
+            <label for="idTxtNuTelefono" class="form-label" style="font-weight: bold;">Número Teléfono
+                @if(isRequired(varFormnumTelefonoContacto)) {
+                <span class="required-asterisk">*</span>
+                }
+            </label>
+            <input type="text" class="form-control" id="idTxtNuTelefono" placeholder="Número Teléfono"
+                [formControlName]="varFormnumTelefonoContacto" maxlength="20">
+            @if (pasajeroForm.get(varFormnumTelefonoContacto)?.invalid &&
+            pasajeroForm.get(varFormnumTelefonoContacto)?.touched){
+            <div class="error-message">
+                @if (pasajeroForm.get(varFormnumTelefonoContacto)?.errors?.['required'] ||
+                pasajeroForm.get(varFormnumTelefonoContacto)?.errors?.['notZero']){
+                <p>El telefono contacto es requerido.</p>
+                }
+            </div>
+            }
+        </div>
+    </div>
     <br><br>
 </div>

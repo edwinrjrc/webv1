@@ -7,13 +7,9 @@ import {
 } from '@angular/forms';
 import { Clasevuelo } from '../modelo/clasevuelo';
 import { Observable, OperatorFunction } from 'rxjs';
-import {
-  map,
-  debounceTime,
-  distinctUntilChanged,
-} from 'rxjs/operators';
+import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { CatalogosService } from '../_services/catalogos.service';
-import { InterDestino2 } from '../modelo/interDestino2';
+import { InterDestino } from '../modelo/interDestino';
 import { InterDataRptaDestino } from '../modelo/InterDataRptaDestino';
 import { ConsultaViaje } from '../modelo/consultaViaje';
 import { ViajeService } from '../_services/viaje.service';
@@ -43,16 +39,16 @@ import { OfertaSeleccionada } from '../modelo/ofertaSeleccionada';
     NgbNavModule,
     NgbTypeaheadModule,
     NgbAccordionModule,
-    DatosComponent
+    DatosComponent,
   ],
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.css',
 })
-export class InicioComponent implements OnInit  {
+export class InicioComponent implements OnInit {
   active = 1;
   listaClasesVuelo: Clasevuelo[] = [];
-  filteredOptionsOrigen!: Observable<InterDestino2[]>;
-  filteredOptionsDestino!: Observable<InterDestino2[]>;
+  filteredOptionsOrigen!: Observable<InterDestino[]>;
+  filteredOptionsDestino!: Observable<InterDestino[]>;
 
   arregloRespDestinos!: InterDataRptaDestino;
 
@@ -60,15 +56,15 @@ export class InicioComponent implements OnInit  {
   myControlNinos = new FormControl('');
   myControlInfantes = new FormControl('');
 
-  valorCombo2!: InterDestino2;
+  valorCombo2!: InterDestino;
   idIdaVuela: string = '';
   idClase: string = '';
 
   varOrigen!: string;
 
-  modelOrigen!: InterDestino2;
-  modelDestino!: InterDestino2;
-  formatter2 = (result: InterDestino2) =>
+  modelOrigen!: InterDestino;
+  modelDestino!: InterDestino;
+  formatter2 = (result: InterDestino) =>
     result.nombreAeropuertoMostrar.toUpperCase();
 
   modelTipoVuelo!: string;
@@ -82,7 +78,9 @@ export class InicioComponent implements OnInit  {
 
   message: string | undefined;
 
-  flgProceso !: string;
+  flgProceso!: string;
+
+  ofertaSeleccionada!: OfertaSeleccionada;
 
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
@@ -92,10 +90,10 @@ export class InicioComponent implements OnInit  {
   calendar = inject(NgbCalendar);
   formatter = inject(NgbDateParserFormatter);
 
-  iataDestinoEncryp!:string
+  iataDestinoEncryp!: string;
 
-  resultadoBusqueda : boolean = false;
-  busquedaRealizada : boolean = false;
+  resultadoBusqueda: boolean = false;
+  busquedaRealizada: boolean = false;
 
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null = this.calendar.getToday();
@@ -105,8 +103,10 @@ export class InicioComponent implements OnInit  {
     10
   );
 
-  modelFechaIda !: string;
-  modelFechaVuelta !: string;
+  modelFechaIda!: string;
+  modelFechaVuelta!: string;
+
+  consultaViaje: ConsultaViaje = new ConsultaViaje();
 
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
@@ -126,14 +126,15 @@ export class InicioComponent implements OnInit  {
 
   constructor(
     private catalogoService: CatalogosService,
-    private viajeService: ViajeService, private _utilconversionsService: UtilconversionsService
+    private viajeService: ViajeService,
+    private _utilconversionsService: UtilconversionsService
   ) {
     this.iniciaClaseVuelo();
     this.idIdaVuela = '1';
     this.idClase = '1';
 
     //Cotizacion
-    this.flgProceso = "C";
+    this.flgProceso = 'C';
   }
 
   ngOnInit(): void {
@@ -151,19 +152,18 @@ export class InicioComponent implements OnInit  {
       ofertasEncontradas: [],
     };
 
+    this.myControlAdultos.setValue('1');
+    this.myControlNinos.setValue('0');
+    this.myControlInfantes.setValue('0');
     //this.consultarVuelo2();
   }
 
   recibeMensaje($event: string) {
-
     const ofertaSelect = JSON.parse($event);
 
-    let ofertaSeleccionada: OfertaSeleccionada;
-    ofertaSeleccionada = new OfertaSeleccionada();
+    this.ofertaSeleccionada = Object.assign(new OfertaSeleccionada,ofertaSelect);
 
-    ofertaSeleccionada.FlgProceso = ofertaSelect.flgProceso;
-
-    this.flgProceso = ofertaSelect.flgProceso;
+    this.flgProceso = this.ofertaSeleccionada.FlgProceso;
   }
 
   cargarDestinos() {
@@ -172,7 +172,7 @@ export class InicioComponent implements OnInit  {
     });
   }
 
-  private _filter(name: string): InterDestino2[] {
+  private _filter(name: string): InterDestino[] {
     const filterValue = name.toLowerCase();
 
     return this.arregloRespDestinos.dataRpta.filter((option) =>
@@ -180,12 +180,12 @@ export class InicioComponent implements OnInit  {
     );
   }
 
-  displayFnOrigen(destino: InterDestino2): string {
+  displayFnOrigen(destino: InterDestino): string {
     return destino && destino.nombreAeropuertoMostrar
       ? destino.nombreAeropuertoMostrar
       : 'Vacio';
   }
-  displayFnDestino(destino: InterDestino2): string {
+  displayFnDestino(destino: InterDestino): string {
     return destino && destino.nombreAeropuertoMostrar
       ? destino.nombreAeropuertoMostrar
       : 'Vacio';
@@ -213,53 +213,80 @@ export class InicioComponent implements OnInit  {
 
   async consultarVuelo() {
     try {
-      let consultaViaje: ConsultaViaje = new ConsultaViaje();
-      
       let fechaIdaDate: Date;
       let fechaVueltaDate: Date;
 
-      fechaIdaDate = new Date(this.modelFechaIda+'T00:00:00');
+      fechaIdaDate = new Date(this.modelFechaIda + 'T00:00:00');
 
-      let fechaIdaStr:string = fechaIdaDate.getDate() + '/' + (fechaIdaDate.getMonth()+1) + '/' + fechaIdaDate.getFullYear();
+      let fechaIdaStr: string =
+        fechaIdaDate.getDate() +
+        '/' +
+        (fechaIdaDate.getMonth() + 1) +
+        '/' +
+        fechaIdaDate.getFullYear();
 
-      const valueFechaIda = await this._utilconversionsService.encryptData(fechaIdaStr);
-      consultaViaje.FechaIdaStr = valueFechaIda;
+      const valueFechaIda = await this._utilconversionsService.encryptData(
+        fechaIdaStr
+      );
+      this.consultaViaje.FechaIdaStr = valueFechaIda;
 
-      fechaVueltaDate = new Date(this.modelFechaVuelta+'T00:00:00');
+      fechaVueltaDate = new Date(this.modelFechaVuelta + 'T00:00:00');
 
-      let fechaVueltaStr:string = fechaVueltaDate.getDate() + '/' + (fechaVueltaDate.getMonth()+1) + '/' + fechaVueltaDate.getFullYear();
+      let fechaVueltaStr: string =
+        fechaVueltaDate.getDate() +
+        '/' +
+        (fechaVueltaDate.getMonth() + 1) +
+        '/' +
+        fechaVueltaDate.getFullYear();
 
-      const valueFechaVuelta = await this._utilconversionsService.encryptData(fechaVueltaStr);
-      consultaViaje.FechaVueltaStr = valueFechaVuelta;
+      const valueFechaVuelta = await this._utilconversionsService.encryptData(
+        fechaVueltaStr
+      );
+      this.consultaViaje.FechaVueltaStr = valueFechaVuelta;
 
-      const valueEncryptDestino = await this._utilconversionsService.encryptData(this.modelDestino.codigoIata);
-      consultaViaje.CodigoIataDestino = valueEncryptDestino;
+      const valueEncryptDestino =
+        await this._utilconversionsService.encryptData(
+          this.modelDestino.codigoIata
+        );
+      this.consultaViaje.CodigoIataDestino = valueEncryptDestino;
 
-      const valueEncryptOrigen = await this._utilconversionsService.encryptData(this.modelOrigen.codigoIata);
-      consultaViaje.CodigoIataOrigen = valueEncryptOrigen;
+      const valueEncryptOrigen = await this._utilconversionsService.encryptData(
+        this.modelOrigen.codigoIata
+      );
+      this.consultaViaje.CodigoIataOrigen = valueEncryptOrigen;
 
-      const valueNumAdultos = await this._utilconversionsService.encryptData(this.myControlAdultos.value != null ? this.myControlAdultos.value: '');
-      consultaViaje.Adultos = valueNumAdultos;
+      const valueNumAdultos = await this._utilconversionsService.encryptData(
+        this.myControlAdultos.value != null ? this.myControlAdultos.value : ''
+      );
+      this.consultaViaje.Adultos = valueNumAdultos;
 
-      const valueNumNinos = await this._utilconversionsService.encryptData(this.myControlNinos.value != null ? this.myControlNinos.value: '');
-      consultaViaje.Ninos = valueNumNinos;
+      const valueNumNinos = await this._utilconversionsService.encryptData(
+        this.myControlNinos.value != null ? this.myControlNinos.value : ''
+      );
+      this.consultaViaje.Ninos = valueNumNinos;
 
-      const valueNumInfantes = await this._utilconversionsService.encryptData(this.myControlInfantes.value != null ? this.myControlInfantes.value: '');
-      consultaViaje.Infantes = valueNumInfantes;
+      const valueNumInfantes = await this._utilconversionsService.encryptData(
+        this.myControlInfantes.value != null ? this.myControlInfantes.value : ''
+      );
+      this.consultaViaje.Infantes = valueNumInfantes;
 
-      const valueClaseVuelo = await this._utilconversionsService.encryptData(this.modelClaseVuelo);
-      consultaViaje.ClaseVuelo = valueClaseVuelo;
+      const valueClaseVuelo = await this._utilconversionsService.encryptData(
+        this.modelClaseVuelo
+      );
+      this.consultaViaje.ClaseVuelo = valueClaseVuelo;
 
-      const valueTipoVuelo = await this._utilconversionsService.encryptData(this.modelTipoVuelo);
-      consultaViaje.TipoViaje = valueTipoVuelo;
+      const valueTipoVuelo = await this._utilconversionsService.encryptData(
+        this.modelTipoVuelo
+      );
+      this.consultaViaje.TipoViaje = valueTipoVuelo;
 
-      this.viajeService.consultarVuelo(consultaViaje).subscribe((resp) => {
+      this.viajeService.consultarVuelo(this.consultaViaje).subscribe((resp) => {
         this.vuelosEncontrados = resp.dataRpta;
         this.busquedaRealizada = true;
-        if (this.vuelosEncontrados != null){
-          this.resultadoBusqueda = (this.vuelosEncontrados.ofertasEncontradas.length > 0 ? true: false);
+        if (this.vuelosEncontrados != null) {
+          this.resultadoBusqueda =
+            this.vuelosEncontrados.ofertasEncontradas.length > 0 ? true : false;
         }
-        
       });
     } catch (e) {
       console.log(e);
@@ -271,8 +298,8 @@ export class InicioComponent implements OnInit  {
     try {
       let consultaViaje: ConsultaViaje = new ConsultaViaje();
 
-      consultaViaje.FechaIda = new Date(2024,10,4);
-      consultaViaje.FechaVuelta = new Date(2024,11,15);
+      consultaViaje.FechaIda = new Date(2024, 10, 4);
+      consultaViaje.FechaVuelta = new Date(2024, 11, 15);
 
       consultaViaje.CodigoIataDestino = 'LIM';
       consultaViaje.CodigoIataOrigen = 'TLA';
@@ -285,7 +312,10 @@ export class InicioComponent implements OnInit  {
       this.viajeService.consultarVuelo(consultaViaje).subscribe((resp) => {
         this.vuelosEncontrados = resp.dataRpta;
       });
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+      e;
+    }
   }
 
   validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
@@ -318,7 +348,7 @@ export class InicioComponent implements OnInit  {
     );
   }
 
-  search: OperatorFunction<string, readonly InterDestino2[]> = (
+  search: OperatorFunction<string, readonly InterDestino[]> = (
     text$: Observable<String>
   ) =>
     text$.pipe(

@@ -5,30 +5,36 @@
             <input type="text" class="form-control" id="idTxtNutarjeta" placeholder="Número Tarjeta" maxlength="16"
                 appDirNumeros style="text-align: right;" formControlName="numeroTarjeta">
             @if (datosTarjetaForm.get(varFormNumTarjeta)?.invalid && datosTarjetaForm.get(varFormNumTarjeta)?.touched){
-            <div class="error-message">
-                @if (datosTarjetaForm.get(varFormNumTarjeta)?.errors?.['required']){
-                <p>El nombre es requerido.</p>
-                }
-            </div>
+                <div class="error-message">
+                    @if (datosTarjetaForm.get(varFormNumTarjeta)?.errors?.['required']){
+                        <p>El nombre es requerido.</p>
+                    }
+                </div>
             }
         </div>
         <div class="col-md-4">
             <label for="idTxtVctoTarj" class="form-label" style="font-weight: bold;">Vcto Tarjeta</label>
             <input type="text" class="form-control" id="idTxtVctoTarj" placeholder="MM/YY" maxlength="5"
                 formControlName="vctoTarjeta">
-            @if (datosTarjetaForm.get(varFormVctoTarjeta)?.invalid &&
-            datosTarjetaForm.get(varFormVctoTarjeta)?.touched){
-            <div class="error-message">
-                @if (datosTarjetaForm.get(varFormVctoTarjeta)?.errors?.['required']){
-                <p>El nombre es requerido.</p>
-                }
-            </div>
+            @if (datosTarjetaForm.get(varFormVctoTarjeta)?.invalid && datosTarjetaForm.get(varFormVctoTarjeta)?.touched){
+                <div class="error-message">
+                    @if (datosTarjetaForm.get(varFormVctoTarjeta)?.errors?.['required']){
+                        <p>El periodo de vencimiento es requerido.</p>
+                    }
+                </div>
             }
         </div>
         <div class="col-md-4">
             <label for="idTxtVctoTarj" class="form-label" style="font-weight: bold;">Código Seguridad</label>
             <input type="text" class="form-control" id="idTxtVctoTarj" maxlength="4" style="text-align: right;"
                 formControlName="codigoSeguridadTarjeta">
+            @if (datosTarjetaForm.get(varFormCodSegTarjeta)?.invalid && datosTarjetaForm.get(varFormCodSegTarjeta)?.touched){
+                <div class="error-message">
+                    @if (datosTarjetaForm.get(varFormCodSegTarjeta)?.errors?.['required']){
+                        <p>El Código de seguridad es requerido.</p>
+                    }
+                </div>
+            }
         </div>
     </div>
     <div class="row" style="padding-top: 1rem;">
@@ -39,16 +45,37 @@
                 <option value="1">Pasaporte</option>
                 <option value="2">DOI</option>
             </select>
+            @if (datosTarjetaForm.get(varFormCodTipoDocTitular)?.invalid && datosTarjetaForm.get(varFormCodTipoDocTitular)?.touched){
+                <div class="error-message">
+                    @if (datosTarjetaForm.get(varFormCodTipoDocTitular)?.errors?.['required'] || datosTarjetaForm.get(varFormCodTipoDocTitular)?.errors?.['notZero']){
+                        <p>El tipo de documento es requerido.</p>
+                    }
+                </div>
+            }
         </div>
         <div class="col-md-4">
             <label for="idTxtDocTitularTarjeta" class="form-label" style="font-weight: bold;">Número Documento</label>
             <input type="text" class="form-control" id="idTxtDocTitularTarjeta"
                 placeholder="Numero Documento Titular Tarjeta" maxlength="20" formControlName="numeroDocumentoTitular">
+            @if (datosTarjetaForm.get(varFormNumDocTitular)?.invalid && datosTarjetaForm.get(varFormNumDocTitular)?.touched){
+                <div class="error-message">
+                    @if (datosTarjetaForm.get(varFormNumDocTitular)?.errors?.['required']){
+                        <p>El número de documento es requerido.</p>
+                    }
+                </div>
+            }
         </div>
         <div class="col-md-5">
             <label for="idTxtNoTitular" class="form-label" style="font-weight: bold;">Nombre Titular Tarjeta</label>
             <input type="text" class="form-control" id="idTxtNoTitular" placeholder="Nombre Titular Tarjeta"
                 maxlength="200" formControlName="nombreTitular">
+            @if (datosTarjetaForm.get(varFormNoTitular)?.invalid && datosTarjetaForm.get(varFormNoTitular)?.touched){
+                <div class="error-message">
+                    @if (datosTarjetaForm.get(varFormNoTitular)?.errors?.['required']){
+                        <p>El nombre del titular es requerido.</p>
+                    }
+                </div>
+            }
         </div>
     </div>
 </form>
