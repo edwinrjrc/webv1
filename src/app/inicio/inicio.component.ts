@@ -1,4 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  Inject,
+  inject,
+  OnInit,
+  PLATFORM_ID,
+  ViewChild,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -18,7 +25,10 @@ import {
   NgbCalendar,
   NgbDate,
   NgbDateParserFormatter,
+  NgbDatepicker,
   NgbDatepickerModule,
+  NgbDateStruct,
+  NgbInputDatepicker,
   NgbNavModule,
   NgbTypeaheadModule,
 } from '@ng-bootstrap/ng-bootstrap';
@@ -27,6 +37,8 @@ import { UtilconversionsService } from '../_services/utilconversions.service';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatosComponent } from '../datos/datos.component';
 import { OfertaSeleccionada } from '../modelo/ofertaSeleccionada';
+import { isPlatformBrowser } from '@angular/common';
+import { AuthService } from '../_services/auth.service'; // Ajusta la ruta si es necesario
 
 @Component({
   selector: 'app-inicio',
@@ -45,6 +57,15 @@ import { OfertaSeleccionada } from '../modelo/ofertaSeleccionada';
   styleUrl: './inicio.component.css',
 })
 export class InicioComponent implements OnInit {
+  hoveredDate: NgbDate | null = null;
+  fromDate: NgbDate | null = null;
+  toDate: NgbDate | null = null;
+
+  listaOfertas: any[] = [];
+
+  modelFechaIda: NgbDateStruct | undefined;
+  modelFechaVuelta: NgbDateStruct | undefined;
+
   active = 1;
   listaClasesVuelo: Clasevuelo[] = [];
   filteredOptionsOrigen!: Observable<InterDestino[]>;
@@ -87,7 +108,6 @@ export class InicioComponent implements OnInit {
     end: new FormControl<Date | null>(null),
   });
 
-  calendar = inject(NgbCalendar);
   formatter = inject(NgbDateParserFormatter);
 
   iataDestinoEncryp!: string;
@@ -95,39 +115,31 @@ export class InicioComponent implements OnInit {
   resultadoBusqueda: boolean = false;
   busquedaRealizada: boolean = false;
 
-  hoveredDate: NgbDate | null = null;
-  fromDate: NgbDate | null = this.calendar.getToday();
-  toDate: NgbDate | null = this.calendar.getNext(
-    this.calendar.getToday(),
-    'd',
-    10
-  );
-
-  modelFechaIda!: string;
-  modelFechaVuelta!: string;
-
   consultaViaje: ConsultaViaje = new ConsultaViaje();
 
+  precioMaximo: number = 2500;
+
+  tokenVisible: string | null = '';
+
+  @ViewChild('d') datepicker!: NgbInputDatepicker;
+
   onDateSelection(date: NgbDate) {
-    if (!this.fromDate && !this.toDate) {
-      this.fromDate = date;
-    } else if (
-      this.fromDate &&
-      !this.toDate &&
-      date &&
-      date.after(this.fromDate)
-    ) {
-      this.toDate = date;
-    } else {
-      this.toDate = null;
-      this.fromDate = date;
+    if (!this.modelFechaIda || (this.modelFechaIda && this.modelFechaVuelta)) {
+      this.modelFechaIda = date;
+      this.modelFechaVuelta = undefined;
+    } else if (date.after(this.modelFechaIda as any)) {
+      this.modelFechaVuelta = date;
+      this.datepicker.close(); // Esto ahora sí funcionará sin errores
     }
   }
 
   constructor(
     private catalogoService: CatalogosService,
     private viajeService: ViajeService,
-    private _utilconversionsService: UtilconversionsService
+    private _utilconversionsService: UtilconversionsService,
+    private calendar: NgbCalendar,
+    private authService: AuthService,
+    @Inject(PLATFORM_ID) private platformId: Object, // 3. Inyectar el ID de plataforma
   ) {
     this.iniciaClaseVuelo();
     this.idIdaVuela = '1';
@@ -135,10 +147,26 @@ export class InicioComponent implements OnInit {
 
     //Cotizacion
     this.flgProceso = 'C';
+
+    this.fromDate = calendar.getToday();
+    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
 
   ngOnInit(): void {
-    this.cargarDestinos();
+    if (isPlatformBrowser(this.platformId)) {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        // Si es un usuario nuevo/anónimo, generamos su token primero
+        this.authService.obtenerTokenAnonimo().subscribe({
+          next: () => this.cargarDestinos(), // Una vez generado, cargamos los datos
+          error: (err) => console.error('Error al generar token anónimo', err),
+        });
+      } else {
+        // Si ya tiene token (anónimo o real), cargamos normal
+        this.cargarDestinos();
+      }
+    }
 
     this.modelTipoVuelo = '1';
     this.modelClaseVuelo = '1';
@@ -161,13 +189,18 @@ export class InicioComponent implements OnInit {
   recibeMensaje($event: string) {
     const ofertaSelect = JSON.parse($event);
 
-    this.ofertaSeleccionada = Object.assign(new OfertaSeleccionada,ofertaSelect);
+    this.ofertaSeleccionada = Object.assign(
+      new OfertaSeleccionada(),
+      ofertaSelect,
+    );
 
     this.flgProceso = this.ofertaSeleccionada.FlgProceso;
   }
 
   cargarDestinos() {
+    this.tokenVisible = localStorage.getItem('token'); // Recuperamos para mostrar
     this.catalogoService.listarDestinos('').subscribe((resp) => {
+      console.log(resp);
       this.arregloRespDestinos = resp;
     });
   }
@@ -176,7 +209,7 @@ export class InicioComponent implements OnInit {
     const filterValue = name.toLowerCase();
 
     return this.arregloRespDestinos.dataRpta.filter((option) =>
-      option.nombreAeropuertoMostrar.toLowerCase().includes(filterValue)
+      option.nombreAeropuertoMostrar.toLowerCase().includes(filterValue),
     );
   }
 
@@ -219,70 +252,73 @@ export class InicioComponent implements OnInit {
       fechaIdaDate = new Date(this.modelFechaIda + 'T00:00:00');
 
       let fechaIdaStr: string =
-        fechaIdaDate.getDate() +
+        this.modelFechaIda?.day +
         '/' +
-        (fechaIdaDate.getMonth() + 1) +
+        this.modelFechaIda?.month +
         '/' +
-        fechaIdaDate.getFullYear();
+        this.modelFechaIda?.year;
 
-      const valueFechaIda = await this._utilconversionsService.encryptData(
-        fechaIdaStr
-      );
+      console.log('fechaIdaStr ::' + fechaIdaStr);
+
+      const valueFechaIda =
+        await this._utilconversionsService.encryptData(fechaIdaStr);
       this.consultaViaje.FechaIdaStr = valueFechaIda;
 
       fechaVueltaDate = new Date(this.modelFechaVuelta + 'T00:00:00');
 
       let fechaVueltaStr: string =
-        fechaVueltaDate.getDate() +
+        this.modelFechaVuelta?.day +
         '/' +
-        (fechaVueltaDate.getMonth() + 1) +
+        this.modelFechaVuelta?.month +
         '/' +
-        fechaVueltaDate.getFullYear();
+        this.modelFechaVuelta?.year;
 
-      const valueFechaVuelta = await this._utilconversionsService.encryptData(
-        fechaVueltaStr
-      );
+      const valueFechaVuelta =
+        await this._utilconversionsService.encryptData(fechaVueltaStr);
       this.consultaViaje.FechaVueltaStr = valueFechaVuelta;
 
       const valueEncryptDestino =
         await this._utilconversionsService.encryptData(
-          this.modelDestino.codigoIata
+          this.modelDestino.codigoIata,
         );
       this.consultaViaje.CodigoIataDestino = valueEncryptDestino;
 
       const valueEncryptOrigen = await this._utilconversionsService.encryptData(
-        this.modelOrigen.codigoIata
+        this.modelOrigen.codigoIata,
       );
       this.consultaViaje.CodigoIataOrigen = valueEncryptOrigen;
 
       const valueNumAdultos = await this._utilconversionsService.encryptData(
-        this.myControlAdultos.value != null ? this.myControlAdultos.value : ''
+        this.myControlAdultos.value != null ? this.myControlAdultos.value : '',
       );
       this.consultaViaje.Adultos = valueNumAdultos;
 
       const valueNumNinos = await this._utilconversionsService.encryptData(
-        this.myControlNinos.value != null ? this.myControlNinos.value : ''
+        this.myControlNinos.value != null ? this.myControlNinos.value : '',
       );
       this.consultaViaje.Ninos = valueNumNinos;
 
       const valueNumInfantes = await this._utilconversionsService.encryptData(
-        this.myControlInfantes.value != null ? this.myControlInfantes.value : ''
+        this.myControlInfantes.value != null
+          ? this.myControlInfantes.value
+          : '',
       );
       this.consultaViaje.Infantes = valueNumInfantes;
 
       const valueClaseVuelo = await this._utilconversionsService.encryptData(
-        this.modelClaseVuelo
+        this.modelClaseVuelo,
       );
       this.consultaViaje.ClaseVuelo = valueClaseVuelo;
 
       const valueTipoVuelo = await this._utilconversionsService.encryptData(
-        this.modelTipoVuelo
+        this.modelTipoVuelo,
       );
       this.consultaViaje.TipoViaje = valueTipoVuelo;
 
       this.viajeService.consultarVuelo(this.consultaViaje).subscribe((resp) => {
         this.vuelosEncontrados = resp.dataRpta;
         this.busquedaRealizada = true;
+        console.log(this.vuelosEncontrados);
         if (this.vuelosEncontrados != null) {
           this.resultadoBusqueda =
             this.vuelosEncontrados.ofertasEncontradas.length > 0 ? true : false;
@@ -325,6 +361,7 @@ export class InicioComponent implements OnInit {
       : currentValue;
   }
 
+  /*
   isInside(date: NgbDate) {
     return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
   }
@@ -348,8 +385,46 @@ export class InicioComponent implements OnInit {
     );
   }
 
+  onDateSelection(date: NgbDate) {
+    if (!this.fromDate && !this.toDate) {
+        this.fromDate = date;
+    } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
+        this.toDate = date;
+    } else {
+        this.toDate = null;
+        this.fromDate = date;
+    }
+}*/
+
+  isHovered(date: NgbDate) {
+    return (
+      this.modelFechaIda &&
+      !this.modelFechaVuelta &&
+      this.hoveredDate &&
+      date.after(this.modelFechaIda as any) &&
+      date.before(this.hoveredDate)
+    );
+  }
+
+  isInside(date: NgbDate) {
+    return (
+      this.modelFechaVuelta &&
+      date.after(this.modelFechaIda as any) &&
+      date.before(this.modelFechaVuelta as any)
+    );
+  }
+
+  isRange(date: NgbDate) {
+    return (
+      date.equals(this.modelFechaIda as any) ||
+      (this.modelFechaVuelta && date.equals(this.modelFechaVuelta as any)) ||
+      this.isInside(date) ||
+      this.isHovered(date)
+    );
+  }
+
   search: OperatorFunction<string, readonly InterDestino[]> = (
-    text$: Observable<String>
+    text$: Observable<String>,
   ) =>
     text$.pipe(
       debounceTime(200),
@@ -362,9 +437,13 @@ export class InicioComponent implements OnInit {
                 (v) =>
                   v.nombreAeropuertoMostrar
                     .toLowerCase()
-                    .indexOf(term.toLowerCase()) > -1
+                    .indexOf(term.toLowerCase()) > -1,
               )
-              .slice(0, 10)
-      )
+              .slice(0, 10),
+      ),
     );
+
+  formatDate(date: any): string {
+    return `${date.day}/${date.month}/${date.year}`;
+  }
 }

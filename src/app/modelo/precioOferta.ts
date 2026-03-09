@@ -1,15 +1,15 @@
 export interface PrecioOferta{
-    precioUnitarioClase: Number;
+    precioUnitarioClase: number;
     cantidadAdultos: Number;
-    totalPrecioAdultos: Number;
+    totalPrecioAdultos: number;
     cantidadNinos: Number;
     porcentajePrecioNinos: Number;
-    totalPrecioNinos: Number;
+    totalPrecioNinos: number;
     cantidadInfantes: Number;
     porcentajePrecioInfantes: Number;
     totalPrecioInfantes: Number;
     totalImpuestos: Number;
-    totalFee: Number;
-    totalRuta: Number;
-    totalImptosCargos: Number;
+    totalFee: number;
+    totalRuta: number;
+    totalImptosCargos: number;
 }

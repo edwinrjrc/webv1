@@ -1,227 +1,242 @@
-<div class="row" style="padding-left: 15px;">
-    <div class="col-md-9"
-        style="border-left: 1px; border-left-style: solid; border-color: #f2f5f5; border-left-width: 1px; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #f2f5f5;">
-        @for (v_rutaTramo of ofertaEncontrada.listaRutaTramos; track v_rutaTramo){
-        <div class="row"
-            style="background-color: #f2f5f5; padding-top: 10px; padding-bottom: 10px; display: flex; align-items: center;">
-            <div class="col-sm-1">
-                @if(v_rutaTramo.tipoViaje == 1){
-                <span>Ida</span>
-                <br>
-                <span class="material-symbols-outlined" style="font-size: 13pt;">
-                    line_end_arrow
-                </span>
-                }
-                @else {
-                <span>Vuelta</span>
-                <br>
-                <span class="material-symbols-outlined" style="font-size: 13pt;">
-                    line_start_arrow
-                </span>
-                }
-            </div>
-            <div class="col-sm-3">
-                <span>{{v_rutaTramo.fechaViaje | date:'dd/MM/yyyy'}}</span>
-            </div>
-            <div class="col-sm-2">
-                <span>{{v_rutaTramo.origen.codigoIata}}</span><br><span
-                    style="font-size: 8pt;">{{v_rutaTramo.origen.nombreCiudad}}</span>
-            </div>
-            <div class="col-sm-2">
-                <span>{{v_rutaTramo.destino.codigoIata}}</span><br><span
-                    style="font-size: 8pt;">{{v_rutaTramo.destino.nombreCiudad}}</span>
-            </div>
-            <div class="col-sm-2">
-                <span>&nbsp;</span>
-            </div>
-            <div class="col-sm-2">
-                <span>&nbsp;</span>
-            </div>
-        </div>
-        @for (v_horarioRuta of v_rutaTramo.horariosRuta; track v_horarioRuta){
-        <div class="row" style="padding-top: 10px; padding-bottom: 10px;">
-            <div class="col-md-1" style="display: flex; align-items: center;">
-                <input type="radio" class="mat-form-field" [name]="'radioRuta' + v_rutaTramo.tipoViaje"
-                    [value]="v_horarioRuta.id" [(ngModel)]="horariosSeleccionados[v_rutaTramo.tipoViaje]"
-                    (change)="onItemChange(v_horarioRuta.id)">
-            </div>
-            <div class="col-md-3" style="display: flex; align-items: center;">
-                <img src="../../assets/resources/img/LA_sq.png" style="height: 20px;"><span
-                    ngbTooltip="Azerbaijan Airlines">{{v_horarioRuta.aerolineaDto.nombreCorto}}</span>
-            </div>
-            <div class="col-md-2" style="display: flex; align-items: center;">
-                <span class="material-symbols-outlined" style="font-size: 11pt;">flight_takeoff</span>
-                &nbsp;
-                <span>{{v_horarioRuta.fechaSalidaVuelo | date:'HH:mm'}}</span>
-            </div>
-            <div class="col-md-2" style="display: flex; align-items: center;"> <span class="material-symbols-outlined"
-                    style="font-size: 11pt;">flight_land</span>&nbsp;<span>{{v_horarioRuta.fechaLlegadaVuelo |
-                    date:'HH:mm'}}</span>
-            </div>
-            <div class="col-md-1" style="display: flex; align-items: center; padding-left: 0%;">
-                @if(v_horarioRuta.inEscalas == 0){
-                <span>Directo</span>
-                }
-                @else {
-                <span>Escala&nbsp;({{v_horarioRuta.numeroEscalas}})</span>
-                }
-            </div>
-            <div class="col-md-2" style="text-align: center;">
-                @if(v_horarioRuta.equipaMochila){
-                <span class="material-symbols-outlined" style="color: lime;">personal_bag</span>
-                }
-                @else{
-                <span class="material-symbols-outlined" style="color: lightgray;">personal_bag</span>
-                }
-                @if(v_horarioRuta.equipaCarrion){
-                <span class="material-symbols-outlined" style="color:lime;">trip</span>
-                }
-                @else{
-                <span class="material-symbols-outlined" style="color: lightgray">trip</span>
-                }
-                @if(v_horarioRuta.equipaBodega){
-                <span class="material-symbols-outlined" style="color: lime;">travel_luggage_and_bags</span>
-                }
-                @else{
-                <span class="material-symbols-outlined" style="color: lightgray;">travel_luggage_and_bags</span>
-                }
-            </div>
-            <div class="col-md-1">
-                <a href="#" (click)="open(content)"><span class="material-symbols-outlined">visibility</span></a>
-            </div>
-        </div>
-        }
-        }
-    </div>
-    <div class="col-md-3" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #f2f5f5;">
-        <div class="row">
-            <div class="col-md-12" style="text-align: right; padding-top: 3px;">
-                <span><strong>Precios</strong></span>
-            </div>
-        </div>
-        <div class="row" style="text-align: right;">
-            <div class="col-md-12">
-                <span style="font-weight: bold;font-size: 15pt;">US$</span>&nbsp;<span
-                    style="font-size: 15pt;text-align: right;">{{
-                    ofertaEncontrada.precioOfertaDto.precioUnitarioClase.valueOf() | number:'3.2-2' }}</span>
-            </div>
-        </div>
-        <br>
-        <div class="row" style="text-align: right;">
-            <div class="col-md-6" style="text-align: left;">
-                <span style="font-size: 10pt;">Adultos ({{ ofertaEncontrada.precioOfertaDto.cantidadAdultos.valueOf()
-                    }})</span>
-            </div>
-            <div class="col-md-6">
-                <span style="font-size: 10pt; color: darkgray;">US$</span>&nbsp;<span
-                    style="font-size: 10pt; color: darkgray; text-align: right;">{{
-                    ofertaEncontrada.precioOfertaDto.totalPrecioAdultos.valueOf() | number:'2.2-2' }}</span>
-            </div>
-        </div>
-        <div class="row" style="text-align: right;">
-            <div class="col-md-6" style="text-align: left;">
-                <span style="font-size: 10pt;">Niños ({{ ofertaEncontrada.precioOfertaDto.cantidadNinos.valueOf()
-                    }})</span>
-            </div>
-            <div class="col-md-6">
-                <span style="font-size: 10pt; color: darkgray;">US$</span>&nbsp;<span
-                    style="font-size: 10pt; color: darkgray; text-align: right;">{{
-                    ofertaEncontrada.precioOfertaDto.totalPrecioNinos.valueOf() | number:'2.2-2' }}</span>
-            </div>
-        </div>
-        <div class="row" style="text-align: right;">
-            <div class="col-md-6" style="text-align: left;">
-                <span style="font-size: 10pt;">Infantes ({{ ofertaEncontrada.precioOfertaDto.cantidadInfantes.valueOf()
-                    }})</span>
-            </div>
-            <div class="col-md-6">
-                <span style="font-size: 10pt; color: darkgray;">US$</span>&nbsp;<span
-                    style="font-size: 10pt; color: darkgray; text-align: right;">{{
-                    ofertaEncontrada.precioOfertaDto.totalPrecioInfantes.valueOf() | number:'2.2-2' }}</span>
-            </div>
-        </div>
-        <div class="row" style="text-align: right;">
-            <div class="col-md-6" style="text-align: left;">
-                <span style="font-size: 10pt;">Imp y car.</span>
-            </div>
-            <div class="col-md-6">
-                <span style="font-size: 10pt; color: darkgray;">US$</span>&nbsp;<span
-                    style="font-size: 10pt; color: darkgray; text-align: right;">{{
-                    ofertaEncontrada.precioOfertaDto.totalImptosCargos.valueOf() | number:'2.2-2' }}</span>
-            </div>
-        </div>
-        <hr>
-        <div class="row" style="text-align: right;">
-            <div class="col-md-4" style="text-align: left;font-weight: bold;font-size: 14pt;">
-                <span style="font-size: 10pt;">Total</span>
-            </div>
-            <div class="col-md-8">
-                <span style="font-size: 10pt; font-weight: bold;font-size: 14pt;">US$</span>&nbsp;<span
-                    style="text-align: right; font-weight: bold;font-size: 14pt;">{{
-                    ofertaEncontrada.precioOfertaDto.totalRuta.valueOf() | number:'2.2-2' }}</span>
-            </div>
-        </div>
-        <br>
-        <div class="row" style="text-align: right;">
-            <div class="col-md-12">
-                <button name="btncomprar" class="btn btn-outline-info" type="button" style="width: 100%;"
-                    (click)="comprarOferta(ofertaEncontrada.id)"><strong>Comprar</strong></button>
-            </div>
-        </div>
-        <div class="row">
-            <br>
-        </div>
-    </div>
-</div>
-<ng-template #content let-c="close" let-d="dismiss">
-    <div class="flight-modal">
-        <div class="modal-header border-0 pb-0">
-            <h5 class="modal-title fw-bold text-secondary">Detalle del Itinerario</h5>
-            <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
-        </div>
-
-        <div class="modal-body">
-            <div class="d-flex justify-content-between align-items-center mb-4 flight-header rounded">
-                <div>
-                    <span class="text-muted small d-block">Identificador</span>
-                    <span class="flight-number">MO1234</span>
-                </div>
-                <div class="text-end">
-                    <span class="text-muted small d-block">Estado</span>
-                    <span class="badge bg-success">Confirmado</span>
-                </div>
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 bg-white border-hover">
+    <div class="row g-0">
+        <div class="col-lg-9 p-0">
+            @for (v_rutaTramo of $any(ofertaEncontrada).listaRutaTramos; track v_rutaTramo){
+            <div class="d-flex align-items-center px-3 py-2 bg-light border-bottom" style="font-size: 0.75rem;">
+                <span class="badge bg-primary me-2 px-2 py-1">{{ v_rutaTramo.tipoViaje == 1 ? 'IDA' : 'VUELTA' }}</span>
+                <span class="fw-bold text-secondary">{{ isValidDate(v_rutaTramo.fechaViaje) ? (v_rutaTramo.fechaViaje | date:'EEEE, dd MMM' | uppercase) : 'FECHA PENDIENTE' }}</span>
             </div>
 
-            <div class="container">
-                <div class="row align-items-center text-center text-md-start">
-                    <div class="col-12 col-md-4 mb-4 mb-md-0">
-                        <p class="date-label mb-1 uppercase">{{ 'Lunes 20 Febrero' | uppercase }}</p>
-                        <p class="time-label mb-0">08:30 AM</p>
-                        <h3 class="airport-code">LIM</h3>
-                        <p class="airport-name">Aeropuerto Internacional Jorge Chávez</p>
+            <div class="p-3">
+                @for (v_horarioRuta of v_rutaTramo.horariosRuta; track v_horarioRuta){
+                <div class="row g-0 align-items-center py-2 mb-2">
+                    <div class="col-auto pe-3">
+                        <input type="radio" class="form-check-input custom-radio"
+                            [name]="'radioRuta' + v_rutaTramo.tipoViaje" [value]="v_horarioRuta.id"
+                            [(ngModel)]="horariosSeleccionados[v_rutaTramo.tipoViaje]">
                     </div>
 
-                    <div class="col-12 col-md-4 mb-4 mb-md-0">
-                        <div class="flight-duration">
-                            <span class="small text-muted">Duración</span>
-                            <div class="duration-line"></div>
-                            <span class="fw-bold" style="color: #007bff;">4h 15min</span>
+                    <div class="col-2 text-center border-end">
+                        <img src="../../assets/resources/img/LA_sq.png" style="height: 18px;"
+                            class="mb-1 d-block mx-auto">
+                        <span class="text-muted"
+                            style="font-size: 0.6rem;">{{v_horarioRuta.aerolineaDto.nombreCorto}}</span>
+                    </div>
+
+                    <div class="col-7 px-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="text-center">
+                                <div class="fw-bold h5 mb-0">{{v_horarioRuta.fechaSalidaVuelo | date:'HH:mm'}}</div>
+                                <div class="text-muted fw-bold" style="font-size: 0.7rem;">
+                                    {{v_rutaTramo.origen.codigoIata}}</div>
+                            </div>
+
+                            <div
+                                class="flex-grow-1 px-3 position-relative d-flex flex-column align-items-center justify-content-center">
+                                <span class="fw-bold mb-1"
+                                    [ngClass]="v_horarioRuta.inEscalas > 0 ? 'text-warning' : 'text-success'"
+                                    style="font-size: 0.6rem; letter-spacing: 0.5px;">
+                                    {{ v_horarioRuta.inEscalas > 0 ? '1 ESCALA' : 'DIRECTO' }}
+                                </span>
+
+                                <div class="w-100 d-flex align-items-center justify-content-center position-relative">
+                                    <div class="flight-path-line"
+                                        [style.border-top-style]="v_horarioRuta.inEscalas > 0 ? 'dashed' : 'solid'"
+                                        [style.border-top-color]="v_horarioRuta.inEscalas > 0 ? '#ffc107' : '#e0e0e0'">
+                                    </div>
+
+                                    <span class="material-symbols-outlined bg-white px-1"
+                                        [ngClass]="v_horarioRuta.inEscalas > 0 ? 'text-warning' : 'text-secondary'"
+                                        style="font-size: 1.1rem; z-index: 1;">
+                                        {{ v_horarioRuta.inEscalas > 0 ? 'alt_route' : 'flight' }}
+                                    </span>
+                                </div>
+
+                                <span class="text-muted mt-1" style="font-size: 0.6rem;">{{ v_horarioRuta.duracionVuelo
+                                    }}</span>
+                            </div>
+
+                            <div class="text-center">
+                                <div class="fw-bold h5 mb-0">{{ isValidDate(v_horarioRuta.fechaLlegadaVuelo) ? (v_horarioRuta.fechaLlegadaVuelo | date:'HH:mm') : '--:--' }}</div>
+                                <div class="text-muted fw-bold" style="font-size: 0.7rem;">
+                                    {{v_rutaTramo.destino.codigoIata}}</div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-4 text-md-end">
-                        <p class="date-label mb-1">{{ 'Lunes 20 Marzo' | uppercase }}</p>
-                        <p class="time-label mb-0">08:30 AM</p>
-                        <h3 class="airport-code">AUA</h3>
-                        <p class="airport-name">Aeropuerto Reina Beatrix</p>
+                    <div class="col-2 d-flex justify-content-center align-items-center gap-2 border-start">
+                        <span
+                            class="material-symbols-outlined {{ v_horarioRuta.equipaMochila ? 'text-success' : 'text-light-subtle' }}"
+                            style="font-size: 1.1rem;" title="Mochila (Objeto personal)">
+                            personal_bag
+                        </span>
+
+                        <span
+                            class="material-symbols-outlined {{ v_horarioRuta.equipaCarrion ? 'text-success' : 'text-light-subtle' }}"
+                            style="font-size: 1.1rem;" title="Equipaje de mano (Carry-on)">
+                            trip
+                        </span>
+
+                        <span
+                            class="material-symbols-outlined {{ v_horarioRuta.equipaBodega ? 'text-success' : 'text-light-subtle' }}"
+                            style="font-size: 1.1rem;" title="Equipaje de bodega">
+                            travel_luggage_and_bags
+                        </span>
+
+                        <button class="btn btn-link p-0 ms-1 text-primary d-flex"
+                            (click)="abrirModalDetalle(v_horarioRuta, v_rutaTramo)">
+                            <span class="material-symbols-outlined" style="font-size: 1.2rem;">info</span>
+                        </button>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+        </div>
+
+        <div class="col-lg-3 border-start bg-detail-price d-flex flex-column p-3 text-end">
+            <div class="mb-auto">
+                <p class="text-muted small mb-0">Precio por persona</p>
+                <div class="d-flex align-items-baseline justify-content-end mb-3">
+                    <span class="fw-bold small me-1">US$</span>
+                    <span class="h3 fw-bold mb-0 text-dark">{{
+                        $any(ofertaEncontrada.precioOfertaDto).precioUnitarioClase | number:'1.2-2' }}</span>
+                </div>
+
+                <div class="price-breakdown small">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-muted">Pasajeros ({{ ofertaEncontrada.precioOfertaDto.cantidadAdultos
+                            }})</span>
+                        <span class="fw-bold">US$ {{ $any(ofertaEncontrada.precioOfertaDto).totalPrecioAdultos |
+                            number:'1.2-2' }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Tasas/Imp.</span>
+                        <span class="fw-bold">US$ {{ $any(ofertaEncontrada.precioOfertaDto).totalImptosCargos |
+                            number:'1.2-2' }}</span>
+                    </div>
+                    <hr class="my-2 opacity-25">
+                    <div class="mt-2">
+                        <span class="text-muted d-block" style="font-size: 0.65rem;">PRECIO TOTAL</span>
+                        <span class="fw-bold text-success h4 mb-0">US$ {{
+                            $any(ofertaEncontrada.precioOfertaDto).totalRuta | number:'1.2-2' }}</span>
                     </div>
                 </div>
             </div>
+            <button class="btn btn-primary w-100 fw-bold shadow-sm py-2 mt-3"
+                style="border-radius: 8px; font-size: 0.9rem;" (click)="comprarOferta(ofertaEncontrada.id)">
+                RESERVAR
+            </button>
+        </div>
+    </div>
+</div>
+<ng-template #modalItinerario let-modal>
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+
+        <div class="modal-header bg-dark text-white border-0 p-4">
+            <div>
+                <h5 class="modal-title fw-bold mb-0" style="font-size: 1.4rem;">Detalle del Itinerario</h5>
+                <p class="text-white-50 small mb-0">Información técnica y tiempos de conexión</p>
+            </div>
+            <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss()"></button>
         </div>
 
-        <div class="modal-footer border-0">
-            <button type="button" class="btn btn-light px-4" (click)="d()">Cerrar</button>
-            <button type="button" class="btn btn-primary px-4 shadow-sm">Guardar Itinerario</button>
+        <div class="modal-body p-0 bg-light">
+            <div class="d-flex justify-content-between align-items-center bg-white px-4 py-3 border-bottom shadow-sm">
+                <div class="d-flex align-items-center">
+                    <img src="../../assets/resources/img/LA_sq.png" style="height: 25px;" class="me-2">
+                    <span class="fw-bold text-secondary">LATAM AIRLINES</span>
+                    <span class="badge bg-primary-subtle text-primary ms-3">Vuelo: LA2044</span>
+                </div>
+                <div class="text-end">
+                    <span class="small text-muted d-block text-uppercase fw-bold" style="font-size: 0.65rem;">Duración
+                        Total</span>
+                    <span class="fw-bold text-dark">4h 15min</span>
+                </div>
+            </div>
+
+            <div class="p-4">
+
+                <div class="card border-0 shadow-sm rounded-4 mb-3 overflow-hidden">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center">
+                            <div class="col-md-5">
+                                <div class="text-primary fw-bold small mb-1">LUNES, 20 FEB.</div>
+                                <div class="display-5 fw-bold text-dark" style="line-height: 1;">08:30</div>
+                                <div class="h3 fw-bold text-primary mb-1">LIM</div>
+                                <div class="text-muted small fw-bold">Aeropuerto Intl. Jorge Chávez</div>
+                                <div class="text-secondary extra-small">Terminal 1</div>
+                            </div>
+
+                            <div class="col-md-2 text-center my-4 my-md-0 position-relative">
+                                <div class="text-muted small mb-2 fw-bold">3h 20m</div>
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <div
+                                        style="height: 2px; background: #e0e0e0; width: 100%; position: absolute; top: 50%;">
+                                    </div>
+                                    <span class="material-symbols-outlined text-primary bg-light px-2"
+                                        style="z-index: 1; font-size: 2rem;">flight_takeoff</span>
+                                </div>
+                                <div class="text-primary extra-small mt-2 fw-bold">DIRECTO</div>
+                            </div>
+
+                            <div class="col-md-5 text-md-end">
+                                <div class="text-primary fw-bold small mb-1">LUNES, 20 FEB.</div>
+                                <div class="display-5 fw-bold text-dark" style="line-height: 1;">11:50</div>
+                                <div class="h3 fw-bold text-primary mb-1">BOG</div>
+                                <div class="text-muted small fw-bold">Aeropuerto El Dorado</div>
+                                <div class="text-secondary extra-small">Terminal 2</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-center my-4">
+                    <div
+                        class="px-4 py-2 rounded-pill bg-warning-subtle border border-warning-subtle d-flex align-items-center shadow-sm">
+                        <span class="material-symbols-outlined text-warning me-2"
+                            style="font-size: 1.2rem;">schedule</span>
+                        <span class="text-warning-emphasis fw-bold small">Espera en Bogotá (BOG): 1h 45m</span>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-4 mb-3 overflow-hidden">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center">
+                            <div class="col-md-5">
+                                <div class="text-primary fw-bold small mb-1">LUNES, 20 FEB.</div>
+                                <div class="display-5 fw-bold text-dark">13:35</div>
+                                <div class="h3 fw-bold text-primary mb-1">BOG</div>
+                                <div class="text-muted small fw-bold">Aeropuerto El Dorado</div>
+                            </div>
+                            <div class="col-md-2 text-center my-4 my-md-0">
+                                <div class="text-muted small mb-2 fw-bold">1h 10m</div>
+                                <div class="d-flex align-items-center justify-content-center position-relative">
+                                    <div
+                                        style="height: 2px; background: #e0e0e0; width: 100%; position: absolute; top: 50%;">
+                                    </div>
+                                    <span class="material-symbols-outlined text-primary bg-light px-2"
+                                        style="z-index: 1; font-size: 2rem;">flight_land</span>
+                                </div>
+                            </div>
+                            <div class="col-md-5 text-md-end">
+                                <div class="text-primary fw-bold small mb-1">LUNES, 20 FEB.</div>
+                                <div class="display-5 fw-bold text-dark">14:45</div>
+                                <div class="h3 fw-bold text-primary mb-1">MDE</div>
+                                <div class="text-muted small fw-bold">Aeropuerto José María Córdova</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal-footer border-0 p-4 bg-white">
+            <button type="button" class="btn btn-dark w-100 py-3 fw-bold shadow-sm" style="border-radius: 12px;"
+                (click)="modal.dismiss()">
+                ENTENDIDO, VOLVER A LAS OFERTAS
+            </button>
         </div>
     </div>
 </ng-template>

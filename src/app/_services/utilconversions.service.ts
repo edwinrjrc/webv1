@@ -1,66 +1,76 @@
 import { Injectable } from '@angular/core';
 
-
 @Injectable({
   providedIn: 'root',
 })
 export class UtilconversionsService {
-  chapa = 'P@s$W0(Contr3n@)';
-  salt = 'mysalt';
+  // Llave pública RSA proporcionada por el Backend (formato SPKI Base64)
+  private readonly publicKeyPem = `MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...`;
+
+  // "Chapa" para desencriptar la respuesta simétrica del Backend
+  private readonly chapaSimetrica = 'P@s$W0(Contr3n@)';
 
   constructor() {}
 
+  /**
+   * 1. ASIMÉTRICA: Encripta datos para enviar al Backend
+   */
   async encryptData(data: string): Promise<string> {
-    try {
-      const encoder = new TextEncoder();
-      const keyBuffer = await crypto.subtle.importKey(
-        'raw',
-        encoder.encode(this.chapa),
-        { name: 'AES-GCM' },
-        true,
-        ['encrypt', 'decrypt']
-      );
-      // Encryption logic
-      const iv = crypto.getRandomValues(new Uint8Array(12));
-      const encodedData = encoder.encode(data);
-      const encryptedData = await crypto.subtle.encrypt(
-        { name: 'AES-GCM', iv: iv },
-        keyBuffer,
-        encodedData
-      );
-      const resultArray = new Uint8Array(
-        iv.length + new Uint8Array(encryptedData).length
-      );
-      resultArray.set(iv);
-      resultArray.set(new Uint8Array(encryptedData), iv.length);
-      return btoa(String.fromCharCode(...resultArray));
-    } catch (error) {
-      console.error('Encryption failed:', error);
-      throw error; // Rethrow the error for the caller to handle
-    }
+    const encoder = new TextEncoder();
+    const dataBuffer = encoder.encode(data);
+
+    const keyBuffer = this.str2ab(atob(this.publicKeyPem));
+    const publicKey = await crypto.subtle.importKey(
+      'spki',
+      keyBuffer,
+      { name: 'RSA-OAEP', hash: 'SHA-256' },
+      true,
+      ['encrypt'],
+    );
+
+    const encrypted = await crypto.subtle.encrypt(
+      { name: 'RSA-OAEP' },
+      publicKey,
+      dataBuffer,
+    );
+    return btoa(String.fromCharCode(...new Uint8Array(encrypted)));
   }
 
+  /**
+   * 2. SIMÉTRICA: Desencripta la respuesta que viene del Backend
+   */
   async decryptData(encryptedData: string): Promise<string> {
     try {
-      const dataBuffer = Uint8Array.from(atob(encryptedData), c => c.charCodeAt(0));  
+      const dataBuffer = Uint8Array.from(atob(encryptedData), (c) =>
+        c.charCodeAt(0),
+      );
       const iv = dataBuffer.slice(0, 12);
       const encryptedContent = dataBuffer.slice(12);
+
       const keyBuffer = await crypto.subtle.importKey(
         'raw',
-        new TextEncoder().encode(this.chapa),
+        new TextEncoder().encode(this.chapaSimetrica),
         { name: 'AES-GCM' },
         true,
-        ['encrypt', 'decrypt']
+        ['decrypt'],
       );
+
       const decryptedData = await crypto.subtle.decrypt(
         { name: 'AES-GCM', iv: iv },
         keyBuffer,
-        encryptedContent
+        encryptedContent,
       );
       return new TextDecoder().decode(decryptedData);
     } catch (error) {
-      console.error('Decryption failed:', error);
-      throw error; // Rethrow the error for the caller to handle
+      console.error('Error al desencriptar respuesta simétrica:', error);
+      throw error;
     }
+  }
+
+  private str2ab(str: string) {
+    const buf = new ArrayBuffer(str.length);
+    const bufView = new Uint8Array(buf);
+    for (let i = 0; i < str.length; i++) bufView[i] = str.charCodeAt(i);
+    return buf;
   }
 }

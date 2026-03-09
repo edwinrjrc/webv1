@@ -30,3 +30,34 @@ select.ng-invalid.ng-dirty
   margin-left: 2px;
   font-size: 1em;
 }
+
+/* Efecto de elevación en los campos al pasar el mouse */
+.form-control:hover, .form-select:hover {
+    border-color: #ced4da;
+    background-color: #fafafa;
+}
+
+/* Estilo para los títulos de sección dentro de los componentes */
+h4, h6 {
+    letter-spacing: -0.5px;
+}
+
+/* Contenedor de la tarjeta con un borde sutil pero definido */
+.bg-light.p-4.rounded-4 {
+    background-color: #fcfcfc !important;
+    border: 1px dashed #dee2e6 !important;
+    transition: all 0.3s ease;
+}
+
+.bg-light.p-4.rounded-4:focus-within {
+    border-style: solid !important;
+    border-color: #0d6efd !important;
+    background-color: #fff !important;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+/* Estilo para el feedback de error para que no mueva el diseño */
+.invalid-feedback {
+    font-size: 0.75rem;
+    font-weight: 500;
+}

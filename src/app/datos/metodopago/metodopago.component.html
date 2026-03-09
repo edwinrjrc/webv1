@@ -1,33 +1,38 @@
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h4 style="color: rgb(99, 38, 38);">Pago</h4>
-            <hr style="color: red;">
+<div class="p-2">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center mb-2">
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                    <i class="bi bi-credit-card"></i>
+                </div>
+                <h4 class="mb-0 fw-bold text-dark">Información de Pago</h4>
+            </div>
+            <p class="text-muted small">Todas las transacciones son seguras y están encriptadas.</p>
         </div>
     </div>
-    <div class="row g-3">
+
+    <div class="bg-light p-4 rounded-4 border border-2 border-dashed mb-4">
         <app-datostarjeta></app-datostarjeta>
     </div>
-    <div class="row" style="padding-top: 1rem;">
-        <div class="col-md-3">
-            <label for="idSelFactBole" class="form-label" style="font-weight: bold;">Tipo Comprobante</label>
-            <select class="form-select" aria-label="Default select example" id="idSelFactBole">
-                <option value="0">Seleccione</option>
-                <option value="1">Boleta</option>
+
+    <div class="row g-3 p-3 bg-white rounded-4 shadow-sm border">
+        <div class="col-12 border-bottom pb-2 mb-2">
+            <h6 class="fw-bold m-0 text-muted"><i class="bi bi-file-earmark-text me-2"></i>Facturación</h6>
+        </div>
+        <div class="col-md-5">
+            <label class="form-label small fw-bold">Tipo Comprobante</label>
+            <select class="form-select border-2 shadow-sm" id="idSelFactBole">
+                <option value="1">Boleta de Venta</option>
                 <option value="2">Factura</option>
             </select>
         </div>
-        <div class="col-md-3">
-            <label for="idSelTitularComprobante" class="form-label" style="font-weight: bold;">A nombre de</label>
-            <select class="form-select" aria-label="Default select example" id="idSelTitularComprobante">
-                <option value="0">Seleccione</option>
-                <option value="1">Adulto 1</option>
-                <option value="2">Adulto 2</option>
-                <option value="3">Otro</option>
+        <div class="col-md-7">
+            <label class="form-label small fw-bold">Emitir a nombre de</label>
+            <select class="form-select border-2 shadow-sm" id="idSelTitularComprobante">
+                <option value="1">Mismo Titular de la Reserva</option>
+                <option value="2">Pasajero Adulto #2</option>
+                <option value="3">Razón Social Diferente</option>
             </select>
-        </div>
-        <div class="col-md-6">
-            &nbsp;
         </div>
     </div>
 </div>

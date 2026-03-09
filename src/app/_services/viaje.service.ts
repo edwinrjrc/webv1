@@ -13,6 +13,7 @@ export class ViajeService {
   constructor(protected http: HttpClient) { }
 
   consultarVuelo(consultaViaje: ConsultaViaje){
+    const url = `${environment.apiUrl}/api/viajes/viajeService/vuelosCotizacion`;
 
     let cabece = new HttpHeaders();
     cabece.set('Content-Type', 'application/json; charset=utf-8');
@@ -28,7 +29,7 @@ export class ViajeService {
     params = params.append('param8', consultaViaje.Ninos);
     params = params.append('param9', consultaViaje.Infantes);
 
-    const servicio = this.http.get<RptaVuelosEncontrados>(`${environment.apiUrl}/iv-service-viajes/viajeService/vuelosCotizacion`, {headers : cabece, observe: 'body', params:params } );
+    const servicio = this.http.get<RptaVuelosEncontrados>(url, {headers : cabece, observe: 'body', params:params } );
     
     return servicio;
   }

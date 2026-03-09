@@ -5,4 +5,5 @@ export interface OfertasEncontradas{
     id: number;
     listaRutaTramos: RutaTramo[];
     precioOfertaDto: PrecioOferta;
+    precioTotal: number;
 }

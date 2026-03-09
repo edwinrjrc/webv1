@@ -1,101 +1,76 @@
-<div class="container" style="padding-top: 3rem;">
-    <div class="row">
-        <div class="col-lg-4">
-            <div class="row">
-                <div class="col-md-12">
-                    <img src="../../assets/resources/img/logotam1.jpg">
+<footer class="bg-dark text-light pt-5 pb-3 mt-5">
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="footer-logo mb-3">
+                    <img src="../../assets/resources/img/logotam1.jpg" alt="Logo" class="rounded bg-white p-1"
+                        style="max-height: 60px;">
                 </div>
-                <div class="col-md-12">
-                    <span style="text-align: center;"></span>
+                <p class="text-secondary small pe-lg-5">
+                    Tu compañero de confianza en cada aventura. En Innova Viajes conectamos tus sueños con los mejores
+                    destinos del mundo.
+                </p>
+                <div class="d-flex gap-2 mt-4">
+                    <a href="#!" class="btn btn-outline-light btn-sm rounded-circle social-icon" aria-label="Facebook">
+                        <fa-icon [icon]="iconfaFacebookF"></fa-icon>
+                    </a>
+                    <a href="#!" class="btn btn-outline-light btn-sm rounded-circle social-icon">
+                        <span class="material-symbols-outlined fs-6">share</span>
+                    </a>
                 </div>
-                <br>
-                <div class="col-md-12">
-                    <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Facebook"><fa-icon
-                        [icon]="iconfaFacebookF"></fa-icon></a>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <h5 class="fw-bold mb-4 text-white">Nosotros</h5>
+                <ul class="list-unstyled footer-links">
+                    <li class="mb-2"><a href="#!" class="text-secondary text-decoration-none hover-white">Quienes
+                            Somos</a></li>
+                    <li class="mb-2"><a href="#!" class="text-secondary text-decoration-none hover-white">Artículos
+                            Innova</a></li>
+                    <li class="mb-2"><a href="#!" class="text-secondary text-decoration-none hover-white">Blog de
+                            Viajes</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <h5 class="fw-bold mb-4 text-white">Servicios</h5>
+                <ul class="list-unstyled footer-links">
+                    <li class="mb-2"><a href="#!" class="text-secondary text-decoration-none hover-white">Verifica tu
+                            compra</a></li>
+                    <li class="mb-2"><a href="#!" class="text-secondary text-decoration-none hover-white">Consulta
+                            cotización</a></li>
+                    <li class="mb-2"><a href="#!" class="text-secondary text-decoration-none hover-white">Preguntas
+                            Frecuentes</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <h5 class="fw-bold mb-4 text-white">Suscríbete</h5>
+                <p class="text-secondary small mb-3">Recibe las mejores ofertas directamente en tu correo.</p>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control bg-transparent border-secondary text-white"
+                        placeholder="Email" aria-label="Email">
+                    <button class="btn btn-primary" type="button">Unirse</button>
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
-            <h4>Nosotros</h4>
-            <ul>
-                <li style="list-style: none;">Quienes Somos</li>
-                <li style="list-style: none;">Articulos Innova Viajes</li>
-            </ul>
-        </div>
-        <div class="col-lg-4">
-            <h4>Servicios</h4>
-            <ul>
-                <li style="list-style: none;">Verifica tu compra</li>
-                <li style="list-style: none;">Consulta tu cotizacion</li>
-            </ul>
-        </div>
-    </div>
-    <div class="row">
-        <div class="container" style="padding-top: 3rem;">
-            <div class="row">
-                <div class="col-lg-12">
-                    <span style="font-size: 10pt;">Copyright © Innova Viajes </span>
-                </div>
+
+        <hr class="mt-5 mb-4 border-secondary opacity-25">
+
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start">
+                <span class="text-secondary small">Copyright © 2026 Innova Viajes. Todos los derechos reservados.</span>
+            </div>
+            <div
+                class="col-md-6 text-center text-md-end mt-3 mt-md-0 d-flex align-items-center justify-content-center justify-content-md-end">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="Paypal" height="22"
+                    class="me-3 grayscale" style="width: auto !important;">
+
+                <i class="fa-brands fa-cc-visa me-3" style="font-size: 30px; color: #ffffff; line-height: 1;"></i>
+
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard"
+                    height="22" class="grayscale" style="width: auto !important;">
             </div>
         </div>
-        
     </div>
-</div>
-<!--div class="container">
-		<div class="row mb-5">
-			<div class="col-md">
-				<div class="ftco-footer-widget mb-4">
-					<h2 class="ftco-heading-2">
-						<fa-icon [icon]="['fas', 'home']"></fa-icon> Menu Familiar</h2>
-					<p>Contactenos por nuestras redes sociales</p>
-					<ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
-						<li class="ftco-animate">
-							<a href="#" >
-								<span style="font-size: 1rem;">
-									<fa-icon [icon]="['fab', 'twitter']"></fa-icon>
-								</span>
-							</a>
-						</li>
-						<li class="ftco-animate">
-							<a href="#">
-								<span style="font-size: 1rem;">
-									<fa-icon [icon]="['fab', 'facebook-f']"></fa-icon>
-								</span>
-							</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<div class="col-md">
-				<div class="ftco-footer-widget mb-4 ml-md-5">
-					<h2 class="ftco-heading-2">Menu</h2>
-					<ul class="list-unstyled">
-						<li>
-							<a href="#" class="py-2 d-block" routerLink="/contactenos">Contactenos</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="ftco-footer-widget mb-4">
-					<h2 class="ftco-heading-2">Contactenos</h2>
-					<div class="block-23 mb-3">
-						<ul>
-							<li class="ftco-animate">
-								<span class="icon">
-									<fa-icon [icon]="['fas', 'phone-alt']"></fa-icon>
-								</span>
-								<a href="#">+51 997 895 622</a>
-							</li>
-							<li class="ftco-animate">
-								<span class="icon">
-									<fa-icon [icon]="['fas', 'envelope']"></fa-icon>
-								</span>
-								<a href="#">info@menufamiliar.com.pe</a>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div-->
+</footer>

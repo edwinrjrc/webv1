@@ -22,3 +22,182 @@
 .custom-day.faded {
     background-color: rgba(2, 117, 216, 0.5);
 }
+
+/* Estilos para los filtros */
+.accordion-filters .accordion-button {
+    background-color: transparent !important;
+    color: #444 !important;
+    font-size: 0.8rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.accordion-filters .accordion-button:not(.collapsed) {
+    box-shadow: none !important;
+}
+
+.accordion-filters .accordion-item {
+    border: none !important;
+    background: transparent;
+}
+
+/* Checkbox personalizado */
+.custom-check .form-check-input {
+    width: 1.1em;
+    height: 1.1em;
+    margin-top: 0.2em;
+    cursor: pointer;
+    border-color: #dee2e6;
+}
+
+.custom-check .form-check-input:checked {
+    background-color: #4285f4;
+    border-color: #4285f4;
+}
+
+.custom-check .form-check-label {
+    cursor: pointer;
+    padding-left: 5px;
+}
+
+.hover-opacity-100:hover {
+    opacity: 1 !important;
+}
+
+/* Badge de cantidad */
+.badge.bg-light {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+    background-color: #f0f2f5 !important;
+}
+
+/* Personalización del Slider (Scroll de precio) */
+.custom-range::-webkit-slider-runnable-track {
+    background: #e9ecef;
+    height: 6px;
+    border-radius: 3px;
+}
+
+.custom-range::-webkit-slider-thumb {
+    background: #4285f4;
+    border: 2px solid #fff;
+    width: 18px;
+    height: 18px;
+    margin-top: -6px; /* Centra el círculo en la línea */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: transform 0.1s ease;
+}
+
+.custom-range::-webkit-slider-thumb:active {
+    transform: scale(1.2);
+    background: #3367d6;
+}
+
+/* Para Firefox */
+.custom-range::-moz-range-thumb {
+    background: #4285f4;
+    border: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+}
+
+/* Quita bordes innecesarios del acordeón para que se vea más limpio */
+.accordion-item, .accordion-button {
+    border: none !important;
+}
+
+/* Espacio extra entre la cabecera y el contenido */
+.accordion-body {
+    padding: 1rem 0 !important;
+}
+
+/* Mejora visual del slider */
+.form-range::-webkit-slider-thumb {
+    background: #0d6efd;
+}
+
+.form-range::-moz-range-thumb {
+    background: #0d6efd;
+}
+
+/* 1. Definimos nuestro nuevo color verde pastel */
+.text-verde-pastel {
+    color: #6da381 !important; /* Un verde suave pero legible */
+}
+
+/* 2. Cambiamos el color de la bolita del slider */
+.form-range::-webkit-slider-thumb {
+    background: #a8d5ba !important;
+    border: 1px solid #6da381;
+}
+
+.form-range::-moz-range-thumb {
+    background: #a8d5ba !important;
+}
+
+/* 3. Cambiamos el color de los checkboxes */
+.form-check-input:checked {
+    background-color: #a8d5ba !important;
+    border-color: #6da381 !important;
+}
+
+/* 4. Estilo para el acordeón abierto */
+.accordion-button:not(.collapsed) {
+    background-color: #f1f8f4 !important; /* Fondo sutil verde */
+    color: #4a6d55 !important;
+}
+
+.btn-verde {
+    background-color: #a8d5ba !important;
+    color: #2d4a37 !important;
+    border: none;
+    font-weight: bold;
+}
+
+.btn-verde:hover {
+    background-color: #92c4a5 !important;
+}
+
+.custom-day {
+    text-align: center;
+    padding: 0.185rem 0.25rem;
+    display: inline-block;
+    height: 2rem;
+    width: 2rem;
+    line-height: 2rem;
+}
+.custom-day.range, .custom-day:hover {
+    background-color: #198754; /* El verde de tu botón */
+    color: white;
+}
+.custom-day.faded {
+    background-color: rgba(25, 135, 84, 0.2);
+}
+
+/* Oculta el texto real del input para que no se choque con el resumen */
+.text-transparent {
+    color: transparent !important;
+}
+
+/* Evita que el usuario pueda interactuar con el texto de resumen 
+   y bloquee el clic en el input */
+.pointer-events-none {
+    pointer-events: none;
+}
+
+/* Ajuste fino para el día seleccionado en el calendario */
+.custom-day.range {
+    background-color: #198754 !important; /* Verde de tu botón */
+    color: white !important;
+    border-radius: 0;
+}
+
+.text-transparent {
+    color: transparent !important;
+}
+
+/* Asegura que el resumen no bloquee el clic para abrir el calendario */
+.pointer-events-none {
+    pointer-events: none;
+}

@@ -10,16 +10,17 @@ export class CatalogosService {
 
   constructor(protected http: HttpClient) { }
 
-  listarDestinos(nombreDestino: string){
+  listarDestinos(nombreDestino: string) {
+    // 1. No definas headers manualmente aquí a menos que sean estrictamente necesarios.
+    // El Interceptor se encargará de añadir el 'Authorization'.
+    
+    // 2. HttpParams debe asignarse al setearse porque es inmutable.
+    const params = new HttpParams().set('nombreDestino', nombreDestino);
 
-      let cabece = new HttpHeaders();
-      cabece.set('Content-Type', 'application/json; charset=utf-8');
-
-      let params = new HttpParams();
-      params.set('nombreDestino', nombreDestino);
-
-      const servicio = this.http.get<InterDataRptaDestino>(`${environment.apiUrl}/iv-service-viajes/destinoservice/destinoCiudadService`, {headers : cabece, observe: 'body', params:params } );
-
-      return servicio;
+    // 3. Llama al servicio sin pasar headers manuales para evitar conflictos.
+    return this.http.get<InterDataRptaDestino>(
+      `${environment.apiUrl}/api/viajes/destinoservice/destinoCiudadService`, 
+      { params } 
+    );
   }
 }

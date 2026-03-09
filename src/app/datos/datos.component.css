@@ -1,0 +1,148 @@
+.sticky-top-custom {
+  position: sticky;
+  top: 20px;
+  z-index: 100;
+}
+
+/* Estilos Acordeón */
+.accordion-item {
+    border: none !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #f0f7ff !important;
+    box-shadow: none !important;
+}
+
+.accordion-button:focus {
+    box-shadow: none !important;
+}
+
+/* Floating Labels */
+.form-floating > .form-control {
+    border-radius: 8px;
+    border: 1px solid #dce1e6;
+}
+
+.form-floating > .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13,110,253,.05);
+}
+
+/* Sidebar Sticky */
+@media (min-width: 992px) {
+    .sticky-top {
+        position: sticky;
+        top: 20px;
+    }
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #f8fbff;
+    color: #0d6efd;
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.125);
+}
+
+.accordion-button::after {
+    background-size: 1rem;
+}
+
+.accordion-item {
+    border-radius: 12px !important;
+    overflow: hidden;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+}
+
+.card {
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+    transition: transform 0.3s ease;
+}
+
+/* Estilo para el header del itinerario */
+.card-header.bg-dark {
+    background: linear-gradient(45deg, #1a1a1a, #333) !important;
+    border-bottom: none;
+    border-radius: 16px 16px 0 0 !important;
+}
+
+/* Efecto hover en el botón de pagar */
+.btn-pagar {
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+}
+
+.btn-pagar:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(13, 110, 253, 0.3) !important;
+  background-color: #0b5ed7;
+}
+
+/* Estilos para el desglose */
+.desglose-precios span {
+  font-size: 0.95rem;
+}
+
+/* Línea de avión en el itinerario */
+.border-secondary {
+  border-color: #dee2e6 !important;
+}
+
+/* Animación cuando el formulario es válido */
+.btn-pagar:not(:disabled) {
+  animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+  0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(25, 135, 84, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
+}
+
+.text-primary {
+    color: #0056b3 !important; /* Un azul un poco más profundo y elegante */
+}
+
+/* Ajuste para el texto muy pequeño */
+.x-small {
+    font-size: 0.75rem;
+    line-height: 1.2;
+}
+
+/* Línea de separación sutil */
+hr {
+    border-top: 1px solid #eee;
+    margin: 1.5rem 0;
+}
+
+/* Animación de entrada para que el resumen aparezca suavemente */
+.sticky-top {
+    animation: fadeInRight 0.8s ease-out;
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.grayscale-icons i {
+  filter: grayscale(100%);
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+.grayscale-icons i:hover {
+  filter: grayscale(0%);
+  opacity: 1;
+  color: #0d6efd !important;
+}

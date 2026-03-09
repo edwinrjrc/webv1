@@ -1,71 +1,143 @@
-.flight-modal .modal-content {
-    border-radius: 15px;
-    border: none;
-    overflow: hidden;
+:host {
+    display: block;
 }
 
-.flight-header {
-    background: #f8f9fa;
-    padding: 1.5rem;
-    border-bottom: 2px dashed #dee2e6;
+.border-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.flight-number {
-    background: #007bff;
-    color: white;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 0.9rem;
+.border-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1) !important;
 }
 
-.airport-code {
-    font-size: 1.8rem;
-    font-weight: 800;
-    margin-bottom: 0;
-    color: #2c3e50;
+.bg-detail-price {
+    background-color: #f9f9f9;
 }
 
-.airport-name {
-    font-size: 0.75rem;
-    color: #6c757d;
-    text-transform: uppercase;
-    line-height: 1.2;
-}
-
-.flight-duration {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-}
-
-.duration-line {
-    width: 100%;
-    height: 2px;
-    background: #dee2e6;
-    position: relative;
-    margin: 10px 0;
-}
-
-.duration-line::after {
-    content: '✈';
+.flight-path-line {
     position: absolute;
-    top: -12px;
-    left: 45%;
-    background: white;
-    padding: 0 5px;
-    color: #007bff;
+    width: 100%;
+    height: 1px;
+    background: #e9ecef;
+    z-index: 0;
 }
 
-.time-label {
-    font-weight: bold;
-    font-size: 1.1rem;
-    color: #333;
+/* Equipaje apagado */
+.text-light-subtle {
+    color: #e0e0e0 !important;
 }
 
-.date-label {
-    font-size: 0.85rem;
-    color: #6c757d;
+.text-success {
+    color: #28a745 !important;
+}
+
+.btn-primary {
+    background-color: #4285f4;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #3367d6;
+}
+
+.custom-radio {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.material-symbols-outlined {
+    vertical-align: middle;
+}
+
+.flight-card {
+    transition: all 0.3s ease;
+    border: 1px solid #eee !important;
+}
+
+.flight-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+.flight-option {
+    transition: background 0.2s;
+    background-color: #fcfcfc;
+}
+
+.flight-option:hover {
+    background-color: #f0f7ff;
+    border-color: #007bff !important;
+}
+
+.btn-verde {
+    background-color: #a8d5ba !important;
+    color: #2d4a37 !important;
+    border: none;
+}
+
+.btn-verde:hover {
+    background-color: #8fc4a3 !important;
+}
+
+.extra-small {
+    font-size: 0.7rem;
+}
+
+.bg-primary-subtle { background-color: #e7f1ff !important; }
+.bg-warning-subtle { background-color: #fff3cd !important; }
+.bg-success-subtle { background-color: #d1e7dd !important; }
+.text-warning-emphasis { color: #664d03 !important; }
+.text-success-emphasis { color: #0a3622 !important; }
+
+.extra-small {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.display-5 {
+    font-size: 2.5rem;
+    letter-spacing: -1.5px;
+}
+
+.bg-primary-subtle {
+    background-color: #e7f1ff !important;
+}
+
+.bg-warning-subtle {
+    background-color: #fff3cd !important;
+}
+
+.text-warning-emphasis {
+    color: #664d03 !important;
+}
+
+.line-height-1 {
+    line-height: 1;
+}
+
+.modal-content {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.flight-path-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    border-top: 2px solid #e0e0e0;
+    z-index: 0;
+}
+
+/* Estilo para que el texto sea muy pequeño pero legible */
+.extra-small {
+    font-size: 0.6rem;
+    text-transform: uppercase;
 }

@@ -1,32 +1,35 @@
-import { Component, EventEmitter, inject, Input, Output, signal, TemplateRef, WritableSignal } from '@angular/core';
-import { DecimalPipe, DatePipe, UpperCasePipe } from '@angular/common';
-import { OfertasEncontradas } from '../modelo/ofertasEncontradas';
-import { OfertaSeleccionada } from '../modelo/ofertaSeleccionada';
+import { Component, Input, ViewChild, TemplateRef, EventEmitter, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { OfertaSeleccionada } from '../modelo/ofertaSeleccionada';
 
 @Component({
   selector: 'app-ofertavuelo',
   standalone: true,
-  imports: [DecimalPipe, DatePipe, FormsModule, UpperCasePipe],
+  imports: [CommonModule, FormsModule, NgbModalModule],
   templateUrl: './ofertavuelo.component.html',
-  styleUrl: './ofertavuelo.component.css',
+  styleUrls: ['./ofertavuelo.component.css'],
 })
 export class OfertavueloComponent {
-  @Input() ofertaEncontrada!: OfertasEncontradas;
-  precioAdulto: Number = 10098.21;
+  @Input() ofertaEncontrada: any;
+  @ViewChild('modalItinerario') modalItinerario!: TemplateRef<any>;
 
   @Output() messageEvent = new EventEmitter<string>();
 
-  private modalService = inject(NgbModal);
-	closeResult: WritableSignal<string> = signal('');
+  horarioSeleccionado: any = null;
+  rutaPadre: any = null;
+  horariosSeleccionados: any = { 1: null, 2: null };
 
-  horariosSeleccionados: { [key: number]: number } = {};
+  constructor(private modalService: NgbModal) {}
 
-  flgDatosUsuario!: string;
-
-  constructor() {
-    this.precioAdulto = 10098.21;
+  abrirModalDetalle(horario: any, ruta: any) {
+    this.horarioSeleccionado = horario;
+    this.rutaPadre = ruta;
+    this.modalService.open(this.modalItinerario, {
+      centered: true,
+      size: 'lg',
+    });
   }
 
   comprarOferta(idOferta: number) {
@@ -43,30 +46,10 @@ export class OfertavueloComponent {
     this.messageEvent.emit(ofertaSeleccionadaJson);
   }
 
-  open(content: TemplateRef<any>) {
-		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
-			(result) => {
-				this.closeResult.set(`Closed with: ${result}`);
-			},
-			(reason) => {
-				this.closeResult.set(`Dismissed ${this.getDismissReason(reason)}`);
-			},
-		);
-	}
-
-  private getDismissReason(reason: any): string {
-		switch (reason) {
-			case ModalDismissReasons.ESC:
-				return 'by pressing ESC';
-			case ModalDismissReasons.BACKDROP_CLICK:
-				return 'by clicking on a backdrop';
-			default:
-				return `with: ${reason}`;
-		}
-	}
-
-  onItemChange(value: Number) {
-    console.log('ID del horario seleccionado:', value);
-    console.log('Estado actual de selecciones:', this.horariosSeleccionados);
+  isValidDate(dateString: any): boolean {
+    if (!dateString) return false;
+    const date = new Date(dateString);
+    // Si el año es menor a 1900 o no es un número, es una fecha inválida
+    return !isNaN(date.getTime()) && date.getFullYear() > 1900;
   }
 }
