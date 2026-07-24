@@ -45,3 +45,18 @@ select.ng-invalid.ng-dirty   /* ¡Y esta! */
     background-color: #f8f9fa;
     color: #0d6efd;
 }
+/* Forzar tamaño uniforme para todos los errores de validación */
+.invalid-feedback, 
+.text-danger, 
+.error-message {
+    font-size: 11px !important; /* Tamaño pequeño y elegante */
+    font-weight: 500;
+    margin-top: 2px !important;
+    display: block;
+    line-height: 1.2;
+}
+
+/* Ajuste para los iconos de error */
+.invalid-feedback i {
+    font-size: 10px;
+}

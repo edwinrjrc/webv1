@@ -1,19 +1,29 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { DatostarjetaComponent } from '../datostarjeta/datostarjeta.component';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { DatostransferenciaComponent } from '../datostransferencia/datostransferencia.component';
+import { ReservaService } from '../../_services/reserva.service';
 
 @Component({
   selector: 'app-metodopago',
   standalone: true,
   imports: [DatostarjetaComponent, FormsModule],
   templateUrl: './metodopago.component.html',
-  styleUrl: './metodopago.component.css'
+  styleUrl: './metodopago.component.css',
 })
-export class MetodopagoComponent implements OnInit{
+export class MetodopagoComponent implements OnInit {
   tipoMedioPago!: number;
-  TIPO_TARJETACREDITO !: number;
-  TIPO_TRANSFERENCIA !: number;
+  TIPO_TARJETACREDITO!: number;
+  TIPO_TRANSFERENCIA!: number;
+
+  @Input() pasajeroForm!: FormGroup;
 
   @Output() datosGuardados = new EventEmitter<any>();
 
@@ -26,13 +36,24 @@ export class MetodopagoComponent implements OnInit{
     return this.datostarjetaComp?.datosTarjetaForm;
   }
 
-  constructor(private fb: FormBuilder){
+  constructor(
+    private fb: FormBuilder,
+    private reservaService: ReservaService,
+  ) {
     this.TIPO_TARJETACREDITO = 1;
     this.TIPO_TRANSFERENCIA = 2;
   }
 
   ngOnInit(): void {
     this.metodoPagoForm = this.fb.group({});
-    
+    // 2. Escuchemos qué pasa por aquí
+    this.reservaService.datosReserva$.subscribe((datos) => {
+      if (datos?.MetodoPago) {
+        console.log(
+          '👨‍👦 PADRE (MetodoPago): Veo que mi hijo ya guardó la tarjeta:',
+          datos.MetodoPago,
+        );
+      }
+    });
   }
 }

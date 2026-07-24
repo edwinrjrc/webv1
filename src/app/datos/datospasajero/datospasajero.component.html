@@ -1,114 +1,125 @@
 <div class="row g-3" [formGroup]="pasajeroForm">
-    <div class="col-md-4">
-        <label class="form-label fw-bold small text-muted text-uppercase">Nombres *</label>
-        <input type="text" class="form-control border-2 shadow-sm" [formControlName]="varFormNombres" 
-               [class.is-invalid]="pasajeroForm.get(varFormNombres)?.invalid && pasajeroForm.get(varFormNombres)?.touched">
-        @if (pasajeroForm.get(varFormNombres)?.invalid && pasajeroForm.get(varFormNombres)?.touched) {
-            <div class="invalid-feedback fw-bold">El nombre es obligatorio.</div>
+    <div class="col-md-6">
+        <label class="form-label small fw-bold text-uppercase">Nombres *</label>
+        <input type="text" class="form-control border-2 shadow-sm" formControlName="primerNombre"
+            [class.is-invalid]="pasajeroForm.get('primerNombre')?.invalid && pasajeroForm.get('primerNombre')?.touched">
+        @if (pasajeroForm.get('primerNombre')?.invalid && pasajeroForm.get('primerNombre')?.touched) {
+        <div class="invalid-feedback" style="font-size: 0.75rem;">El nombre es obligatorio.</div>
         }
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label fw-bold small text-muted text-uppercase">Primer Apellido *</label>
+    <div class="col-md-6">
+        <label class="form-label small fw-bold text-uppercase">Primer Apellido *</label>
         <input type="text" class="form-control border-2 shadow-sm" [formControlName]="varFormprimerApellido"
-               [class.is-invalid]="pasajeroForm.get(varFormprimerApellido)?.invalid && pasajeroForm.get(varFormprimerApellido)?.touched">
+            [class.is-invalid]="pasajeroForm.get(varFormprimerApellido)?.invalid && pasajeroForm.get(varFormprimerApellido)?.touched">
         @if (pasajeroForm.get(varFormprimerApellido)?.invalid && pasajeroForm.get(varFormprimerApellido)?.touched) {
-            <div class="invalid-feedback fw-bold">El apellido es obligatorio.</div>
-        }
-    </div>
-
-    <div class="col-md-4">
-        <label class="form-label fw-bold small text-muted text-uppercase">Segundo Apellido</label>
-        <input type="text" class="form-control border-2 shadow-sm" [formControlName]="varFormsegundoApellido" placeholder="(Opcional)">
-    </div>
-
-    <div class="col-md-6">
-        <label class="form-label fw-bold small text-muted text-uppercase">Fecha de Nacimiento *</label>
-        <div class="input-group shadow-sm">
-            <span class="input-group-text bg-white border-2 border-end-0"><i class="bi bi-calendar3 text-primary"></i></span>
-            <input type="date" class="form-control border-2 border-start-0" 
-                   [formControlName]="varFormfechaNacimiento"
-                   [class.is-invalid]="pasajeroForm.get(varFormfechaNacimiento)?.invalid && pasajeroForm.get(varFormfechaNacimiento)?.touched">
-        </div>
-        @if (pasajeroForm.get(varFormfechaNacimiento)?.invalid && pasajeroForm.get(varFormfechaNacimiento)?.touched) {
-            <div class="text-danger x-small fw-bold mt-1"><i class="bi bi-exclamation-triangle me-1"></i>La fecha es requerida.</div>
+        <div class="invalid-feedback" style="font-size: 0.75rem;">El apellido es obligatorio.</div>
         }
     </div>
 
     <div class="col-md-6">
-        <label class="form-label fw-bold small text-muted text-uppercase">Sexo *</label>
+        <label class="form-label small fw-bold text-uppercase">Segundo Apellido</label>
+        <input type="text" class="form-control border-2 shadow-sm" [formControlName]="varFormsegundoApellido"
+            placeholder="(Opcional)">
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label small fw-bold text-uppercase">Fecha de Nacimiento *</label>
+        <input type="date" class="form-control border-2 shadow-sm" formControlName="fechaNacimiento"
+            [class.is-invalid]="pasajeroForm.get('fechaNacimiento')?.invalid && pasajeroForm.get('fechaNacimiento')?.touched">
+        @if (pasajeroForm.get('fechaNacimiento')?.invalid && pasajeroForm.get('fechaNacimiento')?.touched) {
+        <div class="invalid-feedback" style="font-size: 0.75rem;">La fecha es requerida.</div>
+        }
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label small fw-bold text-uppercase">Sexo *</label>
         <select class="form-select border-2 shadow-sm" [formControlName]="varFormtipoSexo"
-                [class.is-invalid]="pasajeroForm.get(varFormtipoSexo)?.invalid && pasajeroForm.get(varFormtipoSexo)?.touched">
-            <option value="0">Seleccione...</option>
-            <option value="1">Masculino</option>
-            <option value="2">Femenino</option>
+            [class.is-invalid]="pasajeroForm.get(varFormtipoSexo)?.invalid && pasajeroForm.get(varFormtipoSexo)?.touched">
+            <option value="">Seleccione...</option>
+            <option value="M">Masculino</option>
+            <option value="F">Femenino</option>
         </select>
         @if (pasajeroForm.get(varFormtipoSexo)?.invalid && pasajeroForm.get(varFormtipoSexo)?.touched) {
-            <div class="invalid-feedback fw-bold">Seleccione el sexo.</div>
+        <div class="invalid-feedback" style="font-size: 0.75rem;">Seleccione el sexo.</div>
         }
     </div>
 
     <div class="col-md-6">
-        <label class="form-label fw-bold small text-muted text-uppercase">Tipo Documento *</label>
+        <label class="form-label small fw-bold text-uppercase">Tipo Documento *</label>
         <select class="form-select border-2 shadow-sm" [formControlName]="varFormtipoDocumento"
-                [class.is-invalid]="pasajeroForm.get(varFormtipoDocumento)?.invalid && pasajeroForm.get(varFormtipoDocumento)?.touched">
-            <option value="0">Seleccione...</option>
-            <option value="1">DNI</option>
-            <option value="2">Pasaporte</option>
+            [class.is-invalid]="pasajeroForm.get(varFormtipoDocumento)?.invalid && pasajeroForm.get(varFormtipoDocumento)?.touched">
+            <option value="">Seleccione...</option>
+            <option value="DNI">DNI</option>
+            <option value="PAS">Pasaporte</option>
         </select>
         @if (pasajeroForm.get(varFormtipoDocumento)?.invalid && pasajeroForm.get(varFormtipoDocumento)?.touched) {
-            <div class="invalid-feedback fw-bold">Seleccione tipo de documento.</div>
+        <div class="invalid-feedback" style="font-size: 0.75rem;">Seleccione tipo de documento.</div>
         }
     </div>
 
     <div class="col-md-6">
-        <label class="form-label fw-bold small text-muted text-uppercase">Número Documento *</label>
+        <label class="form-label small fw-bold text-uppercase">Número Documento *</label>
         <input type="text" class="form-control border-2 shadow-sm" [formControlName]="varFormnumeroDocumento"
-               [class.is-invalid]="pasajeroForm.get(varFormnumeroDocumento)?.invalid && pasajeroForm.get(varFormnumeroDocumento)?.touched">
+            [class.is-invalid]="pasajeroForm.get(varFormnumeroDocumento)?.invalid && pasajeroForm.get(varFormnumeroDocumento)?.touched">
         @if (pasajeroForm.get(varFormnumeroDocumento)?.invalid && pasajeroForm.get(varFormnumeroDocumento)?.touched) {
-            <div class="invalid-feedback fw-bold">El número de documento es requerido.</div>
+        <div class="invalid-feedback" style="font-size: 0.75rem;">El número de documento es requerido.</div>
         }
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label small fw-bold text-uppercase">Fecha Expiración Documento *</label>
+        <input type="date" class="form-control border-2 shadow-sm" [formControlName]="varFormFechaExpiraDoc">
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label small fw-bold text-uppercase">Nacionalidad *</label>
+        <select class="form-select border-2 shadow-sm" [formControlName]="varFormNacionalidad">
+            <option value="PE">Perú</option>
+            <option value="OT">Otros</option>
+        </select>
+    </div>
+
+    <div class="col-md-6 d-flex align-items-end">
+        <div class="form-check mb-2">
+            <input type="checkbox" class="form-check-input border-2" [formControlName]="varFormAsistencia"
+                id="checkAsistencia{{numeroPasajero}}">
+            <label class="form-check-label fw-bold small text-uppercase" for="checkAsistencia{{numeroPasajero}}">
+                Requiere Asistencia
+            </label>
+        </div>
     </div>
 
     @if(tipoPasajero !== tp_Adulto) {
-        <div class="col-md-12">
-            <div class="alert alert-warning border-0 shadow-sm py-2 mb-0">
-                <label class="small fw-bold mb-1 text-dark">Adulto Responsable *</label>
-                <select class="form-select form-select-sm border-2" [formControlName]="varFormRespAdulto"
-                        [class.is-invalid]="pasajeroForm.get(varFormRespAdulto)?.invalid && pasajeroForm.get(varFormRespAdulto)?.touched">
-                    <option value="0">Seleccione...</option>
-                    <option value="1">Pasajero 1 (Titular)</option>
-                </select>
-                @if (pasajeroForm.get(varFormRespAdulto)?.invalid && pasajeroForm.get(varFormRespAdulto)?.touched) {
-                    <div class="text-danger x-small fw-bold mt-1">Debe vincular a un adulto.</div>
-                }
-            </div>
+    <div class="col-md-12 mt-2">
+        <div class="p-2 rounded-3" style="background-color: #fff3cd; border: 1px solid #ffeeba;">
+            <label class="small fw-bold text-uppercase text-dark mb-1">Adulto Responsable *</label>
+            <select class="form-select border-2" [formControlName]="varFormRespAdulto"
+                [class.is-invalid]="pasajeroForm.get(varFormRespAdulto)?.invalid && pasajeroForm.get(varFormRespAdulto)?.touched">
+                <option value="">Seleccione...</option>
+                <option value="1">Pasajero 1 (Titular)</option>
+            </select>
         </div>
+    </div>
     }
 
     @if(pasajeroForm.get(varFormemailContacto)) {
-        <div class="col-12 mt-3">
-            <div class="p-3 rounded-4" style="background-color: #f8f9ff; border: 2px dashed #d1d9ff;">
-                <h6 class="fw-bold mb-3 text-primary small"><i class="bi bi-envelope-paper me-2"></i>ENVÍO DE BOLETOS ELECTRÓNICOS</h6>
-                <div class="row g-3">
-                    <div class="col-md-7">
-                        <label class="small fw-bold text-muted">Correo Electrónico *</label>
-                        <input type="email" class="form-control border-2 shadow-sm" [formControlName]="varFormemailContacto"
-                               [class.is-invalid]="pasajeroForm.get(varFormemailContacto)?.invalid && pasajeroForm.get(varFormemailContacto)?.touched">
-                        @if (pasajeroForm.get(varFormemailContacto)?.invalid && pasajeroForm.get(varFormemailContacto)?.touched) {
-                            <div class="invalid-feedback fw-bold">Email inválido.</div>
-                        }
-                    </div>
-                    <div class="col-md-5">
-                        <label class="small fw-bold text-muted">Teléfono Móvil *</label>
-                        <input type="text" class="form-control border-2 shadow-sm" [formControlName]="varFormnumTelefonoContacto"
-                               [class.is-invalid]="pasajeroForm.get(varFormnumTelefonoContacto)?.invalid && pasajeroForm.get(varFormnumTelefonoContacto)?.touched">
-                        @if (pasajeroForm.get(varFormnumTelefonoContacto)?.invalid && pasajeroForm.get(varFormnumTelefonoContacto)?.touched) {
-                            <div class="invalid-feedback fw-bold">Teléfono requerido.</div>
-                        }
-                    </div>
+    <div class="col-12 mt-3">
+        <div class="p-3 rounded-4" style="background-color: #f8f9ff; border: 2px dashed #d1d9ff;">
+            <h6 class="fw-bold mb-3 text-primary small text-uppercase">ENVÍO DE BOLETOS ELECTRÓNICOS</h6>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="small fw-bold text-muted text-uppercase">Correo Electrónico *</label>
+                    <input type="email" class="form-control border-2 shadow-sm" [formControlName]="varFormemailContacto"
+                        [class.is-invalid]="pasajeroForm.get(varFormemailContacto)?.invalid && pasajeroForm.get(varFormemailContacto)?.touched">
+                </div>
+                <div class="col-md-6">
+                    <label class="small fw-bold text-muted text-uppercase">Teléfono Móvil *</label>
+                    <input type="text" class="form-control border-2 shadow-sm" [formControlName]="varFormnumTelefonoContacto"
+                        [class.is-invalid]="pasajeroForm.get(varFormnumTelefonoContacto)?.invalid && pasajeroForm.get(varFormnumTelefonoContacto)?.touched">
                 </div>
             </div>
         </div>
+    </div>
     }
 </div>

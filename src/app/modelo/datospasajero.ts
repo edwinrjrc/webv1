@@ -4,13 +4,16 @@ export class DatosPasajero{
     private primerApellido!: string;
     private segundoApellido!: string;
     private codigoPaisResidencia!: number;
-    private fechaNacimiento!: Date;
+    private fechaNacimiento!: string;
     private tipoDocumento!: number;
     private numeroDocumento!: string;
     private sexo!: string;
     private correoElectronico!: string;
-    private codigoPais!: number;
+    private codigoPais!: string;
     private numeroTelefono!: string;
+    private fechaExpiracionDoc!: string;
+    private requiereAsistencia!: string;
+    private tipoPasajero!: number;
     
     public get Id() : number {
         return this.id;
@@ -52,11 +55,11 @@ export class DatosPasajero{
         this.codigoPaisResidencia = v;
     }
 
-    public get FechaNacimiento() : Date {
+    public get FechaNacimiento() : string {
         return this.fechaNacimiento;
     }
     
-    public set FechaNacimiento(v : Date) {
+    public set FechaNacimiento(v : string) {
         this.fechaNacimiento = v;
     }
     
@@ -92,17 +95,14 @@ export class DatosPasajero{
         this.correoElectronico = v;
     }
     
-    
-    public get CodigoPais() : number {
+    public get CodigoPais() : string {
         return this.codigoPais;
     }
     
-    
-    public set CodigoPais(v : number) {
+    public set CodigoPais(v : string) {
         this.codigoPais = v;
     }
 
-    
     public get NumeroTelefono() : string {
         return this.numeroTelefono;
     }
@@ -110,5 +110,29 @@ export class DatosPasajero{
     public set NumeroTelefono(v : string) {
         this.numeroTelefono = v;
     }
+
+    public get FechaExpiracionDoc() : string {
+        return this.fechaExpiracionDoc;
+    }
+
+    public set FechaExpiracionDoc(v : string) {
+        this.fechaExpiracionDoc = v;
+    }
+
+    public get RequiereAsistencia() : string {
+        return this.requiereAsistencia;
+    }
+
+    public set RequiereAsistencia(v : string) {
+        this.requiereAsistencia = v;
+    }
     
+    public get TipoPasajero() : number {
+        return this.tipoPasajero;
+    }
+
+    public set TipoPasajero(v : number) {
+        this.tipoPasajero = v;
+    }
+
 }

@@ -42,4 +42,12 @@
         </div>
     </div>
 
+    <div class="col-md-12 mt-3">
+        <hr class="text-muted">
+        <label class="form-label small fw-bold text-muted text-uppercase">Nombre del Titular</label>
+        <input type="text" class="form-control form-control-lg border-2 shadow-sm" 
+            placeholder="Como aparece en la tarjeta"
+            [formControlName]="varFormNoTitular"
+            [class.is-invalid]="datosTarjetaForm.get(varFormNoTitular)?.invalid && datosTarjetaForm.get(varFormNoTitular)?.touched">
+    </div>
 </form>

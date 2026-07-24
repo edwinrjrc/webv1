@@ -4,7 +4,8 @@
             @for (v_rutaTramo of $any(ofertaEncontrada).listaRutaTramos; track v_rutaTramo){
             <div class="d-flex align-items-center px-3 py-2 bg-light border-bottom" style="font-size: 0.75rem;">
                 <span class="badge bg-primary me-2 px-2 py-1">{{ v_rutaTramo.tipoViaje == 1 ? 'IDA' : 'VUELTA' }}</span>
-                <span class="fw-bold text-secondary">{{ isValidDate(v_rutaTramo.fechaViaje) ? (v_rutaTramo.fechaViaje | date:'EEEE, dd MMM' | uppercase) : 'FECHA PENDIENTE' }}</span>
+                <span class="fw-bold text-secondary">{{ isValidDate(v_rutaTramo.fechaViaje) ? (v_rutaTramo.fechaViaje |
+                    date:'EEEE, dd MMM' | uppercase) : 'FECHA PENDIENTE' }}</span>
             </div>
 
             <div class="p-3">
@@ -12,8 +13,8 @@
                 <div class="row g-0 align-items-center py-2 mb-2">
                     <div class="col-auto pe-3">
                         <input type="radio" class="form-check-input custom-radio"
-                            [name]="'radioRuta' + v_rutaTramo.tipoViaje" [value]="v_horarioRuta.id"
-                            [(ngModel)]="horariosSeleccionados[v_rutaTramo.tipoViaje]">
+                            [name]="'go' + ofertaEncontrada.id + '_t'+ v_rutaTramo.tipoViaje + '_h'+ v_horarioRuta.id" [value]="v_horarioRuta.id"
+                            [(ngModel)]="horariosSeleccionados[v_rutaTramo.tipoViaje]" />
                     </div>
 
                     <div class="col-2 text-center border-end">
@@ -57,7 +58,8 @@
                             </div>
 
                             <div class="text-center">
-                                <div class="fw-bold h5 mb-0">{{ isValidDate(v_horarioRuta.fechaLlegadaVuelo) ? (v_horarioRuta.fechaLlegadaVuelo | date:'HH:mm') : '--:--' }}</div>
+                                <div class="fw-bold h5 mb-0">{{ isValidDate(v_horarioRuta.fechaLlegadaVuelo) ?
+                                    (v_horarioRuta.fechaLlegadaVuelo | date:'HH:mm') : '--:--' }}</div>
                                 <div class="text-muted fw-bold" style="font-size: 0.7rem;">
                                     {{v_rutaTramo.destino.codigoIata}}</div>
                             </div>
@@ -65,22 +67,23 @@
                     </div>
 
                     <div class="col-2 d-flex justify-content-center align-items-center gap-2 border-start">
+
                         <span
                             class="material-symbols-outlined {{ v_horarioRuta.equipaMochila ? 'text-success' : 'text-light-subtle' }}"
                             style="font-size: 1.1rem;" title="Mochila (Objeto personal)">
-                            personal_bag
+                            {{ v_horarioRuta.equipaMochila ? 'personal_bag' : 'block' }}
                         </span>
 
                         <span
                             class="material-symbols-outlined {{ v_horarioRuta.equipaCarrion ? 'text-success' : 'text-light-subtle' }}"
                             style="font-size: 1.1rem;" title="Equipaje de mano (Carry-on)">
-                            trip
+                            {{ v_horarioRuta.equipaCarrion ? 'trip' : 'block' }}
                         </span>
 
                         <span
                             class="material-symbols-outlined {{ v_horarioRuta.equipaBodega ? 'text-success' : 'text-light-subtle' }}"
                             style="font-size: 1.1rem;" title="Equipaje de bodega">
-                            travel_luggage_and_bags
+                            {{ v_horarioRuta.equipaBodega ? 'travel_luggage_and_bags' : 'block' }}
                         </span>
 
                         <button class="btn btn-link p-0 ms-1 text-primary d-flex"

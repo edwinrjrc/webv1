@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { JSEncrypt } from 'jsencrypt';
 
 @Injectable({
   providedIn: 'root',
@@ -15,25 +16,45 @@ export class UtilconversionsService {
   /**
    * 1. ASIMÉTRICA: Encripta datos para enviar al Backend
    */
-  async encryptData(data: string): Promise<string> {
-    const encoder = new TextEncoder();
-    const dataBuffer = encoder.encode(data);
+  async encryptData(data: any): Promise<string> {
+    if (data === undefined || data === null || data === '') {
+      return '';
+    }
 
-    const keyBuffer = this.str2ab(atob(this.publicKeyPem));
-    const publicKey = await crypto.subtle.importKey(
-      'spki',
-      keyBuffer,
-      { name: 'RSA-OAEP', hash: 'SHA-256' },
-      true,
-      ['encrypt'],
-    );
+    try {
+      // 2. Tu Llave Pública Real (Debe ser el formato PEM: con las cabeceras BEGIN/END)
+      const publicKey = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsBaqxa2tR57S2ZCJgswf
+PiaTTI9xVXKa68ulC59jyRiJCqD0Qe76HuFAbekWHUtJvXf1UZEKlN6YwXWp4InB
+X874aKF0H093OsNw8qa94ajtRbe4ELxByipiFl0VFz859C0IfsjjvgCESrTg/mUT
+eUdpk+dM2+zhV9lpLpetfNBmOhmK3b5GZLnnH7kAWh8HkQM6S4fg9eN496iRQpWZ
+brA2iyoHW2ooPWCQkNUhfac6GycgNGwcl1mrwJZuCk5jgXy/DW3zVs5X4F7nBlMd
+qMojQzzRdtvILDQIse8PpOVTdkkeXsvTXocjntlLbJrAhClTJIHkE39kuQY77Hi4
+OQIDAQAB
+-----END PUBLIC KEY-----`;
 
-    const encrypted = await crypto.subtle.encrypt(
-      { name: 'RSA-OAEP' },
-      publicKey,
-      dataBuffer,
-    );
-    return btoa(String.fromCharCode(...new Uint8Array(encrypted)));
+      // 3. DECLARACIÓN Y ACCIÓN
+      let cifradoFinal: string | false = '';
+
+      // Creamos la instancia del encriptador
+      const encryptor = new JSEncrypt();
+
+      // Le asignamos tu llave pública
+      encryptor.setPublicKey(publicKey);
+
+      // ¡AQUÍ OCURRE EL TRABAJO! Transformamos el dato en el "paquete sellado"
+      cifradoFinal = encryptor.encrypt(data.toString());
+
+      // 4. RETORNO SEGURO
+      if (cifradoFinal) {
+        return cifradoFinal; // Esto devolverá una cadena larga en Base64
+      } else {
+        throw new Error('No se pudo cifrar el dato, revisa la llave pública.');
+      }
+    } catch (error) {
+      console.error('Error en el proceso de cifrado asimétrico:', error);
+      throw error;
+    }
   }
 
   /**
@@ -41,6 +62,8 @@ export class UtilconversionsService {
    */
   async decryptData(encryptedData: string): Promise<string> {
     try {
+      console.log('Datos cifrados recibidos del Backend:', encryptedData);
+
       const dataBuffer = Uint8Array.from(atob(encryptedData), (c) =>
         c.charCodeAt(0),
       );

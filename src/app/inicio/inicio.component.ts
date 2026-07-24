@@ -4,6 +4,7 @@ import {
   inject,
   OnInit,
   PLATFORM_ID,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
@@ -29,6 +30,7 @@ import {
   NgbDatepickerModule,
   NgbDateStruct,
   NgbInputDatepicker,
+  NgbModal,
   NgbNavModule,
   NgbTypeaheadModule,
 } from '@ng-bootstrap/ng-bootstrap';
@@ -37,13 +39,16 @@ import { UtilconversionsService } from '../_services/utilconversions.service';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatosComponent } from '../datos/datos.component';
 import { OfertaSeleccionada } from '../modelo/ofertaSeleccionada';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../_services/auth.service'; // Ajusta la ruta si es necesario
+import { ReservaService } from '../_services/reserva.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-inicio',
   standalone: true,
   imports: [
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     OfertavueloComponent,
@@ -121,7 +126,14 @@ export class InicioComponent implements OnInit {
 
   tokenVisible: string | null = '';
 
+  vuelosEncontradosOriginal: any = null;
+
+  soloDirectos: boolean = false;
+  conEscalas: boolean = false;
+
   @ViewChild('d') datepicker!: NgbInputDatepicker;
+
+  @ViewChild('tarifaModal') tarifaModal!: TemplateRef<any>;
 
   onDateSelection(date: NgbDate) {
     if (!this.modelFechaIda || (this.modelFechaIda && this.modelFechaVuelta)) {
@@ -140,6 +152,9 @@ export class InicioComponent implements OnInit {
     private calendar: NgbCalendar,
     private authService: AuthService,
     @Inject(PLATFORM_ID) private platformId: Object, // 3. Inyectar el ID de plataforma
+    private router: Router,
+    private reservaService: ReservaService,
+    private modalService: NgbModal,
   ) {
     this.iniciaClaseVuelo();
     this.idIdaVuela = '1';
@@ -186,21 +201,32 @@ export class InicioComponent implements OnInit {
     //this.consultarVuelo2();
   }
 
-  recibeMensaje($event: string) {
+  /*recibeMensaje($event: string) {
     const ofertaSelect = JSON.parse($event);
-
-    this.ofertaSeleccionada = Object.assign(
-      new OfertaSeleccionada(),
-      ofertaSelect,
-    );
-
+    this.ofertaSeleccionada = Object.assign(new OfertaSeleccionada(),ofertaSelect);
     this.flgProceso = this.ofertaSeleccionada.FlgProceso;
+  }*/
+
+  recibeMensaje(oferta: any) {
+    // Primero, procesamos la oferta (convertimos a objeto si viene como string JSON)
+    const ofertaData = typeof oferta === 'string' ? JSON.parse(oferta) : oferta;
+
+    // Guardamos la oferta temporalmente en una variable de la clase para no perderla
+    this.ofertaSeleccionada = ofertaData;
+
+    // En lugar de navegar, abrimos el modal que definiste en el HTML
+    this.modalService.open(this.tarifaModal, {
+      size: 'xl',
+      centered: true,
+      backdropClass: 'light-backdrop',
+      // 'trapFocus' asegura que el usuario no pueda salir del modal con TAB
+      beforeDismiss: () => true,
+    });
   }
 
   cargarDestinos() {
     this.tokenVisible = localStorage.getItem('token'); // Recuperamos para mostrar
     this.catalogoService.listarDestinos('').subscribe((resp) => {
-      console.log(resp);
       this.arregloRespDestinos = resp;
     });
   }
@@ -258,11 +284,7 @@ export class InicioComponent implements OnInit {
         '/' +
         this.modelFechaIda?.year;
 
-      console.log('fechaIdaStr ::' + fechaIdaStr);
-
-      const valueFechaIda =
-        await this._utilconversionsService.encryptData(fechaIdaStr);
-      this.consultaViaje.FechaIdaStr = valueFechaIda;
+      this.consultaViaje.FechaIdaStr = fechaIdaStr;
 
       fechaVueltaDate = new Date(this.modelFechaVuelta + 'T00:00:00');
 
@@ -273,64 +295,40 @@ export class InicioComponent implements OnInit {
         '/' +
         this.modelFechaVuelta?.year;
 
-      const valueFechaVuelta =
-        await this._utilconversionsService.encryptData(fechaVueltaStr);
-      this.consultaViaje.FechaVueltaStr = valueFechaVuelta;
+      this.consultaViaje.FechaVueltaStr = fechaVueltaStr;
 
-      const valueEncryptDestino =
-        await this._utilconversionsService.encryptData(
-          this.modelDestino.codigoIata,
-        );
-      this.consultaViaje.CodigoIataDestino = valueEncryptDestino;
-
-      const valueEncryptOrigen = await this._utilconversionsService.encryptData(
-        this.modelOrigen.codigoIata,
-      );
-      this.consultaViaje.CodigoIataOrigen = valueEncryptOrigen;
-
-      const valueNumAdultos = await this._utilconversionsService.encryptData(
-        this.myControlAdultos.value != null ? this.myControlAdultos.value : '',
-      );
-      this.consultaViaje.Adultos = valueNumAdultos;
-
-      const valueNumNinos = await this._utilconversionsService.encryptData(
-        this.myControlNinos.value != null ? this.myControlNinos.value : '',
-      );
-      this.consultaViaje.Ninos = valueNumNinos;
-
-      const valueNumInfantes = await this._utilconversionsService.encryptData(
+      this.consultaViaje.CodigoIataDestino = this.modelDestino.codigoIata;
+      this.consultaViaje.CodigoIataOrigen = this.modelOrigen.codigoIata;
+      this.consultaViaje.Adultos =
+        this.myControlAdultos.value != null ? this.myControlAdultos.value : '';
+      this.consultaViaje.Ninos =
+        this.myControlNinos.value != null ? this.myControlNinos.value : '';
+      this.consultaViaje.Infantes =
         this.myControlInfantes.value != null
           ? this.myControlInfantes.value
-          : '',
-      );
-      this.consultaViaje.Infantes = valueNumInfantes;
+          : '';
+      this.consultaViaje.ClaseVuelo = this.modelClaseVuelo;
+      this.consultaViaje.TipoViaje = this.modelTipoVuelo;
 
-      const valueClaseVuelo = await this._utilconversionsService.encryptData(
-        this.modelClaseVuelo,
+      (await this.viajeService.consultarVuelo(this.consultaViaje)).subscribe(
+        (resp) => {
+          this.vuelosEncontrados = resp.dataRpta;
+          this.busquedaRealizada = true;
+          if (this.vuelosEncontrados != null) {
+            this.resultadoBusqueda =
+              this.vuelosEncontrados.ofertasEncontradas.length > 0
+                ? true
+                : false;
+          }
+        },
       );
-      this.consultaViaje.ClaseVuelo = valueClaseVuelo;
-
-      const valueTipoVuelo = await this._utilconversionsService.encryptData(
-        this.modelTipoVuelo,
-      );
-      this.consultaViaje.TipoViaje = valueTipoVuelo;
-
-      this.viajeService.consultarVuelo(this.consultaViaje).subscribe((resp) => {
-        this.vuelosEncontrados = resp.dataRpta;
-        this.busquedaRealizada = true;
-        console.log(this.vuelosEncontrados);
-        if (this.vuelosEncontrados != null) {
-          this.resultadoBusqueda =
-            this.vuelosEncontrados.ofertasEncontradas.length > 0 ? true : false;
-        }
-      });
     } catch (e) {
       console.log(e);
       e;
     }
   }
 
-  consultarVuelo2() {
+  async consultarVuelo2() {
     try {
       let consultaViaje: ConsultaViaje = new ConsultaViaje();
 
@@ -345,9 +343,11 @@ export class InicioComponent implements OnInit {
       consultaViaje.ClaseVuelo = '1';
       consultaViaje.TipoViaje = '1';
 
-      this.viajeService.consultarVuelo(consultaViaje).subscribe((resp) => {
-        this.vuelosEncontrados = resp.dataRpta;
-      });
+      (await this.viajeService.consultarVuelo(consultaViaje)).subscribe(
+        (resp) => {
+          this.vuelosEncontrados = resp.dataRpta;
+        },
+      );
     } catch (e) {
       console.log(e);
       e;
@@ -360,41 +360,6 @@ export class InicioComponent implements OnInit {
       ? NgbDate.from(parsed)
       : currentValue;
   }
-
-  /*
-  isInside(date: NgbDate) {
-    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
-  }
-
-  isHovered(date: NgbDate) {
-    return (
-      this.fromDate &&
-      !this.toDate &&
-      this.hoveredDate &&
-      date.after(this.fromDate) &&
-      date.before(this.hoveredDate)
-    );
-  }
-
-  isRange(date: NgbDate) {
-    return (
-      date.equals(this.fromDate) ||
-      (this.toDate && date.equals(this.toDate)) ||
-      this.isInside(date) ||
-      this.isHovered(date)
-    );
-  }
-
-  onDateSelection(date: NgbDate) {
-    if (!this.fromDate && !this.toDate) {
-        this.fromDate = date;
-    } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
-        this.toDate = date;
-    } else {
-        this.toDate = null;
-        this.fromDate = date;
-    }
-}*/
 
   isHovered(date: NgbDate) {
     return (
@@ -424,26 +389,98 @@ export class InicioComponent implements OnInit {
   }
 
   search: OperatorFunction<string, readonly InterDestino[]> = (
-    text$: Observable<String>,
+    text$: Observable<string>,
   ) =>
     text$.pipe(
-      debounceTime(200),
+      debounceTime(300),
       distinctUntilChanged(),
-      map((term) =>
-        term === null
-          ? []
-          : this.arregloRespDestinos.dataRpta
-              .filter(
-                (v) =>
-                  v.nombreAeropuertoMostrar
-                    .toLowerCase()
-                    .indexOf(term.toLowerCase()) > -1,
-              )
-              .slice(0, 10),
-      ),
+      map((term) => {
+        // VALIDACIÓN CRÍTICA:
+        // Si el término es corto O si los datos aún no llegan del servidor, retornamos lista vacía.
+        if (
+          term.length < 2 ||
+          !this.arregloRespDestinos ||
+          !this.arregloRespDestinos.dataRpta
+        ) {
+          return [];
+        }
+
+        return this.arregloRespDestinos.dataRpta
+          .filter((v) =>
+            v.nombreAeropuertoMostrar
+              .toLowerCase()
+              .includes(term.toLowerCase()),
+          )
+          .slice(0, 10);
+      }),
     );
 
   formatDate(date: any): string {
     return `${date.day}/${date.month}/${date.year}`;
+  }
+
+  abrirModalTarifas() {
+    this.modalService.open(this.tarifaModal, {
+      size: 'xl', // xl para que quepan bien las 3 tarjetas, o 'lg'
+      centered: true,
+      backdropClass: 'light-backdrop',
+    });
+  }
+
+  seleccionarTarifa(tipoTarifa: string, modal: any) {
+    // Agregamos la tarifa seleccionada al objeto de reserva
+    const datosFinales = {
+      ...this.ofertaSeleccionada,
+      tarifaMaleta: tipoTarifa,
+    };
+
+    // 3. Ahora sí, guardamos en el servicio y navegamos
+    this.reservaService.setDatosReserva(this.consultaViaje, datosFinales);
+
+    modal.close(); // Cerramos el modal
+    this.router.navigate(['/reserva']); // Navegamos a la siguiente pantalla
+  }
+  getPrecioPorTarifa(tipo: string): number {
+    /*const precioBase =
+      this.ofertaSeleccionada.OfertaVuelo.precioOfertaDto.totalRuta;*/
+    const precioBase = 1000; // Aquí deberías usar el precio real de la oferta
+
+    switch (tipo) {
+      case 'Clasica':
+        return precioBase + 25; // Ejemplo: +25 USD
+      case 'Plus':
+        return precioBase + 55; // Ejemplo: +55 USD
+      default:
+        return precioBase; // Básica
+    }
+  }
+
+  aplicarFiltros() {
+    if (!this.vuelosEncontradosOriginal) return;
+
+    // Filtramos sobre la copia original de las ofertas
+    const ofertasFiltradas =
+      this.vuelosEncontradosOriginal.ofertasEncontradas.filter(
+        (oferta: any) => {
+          // 1. Filtro por precio máximo
+          const cumplePrecio = oferta.precio <= this.precioMaximo;
+
+          // 2. Filtro por escalas (Ajusta la propiedad 'esDirecto' o 'escalas' según tu API)
+          let cumpleEscalas = true;
+          if (this.soloDirectos && !this.conEscalas) {
+            cumpleEscalas = oferta.esDirecto === true;
+          } else if (this.conEscalas && !this.soloDirectos) {
+            cumpleEscalas = oferta.esDirecto === false;
+          }
+
+          return cumplePrecio && cumpleEscalas;
+        },
+      );
+
+    // Actualizamos el objeto que renderiza el @for en el HTML
+    this.vuelosEncontrados = {
+      ...this.vuelosEncontradosOriginal,
+      ofertasEncontradas: ofertasFiltradas,
+    };
   }
 }

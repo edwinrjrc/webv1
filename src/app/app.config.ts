@@ -8,6 +8,7 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
+import { ErrorHttpInterceptor } from './interceptor/errorhttp.Interceptor';
 
 // app.config.ts corregido
 export const appConfig: ApplicationConfig = {
@@ -27,6 +28,11 @@ export const appConfig: ApplicationConfig = {
     { 
       provide: HTTP_INTERCEPTORS, 
       useClass: AuthInterceptor, 
+      multi: true 
+    },
+    { 
+      provide: HTTP_INTERCEPTORS, 
+      useClass: ErrorHttpInterceptor, 
       multi: true 
     }
   ]

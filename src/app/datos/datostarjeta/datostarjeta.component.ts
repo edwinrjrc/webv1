@@ -11,6 +11,9 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 import { ValidacionesPropias } from '../../validaciones/validacionespropias';
+import { ReservaService } from '../../_services/reserva.service';
+import { DatosCompraTotal } from '../../modelo/datoscompratotal';
+import { DatosMetodoPago } from '../../modelo/datosmetodopago';
 
 @Component({
   selector: 'app-datostarjeta',
@@ -31,12 +34,13 @@ export class DatostarjetaComponent implements OnInit {
 
   @Output() formSubmit = new EventEmitter<any>();
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private reservaService: ReservaService,
+  ) {}
 
   ngOnInit(): void {
     this.datosTarjetaForm = this.fb.group({
-      // Usamos Validators.pattern para asegurar que solo haya números y espacios
-      // y luhnValidator para la validez matemática de la tarjeta
       [this.varFormNumTarjeta]: [
         '',
         [
@@ -48,10 +52,7 @@ export class DatostarjetaComponent implements OnInit {
       ],
       [this.varFormVctoTarjeta]: [
         '',
-        [
-          Validators.required,
-          Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/), // Formato MM/YY
-        ],
+        [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/)],
       ],
       [this.varFormCodSegTarjeta]: [
         '',
@@ -62,12 +63,38 @@ export class DatostarjetaComponent implements OnInit {
           Validators.pattern(/^[0-9]*$/),
         ],
       ],
-      [this.varFormCodTipoDocTitular]: [
-        0,
-        [Validators.required, ValidacionesPropias.notZero()],
-      ],
-      [this.varFormNumDocTitular]: ['', [Validators.required]],
       [this.varFormNoTitular]: ['', [Validators.required]],
+    });
+
+    this.datosTarjetaForm.valueChanges.subscribe((valor) => {
+      console.log('1. Hijo (Tarjeta) - Detectando cambios...'); // <-- LOG DE RASTREO
+
+      if (this.datosTarjetaForm.valid) {
+        const currentData =
+          this.reservaService.getDatosReservaActual() || new DatosCompraTotal();
+        const numLimpio = valor[this.varFormNumTarjeta]?.replace(/\s/g, '');
+
+        console.log(
+          '2. Hijo (Tarjeta) - Formulario Válido. Enviando al servicio.',
+        );
+
+        // Usamos <any> para que el compilador de Angular deje de dar vueltas con los nombres
+        const infoPago: any = {
+          numTarjeta: numLimpio,
+          NumTarjeta: numLimpio,
+          fechaExpiracion: valor[this.varFormVctoTarjeta],
+          FechaExpiracion: valor[this.varFormVctoTarjeta],
+          codigoSeguridad: valor[this.varFormCodSegTarjeta],
+          CodigoSeguridad: valor[this.varFormCodSegTarjeta],
+          nombreTitular: valor[this.varFormNoTitular],
+          NombreTitular: valor[this.varFormNoTitular],
+        };
+
+        currentData.MetodoPago = infoPago;
+        this.reservaService.actualizarDatosCompra(currentData);
+      } else {
+        console.warn('Hijo (Tarjeta) - Formulario incompleto o inválido aún');
+      }
     });
   }
 
@@ -138,23 +165,19 @@ export class DatostarjetaComponent implements OnInit {
 export function luhnValidator(
   control: AbstractControl,
 ): ValidationErrors | null {
-  const value = control.value?.replace(/\s/g, ''); // Quitar espacios para validar
-  if (!value) return null;
+  const value = control.value?.toString().replace(/\s/g, ''); // Limpieza total de espacios
+  if (!value || value.length < 16) return null; // No validar si está incompleto
 
   let sum = 0;
   let shouldDouble = false;
 
   for (let i = value.length - 1; i >= 0; i--) {
     let digit = parseInt(value.charAt(i));
-
     if (shouldDouble) {
-      digit *= 2;
-      if (digit > 9) digit -= 9;
+      if ((digit *= 2) > 9) digit -= 9;
     }
-
     sum += digit;
     shouldDouble = !shouldDouble;
   }
-
   return sum % 10 === 0 ? null : { luhnInvalid: true };
 }

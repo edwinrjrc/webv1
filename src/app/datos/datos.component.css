@@ -146,3 +146,19 @@ hr {
   opacity: 1;
   color: #0d6efd !important;
 }
+
+/* Cuando el pasajero tiene errores y fue tocado */
+.header-error {
+    border-left: 4px solid #dc3545 !important;
+    background-color: #fff8f8 !important;
+}
+
+.header-error strong {
+    color: #dc3545;
+}
+
+/* Forzar que todos los errores sean minúsculos */
+.invalid-feedback {
+    font-size: 11px !important;
+    font-weight: 500;
+}

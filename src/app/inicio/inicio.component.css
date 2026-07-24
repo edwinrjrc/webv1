@@ -201,3 +201,219 @@
 .pointer-events-none {
     pointer-events: none;
 }
+
+.tarifa-card {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.2s;
+}
+
+.tarifa-card.recommended {
+    border-width: 2px;
+    padding-top: 2.5rem;
+}
+
+.badge-recomendado {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0d6efd;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+/* Alineación Horizontal de Secciones */
+.header-section { height: 40px; display: flex; align-items: center; justify-content: center; }
+.price-section { height: 50px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+.baggage-section { height: 60px; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 1.5rem; }
+
+/* Forzamos que los títulos midan lo mismo */
+.header-section {
+    height: 30px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Forzamos que los precios midan lo mismo */
+.price-section {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Forzamos que la fila de iconos de maletas mida lo mismo */
+.baggage-section {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tarifa-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1) !important;
+}
+
+/* Solo para arreglar el z-index de tu selector de fechas si se superpone raro */
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    z-index: 3; 
+}
+/* inicio.component.css */
+
+/* Contenedor principal de la lista de características */
+.caracteristicas-grid {
+    display: grid;
+    /* Columna 1: fija para iconos, Columna 2: texto flexible */
+    grid-template-columns: 24px 1fr; 
+    gap: 8px; /* Espacio entre icono y texto */
+    align-items: center; /* Centrado vertical */
+}
+
+/* Estilo común para cada item (icono + texto) */
+.grid-item {
+    display: contents; /* Hace que el icono y el texto sean hijos directos del grid */
+}
+
+/* Forzar que el texto no salte de línea */
+.texto-caracteristica {
+    white-space: nowrap; /* !CRÍTICO: No permite saltos de línea */
+    overflow: hidden;    /* Oculta lo que sobresale si es muy largo */
+    text-overflow: ellipsis; /* Añade "..." si es MUY largo (para pantallas pequeñas) */
+}
+
+/* Estilos específicos para iconos y texto (positivo/negativo) */
+.icon-success { color: #198754; } /* bootstrap success */
+.icon-danger { color: #dc3545; }  /* bootstrap danger */
+
+.text-enabled { color: #212529; } /* bootstrap dark */
+.text-disabled { color: #6c757d; text-decoration: line-through; } /* bootstrap muted */
+
+/* Clases de Bootstrap existentes que usaremos para iconos */
+.bi-check-circle-fill::before { content: "\f268"; }
+.bi-x-circle::before { content: "\f623"; }
+
+.tarifa-card {
+    transition: transform 0.2s;
+    cursor: pointer;
+    background: white;
+}
+
+.tarifa-card:hover {
+    transform: translateY(-5px);
+}
+
+.bag-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #dee2e6;
+}
+
+.bag-icon.included {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border-color: #c8e6c9;
+}
+
+.bag-icon.disabled {
+    background-color: #f8f9fa;
+    color: #adb5bd;
+    opacity: 0.5;
+}
+
+.material-symbols-outlined {
+    font-size: 20px;
+}
+
+/* Tarjetas */
+.tarifa-card {
+    transition: all 0.2s ease;
+    cursor: pointer;
+    background: white;
+}
+
+.tarifa-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.1) !important;
+}
+
+.tarifa-card h3, .tarifa-card h5 { margin: 0; font-weight: bold; }
+
+/* Iconos de Maletas (Círculos Superiores) */
+.icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    border: 1px solid #eee;
+}
+
+.icon-box.included { background: #e8f5e9; color: #198754; border-color: #c8e6c9; }
+.icon-box.disabled { opacity: 0.4; color: #adb5bd; }
+
+.icon-box .material-symbols-outlined {
+    font-size: 22px;
+}
+
+/* La lista de checks crece para rellenar el espacio y alinear el botón abajo */
+.features-list {
+    flex-grow: 1; /* Ocupa todo el espacio para empujar el botón al final */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.status-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.feature-item.included .status-icon { background: #198754; color: white; }
+.feature-item.disabled .status-icon { background: #dee2e6; color: #6c757d; }
+
+.feature-item.included .status-icon {
+    background-color: #198754;
+    color: white;
+}
+
+.feature-item.disabled .status-icon {
+    background-color: #dee2e6;
+    color: #6c757d;
+}
+
+.feature-text {
+    margin-left: 10px;
+    color: #444;
+}
