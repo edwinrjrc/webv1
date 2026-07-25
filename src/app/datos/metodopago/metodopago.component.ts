@@ -1,20 +1,18 @@
 import {
   Component,
   EventEmitter,
-  Input,
   OnInit,
   Output,
-  ViewChild,
 } from '@angular/core';
 import { DatostarjetaComponent } from '../datostarjeta/datostarjeta.component';
-import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
-import { DatostransferenciaComponent } from '../datostransferencia/datostransferencia.component';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ReservaService } from '../../_services/reserva.service';
 
 @Component({
   selector: 'app-metodopago',
   standalone: true,
-  imports: [DatostarjetaComponent, FormsModule],
+  imports: [CommonModule, DatostarjetaComponent, ReactiveFormsModule],
   templateUrl: './metodopago.component.html',
   styleUrl: './metodopago.component.css',
 })
@@ -23,18 +21,9 @@ export class MetodopagoComponent implements OnInit {
   TIPO_TARJETACREDITO!: number;
   TIPO_TRANSFERENCIA!: number;
 
-  @Input() pasajeroForm!: FormGroup;
-
   @Output() datosGuardados = new EventEmitter<any>();
 
   metodoPagoForm!: FormGroup;
-
-  @ViewChild(DatostarjetaComponent) datostarjetaComp!: DatostarjetaComponent;
-
-  // Método para exponer el FormGroup al padre
-  getTarjetaFormGroup() {
-    return this.datostarjetaComp?.datosTarjetaForm;
-  }
 
   constructor(
     private fb: FormBuilder,
@@ -45,7 +34,15 @@ export class MetodopagoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.metodoPagoForm = this.fb.group({});
+    this.metodoPagoForm =
+      this.reservaService.getMetodoPagoForm() ||
+      this.fb.group({
+        numeroTarjeta: ['', []],
+        nombreTitular: ['', []],
+        vctoTarjeta: ['', []],
+        codigoSeguridadTarjeta: ['', []],
+      });
+
     // 2. Escuchemos qué pasa por aquí
     this.reservaService.datosReserva$.subscribe((datos) => {
       if (datos?.MetodoPago) {

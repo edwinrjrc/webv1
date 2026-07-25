@@ -2,8 +2,6 @@ import {
   Component,
   OnInit,
   ChangeDetectorRef,
-  AfterViewInit,
-  ViewChild,
 } from '@angular/core';
 import {
   FormArray,
@@ -20,13 +18,16 @@ import { ReservaService } from '../_services/reserva.service';
 import { combineLatest } from 'rxjs';
 import { Constantes } from '../_services/constantes';
 import { ValidacionesPropias } from '../validaciones/validacionespropias';
+import { DatosMetodoPago } from '../modelo/datosmetodopago';
+import {
+  cardNumberValidator,
+  luhnValidator,
+} from './datostarjeta/datostarjeta.component';
 
 // IMPORTANTE: Importamos el componente hijo aquí
 import { DatosPasajeroComponent } from './datospasajero/datospasajero.component';
 import { DatosCompraTotal } from '../modelo/datoscompratotal';
 import { DatosPasajero } from '../modelo/datospasajero';
-import { DatosMetodoPago } from '../modelo/datosmetodopago';
-import { MetodopagoComponent } from './metodopago/metodopago.component';
 
 @Component({
   selector: 'app-datos',
@@ -42,14 +43,13 @@ import { MetodopagoComponent } from './metodopago/metodopago.component';
   templateUrl: './datos.component.html',
   styleUrl: './datos.component.css',
 })
-export class DatosComponent implements OnInit, AfterViewInit {
+export class DatosComponent implements OnInit {
   ventaForm: FormGroup;
+  metodoPagoForm: FormGroup;
   ofertaSeleccionada: any;
   consultaViaje: any;
   listaPasajeros: any[] = [];
   totalPasajeros: number = 0;
-
-  @ViewChild(MetodopagoComponent) metodoPagoComp!: MetodopagoComponent;
 
   constructor(
     public router: Router,
@@ -57,15 +57,39 @@ export class DatosComponent implements OnInit, AfterViewInit {
     private reservaService: ReservaService,
     private cd: ChangeDetectorRef,
   ) {
+    this.metodoPagoForm = this.fb.group({
+      numeroTarjeta: [
+        '',
+        [
+          Validators.required,
+          cardNumberValidator,
+        ],
+      ],
+      nombreTitular: ['', [Validators.required]],
+      vctoTarjeta: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/),
+        ],
+      ],
+      codigoSeguridadTarjeta: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(4),
+          Validators.pattern(/^[0-9]*$/),
+        ],
+      ],
+    });
+
     this.ventaForm = this.fb.group({
       listaPasajeros: this.fb.array([]),
-      metodoPago: this.fb.group({
-        numeroTarjeta: ['', Validators.required],
-        nombreTitular: ['', Validators.required],
-        vctoTarjeta: ['', Validators.required],
-        codigoSeguridadTarjeta: ['', Validators.required],
-      }),
+      metodoPago: this.metodoPagoForm,
     });
+
+    this.reservaService.setMetodoPagoForm(this.metodoPagoForm);
   }
 
   ngOnInit() {
@@ -82,25 +106,6 @@ export class DatosComponent implements OnInit, AfterViewInit {
         if (this.listaPasajerosArray.length === 0) {
           this.generarFormularioPasajeros();
         }
-      }
-    });
-  }
-
-  ngAfterViewInit() {
-    // Esperamos un momento a que los hijos se rendericen
-    setTimeout(() => {
-      const tarjetaForm = this.metodoPagoComp?.getTarjetaFormGroup();
-
-      if (tarjetaForm) {
-        // Vinculamos el formulario del nieto (tarjeta) al padre (ventaForm)
-        this.ventaForm.addControl('metodoPago', tarjetaForm);
-
-        // Forzamos a Angular a revalidar todo el formulario
-        this.ventaForm.updateValueAndValidity();
-
-        console.log('✅ Formulario de Tarjeta vinculado exitosamente');
-      } else {
-        console.error('❌ No se pudo encontrar el formulario de la tarjeta');
       }
     });
   }

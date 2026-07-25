@@ -12,9 +12,8 @@
         @if (datosTarjetaForm.get(varFormNumTarjeta)?.invalid && datosTarjetaForm.get(varFormNumTarjeta)?.touched){
         <div class="text-danger small mt-1">
             @if (datosTarjetaForm.get(varFormNumTarjeta)?.errors?.['required']) { El número es requerido. }
-            @if (datosTarjetaForm.get(varFormNumTarjeta)?.errors?.['luhnInvalid']) { El número de tarjeta no es válido.
-            }
-            @if (datosTarjetaForm.get(varFormNumTarjeta)?.errors?.['minlength']) { Debe tener 16 dígitos. }
+            @if (datosTarjetaForm.get(varFormNumTarjeta)?.errors?.['invalidCardNumber']) { El número debe tener 16 dígitos numéricos. }
+            @if (datosTarjetaForm.get(varFormNumTarjeta)?.errors?.['luhnInvalid']) { El número de tarjeta no es válido. }
         </div>
         }
     </div>

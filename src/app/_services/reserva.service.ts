@@ -13,6 +13,8 @@ export class ReservaService {
   );
   datosReserva$ = this.datosReservaSource.asObservable();
 
+  private metodoPagoForm: any = null;
+
   // 2. Definimos los "observables" (públicos, de donde los componentes leen)
   // Agregamos el filter para que no emitan el "null" inicial que rompe la navegación
   ofertaActual$ = this.ofertaSource
@@ -39,6 +41,14 @@ export class ReservaService {
 
   actualizarDatosCompra(datos: DatosCompraTotal) {
     this.datosReservaSource.next(datos);
+  }
+
+  setMetodoPagoForm(form: any) {
+    this.metodoPagoForm = form;
+  }
+
+  getMetodoPagoForm() {
+    return this.metodoPagoForm;
   }
 
   getDatosReservaActual() {

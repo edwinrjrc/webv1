@@ -37,7 +37,6 @@ import {
 import { VuelosEncontrados } from '../modelo/vueltosEncontrados';
 import { UtilconversionsService } from '../_services/utilconversions.service';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
-import { DatosComponent } from '../datos/datos.component';
 import { OfertaSeleccionada } from '../modelo/ofertaSeleccionada';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../_services/auth.service'; // Ajusta la ruta si es necesario
@@ -56,7 +55,6 @@ import { Router } from '@angular/router';
     NgbNavModule,
     NgbTypeaheadModule,
     NgbAccordionModule,
-    DatosComponent,
   ],
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.css',
@@ -313,6 +311,9 @@ export class InicioComponent implements OnInit {
       (await this.viajeService.consultarVuelo(this.consultaViaje)).subscribe(
         (resp) => {
           this.vuelosEncontrados = resp.dataRpta;
+          this.vuelosEncontradosOriginal = JSON.parse(
+            JSON.stringify(resp.dataRpta),
+          );
           this.busquedaRealizada = true;
           if (this.vuelosEncontrados != null) {
             this.resultadoBusqueda =
@@ -455,32 +456,51 @@ export class InicioComponent implements OnInit {
     }
   }
 
+  private esOfertaDirecta(oferta: any): boolean {
+    const rutas = oferta?.listaRutaTramos ?? [];
+
+    if (rutas.length === 0) {
+      return true;
+    }
+
+    return rutas.every((ruta: any) => {
+      const horarios = ruta?.horariosRuta ?? [];
+      return horarios.every((horario: any) => Number(horario?.inEscalas ?? 0) === 0);
+    });
+  }
+
   aplicarFiltros() {
-    if (!this.vuelosEncontradosOriginal) return;
+    console.log('Aplicando filtros:');
 
-    // Filtramos sobre la copia original de las ofertas
-    const ofertasFiltradas =
-      this.vuelosEncontradosOriginal.ofertasEncontradas.filter(
-        (oferta: any) => {
-          // 1. Filtro por precio máximo
-          const cumplePrecio = oferta.precio <= this.precioMaximo;
+    if (!this.vuelosEncontradosOriginal?.ofertasEncontradas) {
+      return;
+    }
+    
+    const ofertasFiltradas = this.vuelosEncontradosOriginal.ofertasEncontradas.filter(
+      (oferta: any) => {
+        const precioTotal = Number(
+          oferta?.precioOfertaDto?.totalRuta ?? oferta?.precioTotal ?? 0,
+        );
+        const cumplePrecio = precioTotal <= this.precioMaximo;
 
-          // 2. Filtro por escalas (Ajusta la propiedad 'esDirecto' o 'escalas' según tu API)
-          let cumpleEscalas = true;
-          if (this.soloDirectos && !this.conEscalas) {
-            cumpleEscalas = oferta.esDirecto === true;
-          } else if (this.conEscalas && !this.soloDirectos) {
-            cumpleEscalas = oferta.esDirecto === false;
-          }
+        const esDirecta = this.esOfertaDirecta(oferta);
+        let cumpleEscalas = true;
 
-          return cumplePrecio && cumpleEscalas;
-        },
-      );
+        if (this.soloDirectos && !this.conEscalas) {
+          cumpleEscalas = esDirecta;
+        } else if (this.conEscalas && !this.soloDirectos) {
+          cumpleEscalas = !esDirecta;
+        }
 
-    // Actualizamos el objeto que renderiza el @for en el HTML
+        return cumplePrecio && cumpleEscalas;
+      },
+    );
+
     this.vuelosEncontrados = {
       ...this.vuelosEncontradosOriginal,
       ofertasEncontradas: ofertasFiltradas,
     };
+
+    this.resultadoBusqueda = ofertasFiltradas.length > 0;
   }
 }

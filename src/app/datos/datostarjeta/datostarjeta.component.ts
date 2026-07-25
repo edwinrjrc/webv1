@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DirNumerosDirective } from '../../dir-numeros.directive';
 import {
   AbstractControl,
@@ -23,7 +23,7 @@ import { DatosMetodoPago } from '../../modelo/datosmetodopago';
   styleUrl: './datostarjeta.component.css',
 })
 export class DatostarjetaComponent implements OnInit {
-  datosTarjetaForm!: FormGroup;
+  @Input() datosTarjetaForm!: FormGroup;
 
   varFormNumTarjeta = 'numeroTarjeta';
   varFormVctoTarjeta = 'vctoTarjeta';
@@ -40,31 +40,31 @@ export class DatostarjetaComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.datosTarjetaForm = this.fb.group({
-      [this.varFormNumTarjeta]: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(19),
-          Validators.maxLength(19),
-          luhnValidator,
+    if (!this.datosTarjetaForm || !this.datosTarjetaForm.get(this.varFormNumTarjeta)) {
+      this.datosTarjetaForm = this.fb.group({
+        [this.varFormNumTarjeta]: [
+          '',
+          [
+            Validators.required,
+            cardNumberValidator,
+          ],
         ],
-      ],
-      [this.varFormVctoTarjeta]: [
-        '',
-        [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/)],
-      ],
-      [this.varFormCodSegTarjeta]: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(4),
-          Validators.pattern(/^[0-9]*$/),
+        [this.varFormVctoTarjeta]: [
+          '',
+          [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/)],
         ],
-      ],
-      [this.varFormNoTitular]: ['', [Validators.required]],
-    });
+        [this.varFormCodSegTarjeta]: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(4),
+            Validators.pattern(/^[0-9]*$/),
+          ],
+        ],
+        [this.varFormNoTitular]: ['', [Validators.required]],
+      });
+    }
 
     this.datosTarjetaForm.valueChanges.subscribe((valor) => {
       console.log('1. Hijo (Tarjeta) - Detectando cambios...'); // <-- LOG DE RASTREO
@@ -162,22 +162,42 @@ export class DatostarjetaComponent implements OnInit {
   }
 }
 
+export function cardNumberValidator(
+  control: AbstractControl,
+): ValidationErrors | null {
+  const rawValue = control.value?.toString().replace(/\s/g, '') ?? '';
+  if (!rawValue) {
+    return null;
+  }
+
+  if (!/^[0-9]{16}$/.test(rawValue)) {
+    return { invalidCardNumber: true, invalidLength: rawValue.length !== 16 };
+  }
+
+  return isValidLuhn(rawValue) ? null : { luhnInvalid: true };
+}
+
 export function luhnValidator(
   control: AbstractControl,
 ): ValidationErrors | null {
-  const value = control.value?.toString().replace(/\s/g, ''); // Limpieza total de espacios
-  if (!value || value.length < 16) return null; // No validar si está incompleto
+  const value = control.value?.toString().replace(/\s/g, '');
+  if (!value || value.length < 16) return null;
+  return isValidLuhn(value) ? null : { luhnInvalid: true };
+}
 
+function isValidLuhn(value: string): boolean {
   let sum = 0;
   let shouldDouble = false;
 
   for (let i = value.length - 1; i >= 0; i--) {
-    let digit = parseInt(value.charAt(i));
+    let digit = parseInt(value.charAt(i), 10);
     if (shouldDouble) {
-      if ((digit *= 2) > 9) digit -= 9;
+      digit *= 2;
+      if (digit > 9) digit -= 9;
     }
     sum += digit;
     shouldDouble = !shouldDouble;
   }
-  return sum % 10 === 0 ? null : { luhnInvalid: true };
+
+  return sum % 10 === 0;
 }

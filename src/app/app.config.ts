@@ -2,7 +2,6 @@ import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { provideClientHydration } from '@angular/platform-browser';
 
 import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
@@ -14,7 +13,6 @@ import { ErrorHttpInterceptor } from './interceptor/errorhttp.Interceptor';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideClientHydration(),
     provideAnimations(),
     importProvidersFrom(NgbAccordionModule),
 

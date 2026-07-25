@@ -174,12 +174,14 @@
                                         <div ngbAccordionCollapse>
                                             <div ngbAccordionBody>
                                                 <div class="form-check mb-2">
-                                                    <input class="form-check-input" type="checkbox" id="directo" />
+                                                    <input class="form-check-input" type="checkbox" id="directo"
+                                                        [(ngModel)]="soloDirectos" name="soloDirectos" />
                                                     <label class="form-check-label small" for="directo">Vuelos
                                                         Directos</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="escalas" />
+                                                    <input class="form-check-input" type="checkbox" id="escalas"
+                                                        [(ngModel)]="conEscalas" name="conEscalas" />
                                                     <label class="form-check-label small" for="escalas">1 o más
                                                         escalas</label>
                                                 </div>
