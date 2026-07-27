@@ -12,7 +12,4 @@ export class DirNumerosDirective {
     const value = input.value.replace(/[^0-9]/g, ''); // Reemplaza todo lo que no sea un número
     input.value = value;
   }
-
-
-  
 }

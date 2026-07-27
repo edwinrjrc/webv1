@@ -216,10 +216,92 @@
                 <button ngbNavLink class="rounded-top px-4 fw-bold shadow-sm">
                     <i class="bi bi-building me-2"></i>Hoteles
                 </button>
+                
                 <ng-template ngbNavContent>
-                    <!-- Contenido del tab de Hoteles -->
                     <div class="card border-0 shadow-sm p-4 bg-white rounded-bottom-4 rounded-end-4 mb-4">
-                        <p class="text-muted">Búsqueda de hoteles - En desarrollo</p>
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-floating">
+                                        <input id="txtHotel" type="text" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelHotel" name="modelHotel" placeholder="Hotel" />
+                                        <label for="txtHotel"><i class="bi bi-building me-1 text-primary"></i> Hotel</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="form-floating position-relative">
+                                        <input type="text" class="form-control border-0 bg-light"
+                                            [class.text-transparent]="modelFechaLlegadaHotel" #dh="ngbDatepicker" ngbDatepicker
+                                            [(ngModel)]="modelFechaLlegadaHotel" name="modelFechaLlegadaHotel"
+                                            [autoClose]="true" placeholder="Fecha de llegada" readonly
+                                            (click)="dh.toggle()" style="cursor: pointer;" />
+                                        <label><i class="bi bi-calendar-event me-1 text-primary"></i> Fecha de llegada</label>
+
+                                        @if (modelFechaLlegadaHotel) {
+                                        <div class="position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center ps-3 pointer-events-none"
+                                            style="padding-top: 1.25rem; z-index: 2; pointer-events: none;">
+                                            <small class="text-dark fw-medium">{{ formatDate(modelFechaLlegadaHotel) }}</small>
+                                        </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="form-floating">
+                                        <input id="txtNoches" type="number" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelNochesHotel" name="modelNochesHotel" min="1" />
+                                        <label for="txtNoches"><i class="bi bi-moon-stars me-1 text-primary"></i> Número de noches</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mt-1">
+                                <div class="col-12 col-md-3">
+                                    <div class="form-floating">
+                                        <input id="txtCantidadPersonas" type="number" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelTotalPersonasHotel" name="modelTotalPersonasHotel" readonly />
+                                        <label for="txtCantidadPersonas"><i class="bi bi-people me-1 text-primary"></i> Cantidad de personas</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-9">
+                                    <div class="row g-2">
+                                        <div class="col-12 col-md-4">
+                                            <div class="form-floating">
+                                                <input id="txtAdultosHotel" type="number" class="form-control border-0 bg-light"
+                                                    [(ngModel)]="modelAdultosHotel" name="modelAdultosHotel" min="1"
+                                                    (ngModelChange)="recalcularTotalPersonasHotel()" />
+                                                <label for="txtAdultosHotel">Adultos</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <div class="form-floating">
+                                                <input id="txtNinosHotel" type="number" class="form-control border-0 bg-light"
+                                                    [(ngModel)]="modelNinosHotel" name="modelNinosHotel" min="0"
+                                                    (ngModelChange)="recalcularTotalPersonasHotel()" />
+                                                <label for="txtNinosHotel">Niños</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <div class="form-floating">
+                                                <input id="txtInfantesHotel" type="number" class="form-control border-0 bg-light"
+                                                    [(ngModel)]="modelInfantesHotel" name="modelInfantesHotel" min="0"
+                                                    (ngModelChange)="recalcularTotalPersonasHotel()" />
+                                                <label for="txtInfantesHotel">Infantes</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-12 text-center">
+                                    <button type="button" (click)="buscarHoteles()"
+                                        class="btn btn-verde btn-lg px-5 shadow-sm"
+                                        style="border-radius: 50px; transition: transform 0.2s;">
+                                        <i class="bi bi-search me-2"></i> Buscar Hoteles
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </ng-template>
             </li>

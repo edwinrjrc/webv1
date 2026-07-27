@@ -100,6 +100,14 @@ export class InicioComponent implements OnInit {
   modelNroNinos: number = 0;
   modelNroInfantes: number = 0;
 
+  modelHotel: string = '';
+  modelFechaLlegadaHotel: NgbDateStruct | undefined;
+  modelNochesHotel: number = 1;
+  modelAdultosHotel: number = 2;
+  modelNinosHotel: number = 0;
+  modelInfantesHotel: number = 0;
+  modelTotalPersonasHotel: number = 2;
+
   message: string | undefined;
 
   flgProceso!: string;
@@ -196,6 +204,7 @@ export class InicioComponent implements OnInit {
     this.myControlAdultos.setValue('1');
     this.myControlNinos.setValue('0');
     this.myControlInfantes.setValue('0');
+    this.recalcularTotalPersonasHotel();
     //this.consultarVuelo2();
   }
 
@@ -418,6 +427,33 @@ export class InicioComponent implements OnInit {
 
   formatDate(date: any): string {
     return `${date.day}/${date.month}/${date.year}`;
+  }
+
+  recalcularTotalPersonasHotel() {
+    this.modelAdultosHotel = Math.max(1, Number(this.modelAdultosHotel || 0));
+    this.modelNinosHotel = Math.max(0, Number(this.modelNinosHotel || 0));
+    this.modelInfantesHotel = Math.max(0, Number(this.modelInfantesHotel || 0));
+
+    this.modelTotalPersonasHotel =
+      this.modelAdultosHotel + this.modelNinosHotel + this.modelInfantesHotel;
+  }
+
+  buscarHoteles() {
+    this.recalcularTotalPersonasHotel();
+
+    const filtrosHoteles = {
+      hotel: this.modelHotel,
+      fechaLlegada: this.modelFechaLlegadaHotel
+        ? this.formatDate(this.modelFechaLlegadaHotel)
+        : '',
+      numeroNoches: this.modelNochesHotel,
+      adultos: this.modelAdultosHotel,
+      ninos: this.modelNinosHotel,
+      infantes: this.modelInfantesHotel,
+      cantidadPersonas: this.modelTotalPersonasHotel,
+    };
+
+    console.log('Busqueda de hoteles:', filtrosHoteles);
   }
 
   abrirModalTarifas() {
