@@ -1,0 +1,95 @@
+<div class="modal-header border-0 pb-0">
+  <div class="d-flex align-items-center gap-3">
+    <div class="rounded-circle bg-primary bg-opacity-10 p-2">
+      <i class="bi bi-grid-fill text-primary fs-4"></i>
+    </div>
+    <div>
+      <h5 class="modal-title fw-bold mb-0">Servicios Adicionales</h5>
+      <p class="text-muted small mb-0">¿Deseas agregar alguno de estos servicios a tu viaje?</p>
+    </div>
+  </div>
+  <button type="button" class="btn-close" (click)="omitir()"></button>
+</div>
+
+<div class="modal-body py-4">
+  <div class="row g-3">
+
+    <!-- Hotel -->
+    <div class="col-12 col-sm-6">
+      <label class="servicio-card w-100" [class.selected]="hotel">
+        <input type="checkbox" [(ngModel)]="hotel" class="d-none" />
+        <div class="d-flex align-items-center gap-3 p-3">
+          <div class="servicio-icon rounded-3 bg-warning bg-opacity-10">
+            <i class="bi bi-building text-warning fs-3"></i>
+          </div>
+          <div class="flex-grow-1">
+            <span class="fw-semibold d-block">Hotel</span>
+            <span class="text-muted small">Hospedaje en tu destino</span>
+          </div>
+          <i class="bi bi-check-circle-fill text-primary check-icon"></i>
+        </div>
+      </label>
+    </div>
+
+    <!-- Traslado -->
+    <div class="col-12 col-sm-6">
+      <label class="servicio-card w-100" [class.selected]="traslado">
+        <input type="checkbox" [(ngModel)]="traslado" class="d-none" />
+        <div class="d-flex align-items-center gap-3 p-3">
+          <div class="servicio-icon rounded-3 bg-success bg-opacity-10">
+            <i class="bi bi-bus-front text-success fs-3"></i>
+          </div>
+          <div class="flex-grow-1">
+            <span class="fw-semibold d-block">Traslado</span>
+            <span class="text-muted small">Transporte aeropuerto - hotel</span>
+          </div>
+          <i class="bi bi-check-circle-fill text-primary check-icon"></i>
+        </div>
+      </label>
+    </div>
+
+    <!-- Renta de Carro -->
+    <div class="col-12 col-sm-6">
+      <label class="servicio-card w-100" [class.selected]="rentaCarro">
+        <input type="checkbox" [(ngModel)]="rentaCarro" class="d-none" />
+        <div class="d-flex align-items-center gap-3 p-3">
+          <div class="servicio-icon rounded-3 bg-danger bg-opacity-10">
+            <i class="bi bi-car-front text-danger fs-3"></i>
+          </div>
+          <div class="flex-grow-1">
+            <span class="fw-semibold d-block">Renta de Carro</span>
+            <span class="text-muted small">Movilidad en tu destino</span>
+          </div>
+          <i class="bi bi-check-circle-fill text-primary check-icon"></i>
+        </div>
+      </label>
+    </div>
+
+    <!-- Tours -->
+    <div class="col-12 col-sm-6">
+      <label class="servicio-card w-100" [class.selected]="tours">
+        <input type="checkbox" [(ngModel)]="tours" class="d-none" />
+        <div class="d-flex align-items-center gap-3 p-3">
+          <div class="servicio-icon rounded-3 bg-info bg-opacity-10">
+            <i class="bi bi-map text-info fs-3"></i>
+          </div>
+          <div class="flex-grow-1">
+            <span class="fw-semibold d-block">Tours</span>
+            <span class="text-muted small">Excursiones y actividades</span>
+          </div>
+          <i class="bi bi-check-circle-fill text-primary check-icon"></i>
+        </div>
+      </label>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal-footer border-0 pt-0 d-flex flex-column flex-sm-row gap-2">
+  <button type="button" class="btn btn-outline-secondary flex-fill" (click)="omitir()">
+    <i class="bi bi-skip-forward me-2"></i>Continuar sin servicios
+  </button>
+  <button type="button" class="btn btn-primary flex-fill fw-bold" (click)="confirmar()">
+    <i class="bi bi-search me-2"></i>Buscar servicios
+  </button>
+</div>
