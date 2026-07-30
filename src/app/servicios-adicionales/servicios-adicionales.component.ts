@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
 import { ReservaService } from '../_services/reserva.service';
 
 @Component({
@@ -11,35 +11,55 @@ import { ReservaService } from '../_services/reserva.service';
   templateUrl: './servicios-adicionales.component.html',
   styleUrl: './servicios-adicionales.component.css',
 })
-export class ServiciosAdicionalesComponent {
-  hotel: boolean = false;
-  traslado: boolean = false;
-  rentaCarro: boolean = false;
-  tours: boolean = false;
+export class ServiciosAdicionalesComponent implements OnInit {
+  servicios = {
+    hotel: false,
+    rentacarro: false,
+    traslado: false,
+    tours: false,
+  };
 
   constructor(
-    public activeModal: NgbActiveModal,
+    private router: Router,
     private reservaService: ReservaService,
   ) {}
 
-  confirmar() {
-    const servicios = {
-      hotel: this.hotel,
-      traslado: this.traslado,
-      rentaCarro: this.rentaCarro,
-      tours: this.tours,
-    };
-    this.reservaService.setServiciosAdicionales(servicios);
-    this.activeModal.close(servicios);
+  ngOnInit(): void {}
+
+  continuar() {
+    const seleccionados = Object.entries(this.servicios)
+      .filter(([, val]) => val)
+      .map(([key]) => key);
+
+    this.reservaService.setServiciosSeleccionados(seleccionados);
+
+    if (seleccionados.length === 0) {
+      this.irAPago();
+      return;
+    }
+
+    this.navegarAlSiguienteServicio(seleccionados, 0);
   }
 
-  omitir() {
-    this.reservaService.setServiciosAdicionales({
-      hotel: false,
-      traslado: false,
-      rentaCarro: false,
-      tours: false,
-    });
-    this.activeModal.close(null);
+  saltar() {
+    this.reservaService.setServiciosSeleccionados([]);
+    this.irAPago();
+  }
+
+  irAPago() {
+    this.router.navigate(['/reserva/pago']);
+  }
+
+  navegarAlSiguienteServicio(servicios: string[], indice: number) {
+    if (indice >= servicios.length) {
+      this.router.navigate(['/reserva/resumen-servicios']);
+      return;
+    }
+    const servicio = servicios[indice];
+    this.router.navigate(['/reserva/servicios', servicio]);
+  }
+
+  get haySeleccion(): boolean {
+    return Object.values(this.servicios).some((v) => v);
   }
 }
