@@ -7,16 +7,25 @@ import { RentaCarro } from '../modelo/rentaCarro';
 import { Traslado } from '../modelo/traslado';
 import { Tour } from '../modelo/tour';
 
+export interface ServiciosAdicionales {
+  hotel: boolean;
+  traslado: boolean;
+  rentaCarro: boolean;
+  tours: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ReservaService {
   // 1. Definimos los "sujetos" (privados, donde metemos la información)
   private ofertaSource = new BehaviorSubject<any>(null);
   private consultaSource = new BehaviorSubject<any>(null);
+  private serviciosAdicionalesSource = new BehaviorSubject<ServiciosAdicionales | null>(null);
 
   private datosReservaSource = new BehaviorSubject<DatosCompraTotal | null>(
     null,
   );
   datosReserva$ = this.datosReservaSource.asObservable();
+  serviciosAdicionales$ = this.serviciosAdicionalesSource.asObservable();
 
   // Servicios adicionales seleccionados
   private serviciosSeleccionadosSource = new BehaviorSubject<string[]>([]);
