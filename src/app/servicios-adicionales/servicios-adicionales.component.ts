@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ReservaService } from '../_services/reserva.service';
 
 @Component({
@@ -22,6 +23,7 @@ export class ServiciosAdicionalesComponent implements OnInit {
   constructor(
     private router: Router,
     private reservaService: ReservaService,
+    @Optional() private modalRef?: NgbActiveModal,
   ) {}
 
   ngOnInit(): void {}
@@ -32,6 +34,7 @@ export class ServiciosAdicionalesComponent implements OnInit {
       .map(([key]) => key);
 
     this.reservaService.setServiciosSeleccionados(seleccionados);
+    this.modalRef?.close();
 
     if (seleccionados.length === 0) {
       this.irAPago();
@@ -43,6 +46,7 @@ export class ServiciosAdicionalesComponent implements OnInit {
 
   saltar() {
     this.reservaService.setServiciosSeleccionados([]);
+    this.modalRef?.close();
     this.irAPago();
   }
 
