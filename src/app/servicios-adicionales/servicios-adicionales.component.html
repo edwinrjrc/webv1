@@ -1,0 +1,97 @@
+<div class="text-center mb-4">
+  <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+    style="width: 64px; height: 64px;">
+    <i class="bi bi-grid-1x2-fill text-primary fs-2"></i>
+  </div>
+  <h4 class="fw-bold text-dark mb-1">¿Necesitas servicios adicionales?</h4>
+  <p class="text-muted small">Selecciona los servicios que deseas agregar a tu reserva</p>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <label class="card border-2 rounded-3 p-3 text-center h-100"
+      [class.border-primary]="servicios.hotel" [class.bg-primary]="servicios.hotel"
+      [class.bg-opacity-10]="servicios.hotel" style="cursor: pointer;">
+      <input type="checkbox" class="d-none" [(ngModel)]="servicios.hotel">
+      <div class="mb-2">
+        <i class="bi bi-building fs-1" [class.text-primary]="servicios.hotel"
+          [class.text-muted]="!servicios.hotel"></i>
+      </div>
+      <div class="fw-bold small" [class.text-primary]="servicios.hotel">Hotel</div>
+      @if (servicios.hotel) {
+      <div class="mt-1">
+        <span class="badge bg-primary rounded-pill"><i class="bi bi-check-lg"></i></span>
+      </div>
+      }
+    </label>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <label class="card border-2 rounded-3 p-3 text-center h-100"
+      [class.border-primary]="servicios.traslado" [class.bg-primary]="servicios.traslado"
+      [class.bg-opacity-10]="servicios.traslado" style="cursor: pointer;">
+      <input type="checkbox" class="d-none" [(ngModel)]="servicios.traslado">
+      <div class="mb-2">
+        <i class="bi bi-bus-front fs-1" [class.text-primary]="servicios.traslado"
+          [class.text-muted]="!servicios.traslado"></i>
+      </div>
+      <div class="fw-bold small" [class.text-primary]="servicios.traslado">Traslado</div>
+      @if (servicios.traslado) {
+      <div class="mt-1">
+        <span class="badge bg-primary rounded-pill"><i class="bi bi-check-lg"></i></span>
+      </div>
+      }
+    </label>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <label class="card border-2 rounded-3 p-3 text-center h-100"
+      [class.border-primary]="servicios.rentacarro" [class.bg-primary]="servicios.rentacarro"
+      [class.bg-opacity-10]="servicios.rentacarro" style="cursor: pointer;">
+      <input type="checkbox" class="d-none" [(ngModel)]="servicios.rentacarro">
+      <div class="mb-2">
+        <i class="bi bi-car-front fs-1" [class.text-primary]="servicios.rentacarro"
+          [class.text-muted]="!servicios.rentacarro"></i>
+      </div>
+      <div class="fw-bold small" [class.text-primary]="servicios.rentacarro">Renta de Carro</div>
+      @if (servicios.rentacarro) {
+      <div class="mt-1">
+        <span class="badge bg-primary rounded-pill"><i class="bi bi-check-lg"></i></span>
+      </div>
+      }
+    </label>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <label class="card border-2 rounded-3 p-3 text-center h-100"
+      [class.border-primary]="servicios.tours" [class.bg-primary]="servicios.tours"
+      [class.bg-opacity-10]="servicios.tours" style="cursor: pointer;">
+      <input type="checkbox" class="d-none" [(ngModel)]="servicios.tours">
+      <div class="mb-2">
+        <i class="bi bi-map fs-1" [class.text-primary]="servicios.tours"
+          [class.text-muted]="!servicios.tours"></i>
+      </div>
+      <div class="fw-bold small" [class.text-primary]="servicios.tours">Tours</div>
+      @if (servicios.tours) {
+      <div class="mt-1">
+        <span class="badge bg-primary rounded-pill"><i class="bi bi-check-lg"></i></span>
+      </div>
+      }
+    </label>
+  </div>
+</div>
+
+<div class="d-grid gap-2">
+  @if (haySeleccion) {
+  <button class="btn btn-primary btn-lg fw-bold rounded-3" (click)="continuar()">
+    <i class="bi bi-arrow-right-circle me-2"></i> Continuar con servicios seleccionados
+  </button>
+  } @else {
+  <button class="btn btn-primary btn-lg fw-bold rounded-3" (click)="continuar()">
+    <i class="bi bi-arrow-right-circle me-2"></i> Continuar sin servicios adicionales
+  </button>
+  }
+  <button class="btn btn-link text-muted text-decoration-none" (click)="saltar()">
+    <i class="bi bi-skip-forward me-1"></i> Saltar e ir directamente al pago
+  </button>
+</div>
