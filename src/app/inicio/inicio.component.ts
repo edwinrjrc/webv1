@@ -42,6 +42,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../_services/auth.service'; // Ajusta la ruta si es necesario
 import { ReservaService } from '../_services/reserva.service';
 import { Router } from '@angular/router';
+import { ServiciosAdicionalesComponent } from '../servicios-adicionales/servicios-adicionales.component';
 
 @Component({
   selector: 'app-inicio',
@@ -471,11 +472,23 @@ export class InicioComponent implements OnInit {
       tarifaMaleta: tipoTarifa,
     };
 
-    // 3. Ahora sí, guardamos en el servicio y navegamos
+    // 3. Ahora sí, guardamos en el servicio
     this.reservaService.setDatosReserva(this.consultaViaje, datosFinales);
 
-    modal.close(); // Cerramos el modal
-    this.router.navigate(['/reserva']); // Navegamos a la siguiente pantalla
+    modal.close(); // Cerramos el modal de tarifas
+
+    // Abrimos el modal de servicios adicionales antes de navegar
+    const modalServicios = this.modalService.open(ServiciosAdicionalesComponent, {
+      centered: true,
+      backdrop: 'static',
+      keyboard: false,
+    });
+
+    modalServicios.result.then(() => {
+      this.router.navigate(['/reserva']); // Navegamos a la siguiente pantalla
+    }, () => {
+      this.router.navigate(['/reserva']); // Navegamos también si se descarta el modal
+    });
   }
   getPrecioPorTarifa(tipo: string): number {
     /*const precioBase =

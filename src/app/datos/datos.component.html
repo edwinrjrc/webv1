@@ -2,16 +2,16 @@
   <div class="row mb-4">
     <div class="col-12">
       <h2 class="fw-bold text-dark">
-        {{ router.url.includes('pago') ? 'Finaliza tu Reserva' : 'Datos de los Pasajeros' }}
+        {{ tituloActual }}
       </h2>
-      <ngb-progressbar type="primary" [value]="router.url.includes('pago') ? 90 : 45" [striped]="true" [animated]="true"
+      <ngb-progressbar type="primary" [value]="progresoActual" [striped]="true" [animated]="true"
         style="height: 10px;" class="rounded-pill shadow-sm" />
     </div>
   </div>
 
   <div class="row">
     <div class="col-lg-8">
-      @if (!router.url.includes('pago')) {
+      @if (!router.url.includes('pago') && !router.url.includes('servicios') && !router.url.includes('resumen-servicios')) {
         <div class="accordion shadow-sm mb-4" id="accPasajeros">
           @for(p of listaPasajerosArray.controls; track $index){
             <div class="accordion-item border-0 mb-3 shadow-sm rounded-3 overflow-hidden">
@@ -90,12 +90,25 @@
               <span>- USD 0.00</span>
             </div>
 
+            @if (hayServiciosAdicionales) {
+            <div class="d-flex justify-content-between mb-2 text-info fw-medium">
+              <span><i class="bi bi-grid-1x2-fill me-1"></i> Servicios Adicionales</span>
+              <span>+ USD {{ totalServiciosExtra | number:'1.2-2' }}</span>
+            </div>
+            @for (srv of resumenServicios; track srv.tipo) {
+            <div class="d-flex justify-content-between mb-1 small text-muted ps-3">
+              <span>{{ srv.nombre }}</span>
+              <span>USD {{ srv.precio | number:'1.2-2' }}</span>
+            </div>
+            }
+            }
+
             <hr class="my-3 opacity-10">
 
             <div class="mb-4 text-end">
               <span class="small text-muted d-block text-uppercase fw-bold">Total a pagar</span>
               <h2 class="fw-extrabold text-primary mb-0">
-                USD {{ (ofertaSeleccionada?.precioOfertaDto?.totalRuta || 0) | number:'1.2-2' }}
+                USD {{ totalConServicios | number:'1.2-2' }}
               </h2>
             </div>
 
@@ -127,10 +140,15 @@
               (click)="router.navigate(['/reserva/pasajeros'])">
               <i class="bi bi-arrow-left"></i> Editar pasajeros
             </button>
+            } @else if (router.url.includes('resumen-servicios') || router.url.includes('servicios')) {
+            <button class="btn btn-link w-100 mt-2 text-decoration-none text-muted"
+              (click)="router.navigate(['/reserva/pasajeros'])">
+              <i class="bi bi-arrow-left"></i> Editar pasajeros
+            </button>
             } @else {
             <button class="btn btn-primary btn-lg w-100 py-3 fw-bold shadow-sm rounded-3"
-              (click)="router.navigate(['/reserva/pago'])" [disabled]="!listaPasajerosArray.valid">
-              CONTINUAR AL PAGO <i class="bi bi-arrow-right ms-2"></i>
+              (click)="irAServiciosAdicionales()" [disabled]="!listaPasajerosArray.valid">
+              CONTINUAR <i class="bi bi-arrow-right ms-2"></i>
             </button>
             }
           </div>

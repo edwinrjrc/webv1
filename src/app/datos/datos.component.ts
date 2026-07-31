@@ -164,6 +164,44 @@ export class DatosComponent implements OnInit {
     return control as FormGroup;
   }
 
+  get progresoActual(): number {
+    const url = this.router.url;
+    if (url.includes('pago')) return 90;
+    if (url.includes('resumen-servicios')) return 80;
+    if (url.includes('servicios')) return 65;
+    return 45;
+  }
+
+  get tituloActual(): string {
+    const url = this.router.url;
+    if (url.includes('pago')) return 'Finaliza tu Reserva';
+    if (url.includes('resumen-servicios')) return 'Resumen de Servicios';
+    if (url.includes('servicios/')) return 'Datos del Servicio';
+    if (url.includes('servicios')) return 'Servicios Adicionales';
+    return 'Datos de los Pasajeros';
+  }
+
+  get totalConServicios(): number {
+    const base = this.ofertaSeleccionada?.precioOfertaDto?.totalRuta || 0;
+    return base + this.reservaService.calcularTotalServicios();
+  }
+
+  get totalServiciosExtra(): number {
+    return this.reservaService.calcularTotalServicios();
+  }
+
+  get hayServiciosAdicionales(): boolean {
+    return this.reservaService.calcularTotalServicios() > 0;
+  }
+
+  get resumenServicios() {
+    return this.reservaService.getResumenServicios();
+  }
+
+  irAServiciosAdicionales() {
+    this.router.navigate(['/reserva/servicios']);
+  }
+
   /*realizarCompra() {
     if (this.ventaForm.valid) {
       const rawData = this.ventaForm.value;
