@@ -466,29 +466,15 @@ export class InicioComponent implements OnInit {
   }
 
   seleccionarTarifa(tipoTarifa: string, modal: any) {
-    // Agregamos la tarifa seleccionada al objeto de reserva
     const datosFinales = {
       ...this.ofertaSeleccionada,
       tarifaMaleta: tipoTarifa,
     };
 
-    // 3. Ahora sí, guardamos en el servicio
     this.reservaService.setDatosReserva(this.consultaViaje, datosFinales);
 
-    modal.close(); // Cerramos el modal de tarifas
-
-    // Abrimos el modal de servicios adicionales antes de navegar
-    const modalServicios = this.modalService.open(ServiciosAdicionalesComponent, {
-      centered: true,
-      backdrop: 'static',
-      keyboard: false,
-    });
-
-    modalServicios.result.then(() => {
-      this.router.navigate(['/reserva']); // Navegamos a la siguiente pantalla
-    }, () => {
-      this.router.navigate(['/reserva']); // Navegamos también si se descarta el modal
-    });
+    modal.close();
+    this.router.navigate(['/reserva']);
   }
   getPrecioPorTarifa(tipo: string): number {
     /*const precioBase =

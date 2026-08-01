@@ -5,4 +5,8 @@ export interface ReservaHotel {
   cantidadHuespedes: number;
   nombreHotel?: string;
   precio: number;
+  noches?: number;
+  adultos?: number;
+  ninos?: number;
+  infantes?: number;
 }

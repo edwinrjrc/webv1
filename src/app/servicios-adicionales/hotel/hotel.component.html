@@ -6,29 +6,116 @@
     </div>
     <div>
       <h5 class="fw-bold mb-0">Reserva de Hotel</h5>
-      <p class="text-muted small mb-0">Completa los datos para tu estadía</p>
+      <p class="text-muted small mb-0">Busca y selecciona el hotel que prefiera el pasajero</p>
     </div>
   </div>
 
-  <div class="row g-3">
-    <div class="col-md-6">
-      <label class="form-label small fw-bold text-uppercase">Fecha Check-In *</label>
-      <input type="date" class="form-control border-2 shadow-sm" formControlName="fechaCheckIn"
-        [class.is-invalid]="hotelForm.get('fechaCheckIn')?.invalid && hotelForm.get('fechaCheckIn')?.touched">
-      @if (hotelForm.get('fechaCheckIn')?.invalid && hotelForm.get('fechaCheckIn')?.touched) {
-      <div class="invalid-feedback">La fecha de check-in es requerida.</div>
-      }
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-4">
+      <label class="form-label small fw-bold text-uppercase">Fecha de llegada</label>
+      <input type="date" class="form-control border-2 shadow-sm" formControlName="fechaLlegada"
+        [class.is-invalid]="hotelForm.get('fechaLlegada')?.invalid && hotelForm.get('fechaLlegada')?.touched">
     </div>
 
-    <div class="col-md-6">
-      <label class="form-label small fw-bold text-uppercase">Fecha Check-Out *</label>
-      <input type="date" class="form-control border-2 shadow-sm" formControlName="fechaCheckOut"
-        [class.is-invalid]="hotelForm.get('fechaCheckOut')?.invalid && hotelForm.get('fechaCheckOut')?.touched">
-      @if (hotelForm.get('fechaCheckOut')?.invalid && hotelForm.get('fechaCheckOut')?.touched) {
-      <div class="invalid-feedback">La fecha de check-out es requerida.</div>
-      }
+    <div class="col-12 col-md-4">
+      <label class="form-label small fw-bold text-uppercase">Noches</label>
+      <input type="number" class="form-control border-2 shadow-sm" formControlName="noches" min="1"
+        [class.is-invalid]="hotelForm.get('noches')?.invalid && hotelForm.get('noches')?.touched">
     </div>
 
+    <div class="col-12 col-md-4">
+      <label class="form-label small fw-bold text-uppercase">Adultos</label>
+      <input type="number" class="form-control border-2 shadow-sm" formControlName="adultos" min="1">
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-6">
+      <label class="form-label small fw-bold text-uppercase">Niños</label>
+      <input type="number" class="form-control border-2 shadow-sm" formControlName="ninos" min="0">
+    </div>
+    <div class="col-12 col-md-6">
+      <label class="form-label small fw-bold text-uppercase">Infantes</label>
+      <input type="number" class="form-control border-2 shadow-sm" formControlName="infantes" min="0">
+    </div>
+  </div>
+
+  <div class="card border-0 bg-light rounded-4 p-3 mb-3">
+    <div class="row g-3 align-items-end">
+      <div class="col-12 col-md-3">
+        <label class="form-label small fw-bold text-uppercase">Categoría</label>
+        <select class="form-select border-2 shadow-sm" formControlName="filtroCategoria">
+          <option value="Todas">Todas</option>
+          <option value="5★">5★</option>
+          <option value="4★">4★</option>
+          <option value="3★">3★</option>
+        </select>
+      </div>
+      <div class="col-12 col-md-3">
+        <label class="form-label small fw-bold text-uppercase">Precio máximo</label>
+        <input type="range" class="form-range" min="100" max="250" step="10" formControlName="filtroPrecioMax">
+        <div class="small text-muted">USD {{ hotelForm.get('filtroPrecioMax')?.value }}</div>
+      </div>
+      <div class="col-12 col-md-3">
+        <button class="btn btn-outline-primary w-100" type="button" (click)="aplicarFiltros()">
+          <i class="bi bi-funnel me-2"></i> Aplicar filtros
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h6 class="fw-bold mb-0">Hoteles disponibles</h6>
+      <p class="text-muted small mb-0">Selecciona uno para completar la reserva</p>
+    </div>
+  </div>
+
+  @if (mensajeBusqueda) {
+  <div class="alert alert-light border rounded-3 mb-3">
+    <i class="bi bi-info-circle me-2 text-primary"></i>{{ mensajeBusqueda }}
+  </div>
+  }
+
+  @if (hotelesDisponibles.length > 0) {
+  <div class="row g-3 mb-4">
+    @for (hotel of hotelesDisponibles; track hotel.nombre) {
+    <div class="col-md-6">
+      <div class="card h-100 border-2 rounded-4 shadow-sm"
+        [class.border-primary]="hotelSeleccionado?.nombre === hotel.nombre"
+        [class.bg-primary]="hotelSeleccionado?.nombre === hotel.nombre"
+        [class.bg-opacity-10]="hotelSeleccionado?.nombre === hotel.nombre">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <h6 class="fw-bold mb-1">{{ hotel.nombre }}</h6>
+              <span class="badge bg-light text-dark">{{ hotel.categoria }}</span>
+            </div>
+            <span class="fw-bold text-primary">USD {{ hotel.precioPorNoche }}/noche</span>
+          </div>
+          <div class="d-flex align-items-center gap-2 mb-2 text-muted small">
+            <span><i class="bi bi-geo-alt me-1"></i>{{ hotel.ubicacion }}</span>
+            <span>•</span>
+            <span><i class="bi bi-people me-1"></i>Hasta {{ hotel.capacidad }} personas</span>
+            <span>•</span>
+            <span><i class="bi bi-star-fill me-1"></i>{{ hotel.rating }}</span>
+          </div>
+          <p class="small mb-3">{{ hotel.descripcion }}</p>
+          <button class="btn btn-sm btn-outline-primary" type="button" (click)="seleccionarHotel(hotel)">
+            @if (hotelSeleccionado?.nombre === hotel.nombre) {
+            <i class="bi bi-check-circle me-1"></i> Seleccionado
+            } @else {
+            <i class="bi bi-check2-circle me-1"></i> Seleccionar
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+  }
+
+  <div class="row g-3 mb-4">
     <div class="col-md-6">
       <label class="form-label small fw-bold text-uppercase">Tipo de Habitación *</label>
       <select class="form-select border-2 shadow-sm" formControlName="tipoHabitacion"
@@ -44,12 +131,12 @@
     </div>
 
     <div class="col-md-6">
-      <label class="form-label small fw-bold text-uppercase">Cantidad de Huéspedes *</label>
-      <input type="number" class="form-control border-2 shadow-sm" formControlName="cantidadHuespedes" min="1" max="10"
-        [class.is-invalid]="hotelForm.get('cantidadHuespedes')?.invalid && hotelForm.get('cantidadHuespedes')?.touched">
-      @if (hotelForm.get('cantidadHuespedes')?.invalid && hotelForm.get('cantidadHuespedes')?.touched) {
-      <div class="invalid-feedback">Ingrese una cantidad válida (1-10).</div>
-      }
+      <label class="form-label small fw-bold text-uppercase">Fechas de estadía</label>
+      <div class="form-control border-2 shadow-sm bg-light">
+        <span class="fw-semibold">Check-In:</span> {{ hotelForm.get('fechaCheckIn')?.value || '—' }}
+        <span class="mx-2">|</span>
+        <span class="fw-semibold">Check-Out:</span> {{ hotelForm.get('fechaCheckOut')?.value || '—' }}
+      </div>
     </div>
   </div>
 
