@@ -43,6 +43,7 @@ import { AuthService } from '../_services/auth.service'; // Ajusta la ruta si es
 import { ReservaService } from '../_services/reserva.service';
 import { Router } from '@angular/router';
 import { ServiciosAdicionalesComponent } from '../servicios-adicionales/servicios-adicionales.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-inicio',
@@ -56,6 +57,7 @@ import { ServiciosAdicionalesComponent } from '../servicios-adicionales/servicio
     NgbNavModule,
     NgbTypeaheadModule,
     NgbAccordionModule,
+    TranslateModule,
   ],
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.css',

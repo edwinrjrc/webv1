@@ -1,69 +1,69 @@
 <div class="row g-3" [formGroup]="pasajeroForm">
     <div class="col-md-6">
-        <label class="form-label small fw-bold text-uppercase">Nombres *</label>
+        <label class="form-label small fw-bold text-uppercase">{{ 'passengerForm.firstName' | translate }}</label>
         <input type="text" class="form-control border-2 shadow-sm" formControlName="primerNombre"
             [class.is-invalid]="pasajeroForm.get('primerNombre')?.invalid && pasajeroForm.get('primerNombre')?.touched">
         @if (pasajeroForm.get('primerNombre')?.invalid && pasajeroForm.get('primerNombre')?.touched) {
-        <div class="invalid-feedback" style="font-size: 0.75rem;">El nombre es obligatorio.</div>
+        <div class="invalid-feedback" style="font-size: 0.75rem;">{{ 'passengerForm.errors.nameRequired' | translate }}</div>
         }
     </div>
 
     <div class="col-md-6">
-        <label class="form-label small fw-bold text-uppercase">Primer Apellido *</label>
+        <label class="form-label small fw-bold text-uppercase">{{ 'passengerForm.lastName' | translate }}</label>
         <input type="text" class="form-control border-2 shadow-sm" [formControlName]="varFormprimerApellido"
             [class.is-invalid]="pasajeroForm.get(varFormprimerApellido)?.invalid && pasajeroForm.get(varFormprimerApellido)?.touched">
         @if (pasajeroForm.get(varFormprimerApellido)?.invalid && pasajeroForm.get(varFormprimerApellido)?.touched) {
-        <div class="invalid-feedback" style="font-size: 0.75rem;">El apellido es obligatorio.</div>
+        <div class="invalid-feedback" style="font-size: 0.75rem;">{{ 'passengerForm.errors.lastNameRequired' | translate }}</div>
         }
     </div>
 
     <div class="col-md-6">
-        <label class="form-label small fw-bold text-uppercase">Segundo Apellido</label>
+        <label class="form-label small fw-bold text-uppercase">{{ 'passengerForm.secondLastName' | translate }}</label>
         <input type="text" class="form-control border-2 shadow-sm" [formControlName]="varFormsegundoApellido"
-            placeholder="(Opcional)">
+            [placeholder]="'passengerForm.optional' | translate">
     </div>
 
     <div class="col-md-6">
-        <label class="form-label small fw-bold text-uppercase">Fecha de Nacimiento *</label>
+        <label class="form-label small fw-bold text-uppercase">{{ 'passengerForm.birthDate' | translate }}</label>
         <input type="date" class="form-control border-2 shadow-sm" formControlName="fechaNacimiento"
             [class.is-invalid]="pasajeroForm.get('fechaNacimiento')?.invalid && pasajeroForm.get('fechaNacimiento')?.touched">
         @if (pasajeroForm.get('fechaNacimiento')?.invalid && pasajeroForm.get('fechaNacimiento')?.touched) {
-        <div class="invalid-feedback" style="font-size: 0.75rem;">La fecha es requerida.</div>
+        <div class="invalid-feedback" style="font-size: 0.75rem;">{{ 'passengerForm.errors.birthDateRequired' | translate }}</div>
         }
     </div>
 
     <div class="col-md-6">
-        <label class="form-label small fw-bold text-uppercase">Sexo *</label>
+        <label class="form-label small fw-bold text-uppercase">{{ 'passengerForm.gender.label' | translate }}</label>
         <select class="form-select border-2 shadow-sm" [formControlName]="varFormtipoSexo"
             [class.is-invalid]="pasajeroForm.get(varFormtipoSexo)?.invalid && pasajeroForm.get(varFormtipoSexo)?.touched">
-            <option value="">Seleccione...</option>
-            <option value="M">Masculino</option>
-            <option value="F">Femenino</option>
+            <option value="">{{ 'passengerForm.gender.placeholder' | translate }}</option>
+            <option value="M">{{ 'passengerForm.gender.male' | translate }}</option>
+            <option value="F">{{ 'passengerForm.gender.female' | translate }}</option>
         </select>
         @if (pasajeroForm.get(varFormtipoSexo)?.invalid && pasajeroForm.get(varFormtipoSexo)?.touched) {
-        <div class="invalid-feedback" style="font-size: 0.75rem;">Seleccione el sexo.</div>
+        <div class="invalid-feedback" style="font-size: 0.75rem;">{{ 'passengerForm.errors.genderRequired' | translate }}</div>
         }
     </div>
 
     <div class="col-md-6">
-        <label class="form-label small fw-bold text-uppercase">Tipo Documento *</label>
+        <label class="form-label small fw-bold text-uppercase">{{ 'passengerForm.documentType.label' | translate }}</label>
         <select class="form-select border-2 shadow-sm" [formControlName]="varFormtipoDocumento"
             [class.is-invalid]="pasajeroForm.get(varFormtipoDocumento)?.invalid && pasajeroForm.get(varFormtipoDocumento)?.touched">
-            <option value="">Seleccione...</option>
-            <option value="DNI">DNI</option>
-            <option value="PAS">Pasaporte</option>
+            <option value="">{{ 'passengerForm.documentType.placeholder' | translate }}</option>
+            <option value="DNI">{{ 'passengerForm.documentType.dni' | translate }}</option>
+            <option value="PAS">{{ 'passengerForm.documentType.passport' | translate }}</option>
         </select>
         @if (pasajeroForm.get(varFormtipoDocumento)?.invalid && pasajeroForm.get(varFormtipoDocumento)?.touched) {
-        <div class="invalid-feedback" style="font-size: 0.75rem;">Seleccione tipo de documento.</div>
+        <div class="invalid-feedback" style="font-size: 0.75rem;">{{ 'passengerForm.errors.documentTypeRequired' | translate }}</div>
         }
     </div>
 
     <div class="col-md-6">
-        <label class="form-label small fw-bold text-uppercase">Número Documento *</label>
+        <label class="form-label small fw-bold text-uppercase">{{ 'passengerForm.documentNumber' | translate }}</label>
         <input type="text" class="form-control border-2 shadow-sm" [formControlName]="varFormnumeroDocumento"
             [class.is-invalid]="pasajeroForm.get(varFormnumeroDocumento)?.invalid && pasajeroForm.get(varFormnumeroDocumento)?.touched">
         @if (pasajeroForm.get(varFormnumeroDocumento)?.invalid && pasajeroForm.get(varFormnumeroDocumento)?.touched) {
-        <div class="invalid-feedback" style="font-size: 0.75rem;">El número de documento es requerido.</div>
+        <div class="invalid-feedback" style="font-size: 0.75rem;">{{ 'passengerForm.errors.documentNumberRequired' | translate }}</div>
         }
     </div>
 

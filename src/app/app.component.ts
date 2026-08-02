@@ -5,6 +5,7 @@ import { DatosPasajeroComponent } from './datos/datospasajero/datospasajero.comp
 import { MetodopagoComponent } from './datos/metodopago/metodopago.component';
 import { FooterComponent } from './footer/footer.component';
 import { RouterOutlet } from '@angular/router';
+import { LanguageService } from './_services/language.service';
 
 @Component({
   selector: 'app-root',
@@ -15,4 +16,8 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = '..:: Innova Viajes';
+
+  constructor(private languageService: LanguageService) {
+    this.languageService.init();
+  }
 }

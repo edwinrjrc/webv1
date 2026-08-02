@@ -1,0 +1,152 @@
+{
+  "header": {
+    "brand": "Innova Viajes",
+    "attention": "24/7 Support",
+    "language": "Language"
+  },
+  "footer": {
+    "tagline": "Your trusted travel companion. At Innova Viajes we connect your dreams with the best destinations in the world.",
+    "about": {
+      "title": "About Us",
+      "whoWeAre": "Who We Are",
+      "articles": "Innova Articles",
+      "blog": "Travel Blog"
+    },
+    "services": {
+      "title": "Services",
+      "verifyPurchase": "Verify your purchase",
+      "checkQuote": "Check quote",
+      "faq": "Frequently Asked Questions"
+    },
+    "newsletter": {
+      "title": "Subscribe",
+      "description": "Receive the best deals directly in your inbox.",
+      "placeholder": "Email",
+      "button": "Join"
+    },
+    "copyright": "Copyright © 2026 Innova Viajes. All rights reserved."
+  },
+  "search": {
+    "tabs": {
+      "flights": "Flights",
+      "hotels": "Hotels"
+    },
+    "flightType": {
+      "label": "Flight Type",
+      "roundTrip": "Round Trip",
+      "oneWay": "One Way"
+    },
+    "origin": "Origin",
+    "destination": "Destination",
+    "class": {
+      "label": "Class",
+      "economy": "Economy",
+      "business": "Business",
+      "firstClass": "First Class"
+    },
+    "dates": "Dates",
+    "selectReturn": "(Select return date)",
+    "passengers": {
+      "adults": "Adults",
+      "children": "Children",
+      "infants": "Infants"
+    },
+    "searchButton": "Search Flights",
+    "filters": {
+      "title": "Filters",
+      "maxPrice": "Maximum price",
+      "directOnly": "Direct flights only",
+      "withStops": "With stopovers",
+      "apply": "Apply filters"
+    },
+    "hotels": {
+      "destination": "Destination / Hotel",
+      "arrivalDate": "Arrival date",
+      "nights": "Nights",
+      "adults": "Adults",
+      "children": "Children",
+      "infants": "Infants",
+      "total": "Total guests",
+      "searchButton": "Search Hotels"
+    },
+    "noResults": "No flights found for this search.",
+    "results": "flights found"
+  },
+  "fares": {
+    "title": "Choose your fare",
+    "subtitle": "Select the option that best suits your trip",
+    "basic": {
+      "name": "Basic",
+      "feature1": "Carry-on bag (10 kg)",
+      "feature2": "Standard seat",
+      "feature3": "No changes included",
+      "button": "Choose Basic"
+    },
+    "classic": {
+      "name": "Classic",
+      "feature1": "Carry-on bag (10 kg)",
+      "feature2": "1 checked bag (23 kg)",
+      "feature3": "1 date change",
+      "button": "Choose Classic"
+    },
+    "plus": {
+      "name": "Plus",
+      "feature1": "Carry-on bag (15 kg)",
+      "feature2": "2 checked bags (23 kg)",
+      "feature3": "Changes and refunds",
+      "button": "Choose Plus"
+    },
+    "perPerson": "/ person"
+  },
+  "reservation": {
+    "title": "Booking Details",
+    "summary": {
+      "title": "Booking Summary",
+      "baseFare": "Base Fare",
+      "taxesFees": "Taxes & Fees",
+      "webDiscount": "Web Discount",
+      "additionalServices": "Additional Services",
+      "total": "Total to pay",
+      "secure": "100% secure purchase with Innova Viajes",
+      "continue": "CONTINUE",
+      "confirmPay": "CONFIRM & PAY",
+      "editPassengers": "Edit passengers"
+    },
+    "passenger": {
+      "label": "Passenger",
+      "adult": "Adult",
+      "child": "Child",
+      "infant": "Infant",
+      "incomplete": "Incomplete data",
+      "ready": "Ready"
+    }
+  },
+  "passengerForm": {
+    "firstName": "First Name *",
+    "lastName": "Last Name *",
+    "secondLastName": "Second Last Name",
+    "birthDate": "Date of Birth *",
+    "gender": {
+      "label": "Gender *",
+      "placeholder": "Select...",
+      "male": "Male",
+      "female": "Female"
+    },
+    "documentType": {
+      "label": "Document Type *",
+      "placeholder": "Select...",
+      "dni": "ID Card",
+      "passport": "Passport"
+    },
+    "documentNumber": "Document Number *",
+    "optional": "(Optional)",
+    "errors": {
+      "nameRequired": "First name is required.",
+      "lastNameRequired": "Last name is required.",
+      "birthDateRequired": "Date of birth is required.",
+      "genderRequired": "Please select a gender.",
+      "documentTypeRequired": "Please select a document type.",
+      "documentNumberRequired": "Document number is required."
+    }
+  }
+}
