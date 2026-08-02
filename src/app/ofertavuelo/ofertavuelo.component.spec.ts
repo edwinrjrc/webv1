@@ -8,12 +8,22 @@ describe('OfertavueloComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OfertavueloComponent]
-    })
-    .compileComponents();
-    
+      imports: [OfertavueloComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(OfertavueloComponent);
     component = fixture.componentInstance;
+    component.ofertaEncontrada = {
+      id: 1,
+      listaRutaTramos: [],
+      precioOfertaDto: {
+        precioUnitarioClase: 0,
+        cantidadAdultos: 1,
+        totalPrecioAdultos: 0,
+        totalImptosCargos: 0,
+        totalRuta: 0,
+      },
+    };
     fixture.detectChanges();
   });
 
