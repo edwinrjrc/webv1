@@ -3,24 +3,38 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 
-import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { ErrorHttpInterceptor } from './interceptor/errorhttp.Interceptor';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-// app.config.ts corregido
+export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideAnimations(),
     importProvidersFrom(NgbAccordionModule),
 
-    // ELIMINA: importProvidersFrom(HttpClientModule) <--- ESTO CAUSA EL ERROR
-    
     provideHttpClient(
-      withFetch(), 
-      withInterceptorsFromDi() // Esto permite usar tu AuthInterceptor basado en clase
+      withFetch(),
+      withInterceptorsFromDi()
+    ),
+
+    importProvidersFrom(
+      TranslateModule.forRoot({
+        fallbackLang: 'es',
+        loader: {
+          provide: TranslateLoader,
+          useFactory: createTranslateLoader,
+          deps: [HttpClient],
+        },
+      })
     ),
 
     { 

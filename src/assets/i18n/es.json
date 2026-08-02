@@ -1,0 +1,152 @@
+{
+  "header": {
+    "brand": "Innova Viajes",
+    "attention": "Atención 24/7",
+    "language": "Idioma"
+  },
+  "footer": {
+    "tagline": "Tu compañero de confianza en cada aventura. En Innova Viajes conectamos tus sueños con los mejores destinos del mundo.",
+    "about": {
+      "title": "Nosotros",
+      "whoWeAre": "Quiénes Somos",
+      "articles": "Artículos Innova",
+      "blog": "Blog de Viajes"
+    },
+    "services": {
+      "title": "Servicios",
+      "verifyPurchase": "Verifica tu compra",
+      "checkQuote": "Consulta cotización",
+      "faq": "Preguntas Frecuentes"
+    },
+    "newsletter": {
+      "title": "Suscríbete",
+      "description": "Recibe las mejores ofertas directamente en tu correo.",
+      "placeholder": "Email",
+      "button": "Unirse"
+    },
+    "copyright": "Copyright © 2026 Innova Viajes. Todos los derechos reservados."
+  },
+  "search": {
+    "tabs": {
+      "flights": "Vuelos",
+      "hotels": "Hoteles"
+    },
+    "flightType": {
+      "label": "Tipo Vuelo",
+      "roundTrip": "Ida y Vuelta",
+      "oneWay": "Solo Ida"
+    },
+    "origin": "Origen",
+    "destination": "Destino",
+    "class": {
+      "label": "Clase",
+      "economy": "Económica",
+      "business": "Business",
+      "firstClass": "Primera Clase"
+    },
+    "dates": "Fechas",
+    "selectReturn": "(Seleccione regreso)",
+    "passengers": {
+      "adults": "Adultos",
+      "children": "Niños",
+      "infants": "Infantes"
+    },
+    "searchButton": "Buscar Vuelos",
+    "filters": {
+      "title": "Filtros",
+      "maxPrice": "Precio máximo",
+      "directOnly": "Solo directos",
+      "withStops": "Con escalas",
+      "apply": "Aplicar filtros"
+    },
+    "hotels": {
+      "destination": "Destino / Hotel",
+      "arrivalDate": "Fecha de llegada",
+      "nights": "Noches",
+      "adults": "Adultos",
+      "children": "Niños",
+      "infants": "Infantes",
+      "total": "Total personas",
+      "searchButton": "Buscar Hoteles"
+    },
+    "noResults": "No se encontraron vuelos para esta búsqueda.",
+    "results": "vuelos encontrados"
+  },
+  "fares": {
+    "title": "Elige tu tarifa",
+    "subtitle": "Selecciona la opción que mejor se adapte a tu viaje",
+    "basic": {
+      "name": "Básica",
+      "feature1": "Equipaje de mano (10 kg)",
+      "feature2": "Asiento estándar",
+      "feature3": "Sin cambios incluidos",
+      "button": "Elegir Básica"
+    },
+    "classic": {
+      "name": "Clásica",
+      "feature1": "Equipaje de mano (10 kg)",
+      "feature2": "1 maleta facturada (23 kg)",
+      "feature3": "1 cambio de fecha",
+      "button": "Elegir Clásica"
+    },
+    "plus": {
+      "name": "Plus",
+      "feature1": "Equipaje de mano (15 kg)",
+      "feature2": "2 maletas facturadas (23 kg)",
+      "feature3": "Cambios y reembolsos",
+      "button": "Elegir Plus"
+    },
+    "perPerson": "/ persona"
+  },
+  "reservation": {
+    "title": "Datos de la Reserva",
+    "summary": {
+      "title": "Resumen de Reserva",
+      "baseFare": "Tarifa Base",
+      "taxesFees": "Tasas e Impuestos",
+      "webDiscount": "Descuento Web",
+      "additionalServices": "Servicios Adicionales",
+      "total": "Total a pagar",
+      "secure": "Compra 100% segura con Innova Viajes",
+      "continue": "CONTINUAR",
+      "confirmPay": "CONFIRMAR Y PAGAR",
+      "editPassengers": "Editar pasajeros"
+    },
+    "passenger": {
+      "label": "Pasajero",
+      "adult": "Adulto",
+      "child": "Niño",
+      "infant": "Infante",
+      "incomplete": "Datos incompletos",
+      "ready": "Listo"
+    }
+  },
+  "passengerForm": {
+    "firstName": "Nombres *",
+    "lastName": "Primer Apellido *",
+    "secondLastName": "Segundo Apellido",
+    "birthDate": "Fecha de Nacimiento *",
+    "gender": {
+      "label": "Sexo *",
+      "placeholder": "Seleccione...",
+      "male": "Masculino",
+      "female": "Femenino"
+    },
+    "documentType": {
+      "label": "Tipo Documento *",
+      "placeholder": "Seleccione...",
+      "dni": "DNI",
+      "passport": "Pasaporte"
+    },
+    "documentNumber": "Número de Documento *",
+    "optional": "(Opcional)",
+    "errors": {
+      "nameRequired": "El nombre es obligatorio.",
+      "lastNameRequired": "El apellido es obligatorio.",
+      "birthDateRequired": "La fecha es requerida.",
+      "genderRequired": "Seleccione el sexo.",
+      "documentTypeRequired": "Seleccione tipo de documento.",
+      "documentNumberRequired": "El número de documento es obligatorio."
+    }
+  }
+}
