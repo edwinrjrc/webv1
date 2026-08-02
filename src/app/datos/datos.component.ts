@@ -2,8 +2,6 @@ import {
   Component,
   OnInit,
   ChangeDetectorRef,
-  AfterViewInit,
-  ViewChild,
 } from '@angular/core';
 import {
   FormArray,
@@ -26,7 +24,6 @@ import { DatosPasajeroComponent } from './datospasajero/datospasajero.component'
 import { DatosCompraTotal } from '../modelo/datoscompratotal';
 import { DatosPasajero } from '../modelo/datospasajero';
 import { DatosMetodoPago } from '../modelo/datosmetodopago';
-import { MetodopagoComponent } from './metodopago/metodopago.component';
 
 @Component({
   selector: 'app-datos',
@@ -42,14 +39,12 @@ import { MetodopagoComponent } from './metodopago/metodopago.component';
   templateUrl: './datos.component.html',
   styleUrl: './datos.component.css',
 })
-export class DatosComponent implements OnInit, AfterViewInit {
+export class DatosComponent implements OnInit {
   ventaForm: FormGroup;
   ofertaSeleccionada: any;
   consultaViaje: any;
   listaPasajeros: any[] = [];
   totalPasajeros: number = 0;
-
-  @ViewChild(MetodopagoComponent) metodoPagoComp!: MetodopagoComponent;
 
   constructor(
     public router: Router,
@@ -82,25 +77,6 @@ export class DatosComponent implements OnInit, AfterViewInit {
         if (this.listaPasajerosArray.length === 0) {
           this.generarFormularioPasajeros();
         }
-      }
-    });
-  }
-
-  ngAfterViewInit() {
-    // Esperamos un momento a que los hijos se rendericen
-    setTimeout(() => {
-      const tarjetaForm = this.metodoPagoComp?.getTarjetaFormGroup();
-
-      if (tarjetaForm) {
-        // Vinculamos el formulario del nieto (tarjeta) al padre (ventaForm)
-        this.ventaForm.addControl('metodoPago', tarjetaForm);
-
-        // Forzamos a Angular a revalidar todo el formulario
-        this.ventaForm.updateValueAndValidity();
-
-        console.log('✅ Formulario de Tarjeta vinculado exitosamente');
-      } else {
-        console.error('❌ No se pudo encontrar el formulario de la tarjeta');
       }
     });
   }
