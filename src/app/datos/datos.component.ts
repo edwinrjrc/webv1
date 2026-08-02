@@ -28,6 +28,7 @@ import {
 import { DatosPasajeroComponent } from './datospasajero/datospasajero.component';
 import { DatosCompraTotal } from '../modelo/datoscompratotal';
 import { DatosPasajero } from '../modelo/datospasajero';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-datos',
@@ -39,6 +40,7 @@ import { DatosPasajero } from '../modelo/datospasajero';
     ReactiveFormsModule,
     NgbProgressbarModule,
     DatosPasajeroComponent, // <--- ESTO ES LO QUE FALTABA PARA QUITAR EL ERROR NG8001
+    TranslateModule,
   ],
   templateUrl: './datos.component.html',
   styleUrl: './datos.component.css',

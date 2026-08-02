@@ -29,20 +29,20 @@
                       ' ' + (p.get('primerApellido')?.value) : ('Pasajero #' + ($index
                       + 1)) }}
 
-                      <span class="ms-1 text-muted small" style="font-weight: 400;">
-                        ({{ listaPasajeros[$index]?.tipo === 'A' ? 'Adulto' : listaPasajeros[$index]?.tipo === 'N' ? 'Niño'
-                        : 'Infante' }})
+                  <span class="ms-1 text-muted small" style="font-weight: 400;">
+                        ({{ listaPasajeros[$index]?.tipo === 'A' ? ('reservation.passenger.adult' | translate) : listaPasajeros[$index]?.tipo === 'N' ? ('reservation.passenger.child' | translate)
+                        : ('reservation.passenger.infant' | translate) }})
                       </span>
                     </strong>
 
                     @if(p.invalid && p.touched) {
                       <span class="badge rounded-pill bg-danger me-3 animate__animated animate__fadeIn">
-                        <i class="bi bi-exclamation-circle me-1"></i> Datos incompletos
+                        <i class="bi bi-exclamation-circle me-1"></i> {{ 'reservation.passenger.incomplete' | translate }}
                       </span>
                     }
                     @if(p.valid) {
                       <span class="badge rounded-pill bg-success me-3 animate__animated animate__bounceIn">
-                        <i class="bi bi-check-circle-fill me-1"></i> Listo
+                        <i class="bi bi-check-circle-fill me-1"></i> {{ 'reservation.passenger.ready' | translate }}
                       </span>
                     }
                   </div>
@@ -71,28 +71,28 @@
       <div class="sticky-top" style="top: 2rem;">
         <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
           <div class="card-header bg-primary text-white py-3 border-0">
-            <h5 class="mb-0 fw-bold"><i class="bi bi-cart-fill me-2"></i> Resumen de Reserva</h5>
+            <h5 class="mb-0 fw-bold"><i class="bi bi-cart-fill me-2"></i> {{ 'reservation.summary.title' | translate }}</h5>
           </div>
           <div class="card-body p-4 bg-white">
             <div class="d-flex justify-content-between mb-2">
-              <span class="text-muted">Tarifa Base</span>
+              <span class="text-muted">{{ 'reservation.summary.baseFare' | translate }}</span>
               <span class="fw-bold">USD {{ (ofertaSeleccionada?.precioOfertaDto?.precioUnitarioClase || 0) |
                 number:'1.2-2' }}</span>
             </div>
             <div class="d-flex justify-content-between mb-2 text-muted">
-              <span>Tasas e Impuestos</span>
+              <span>{{ 'reservation.summary.taxesFees' | translate }}</span>
               <span class="fw-bold">USD {{ (ofertaSeleccionada?.precioOfertaDto?.totalImpuestos || 0) | number:'1.2-2'
                 }}</span>
             </div>
 
             <div class="d-flex justify-content-between mb-2 text-success fw-medium">
-              <span><i class="bi bi-tag-fill me-1"></i> Descuento Web</span>
+              <span><i class="bi bi-tag-fill me-1"></i> {{ 'reservation.summary.webDiscount' | translate }}</span>
               <span>- USD 0.00</span>
             </div>
 
             @if (hayServiciosAdicionales) {
             <div class="d-flex justify-content-between mb-2 text-info fw-medium">
-              <span><i class="bi bi-grid-1x2-fill me-1"></i> Servicios Adicionales</span>
+              <span><i class="bi bi-grid-1x2-fill me-1"></i> {{ 'reservation.summary.additionalServices' | translate }}</span>
               <span>+ USD {{ totalServiciosExtra | number:'1.2-2' }}</span>
             </div>
             @for (srv of resumenServicios; track srv.tipo) {
@@ -106,7 +106,7 @@
             <hr class="my-3 opacity-10">
 
             <div class="mb-4 text-end">
-              <span class="small text-muted d-block text-uppercase fw-bold">Total a pagar</span>
+              <span class="small text-muted d-block text-uppercase fw-bold">{{ 'reservation.summary.total' | translate }}</span>
               <h2 class="fw-extrabold text-primary mb-0">
                 USD {{ totalConServicios | number:'1.2-2' }}
               </h2>
@@ -114,7 +114,7 @@
 
             <div class="alert alert-light border-0 small d-flex align-items-center mb-4 py-2">
               <i class="bi bi-shield-lock text-success fs-4 me-2"></i>
-              <span class="text-muted">Compra 100% segura con Innova Viajes</span>
+              <span class="text-muted">{{ 'reservation.summary.secure' | translate }}</span>
             </div>
 
             <div class="card border-danger mb-3 shadow-sm">
@@ -138,17 +138,17 @@
             </button>
             <button class="btn btn-link w-100 mt-2 text-decoration-none text-muted"
               (click)="router.navigate(['/reserva/pasajeros'])">
-              <i class="bi bi-arrow-left"></i> Editar pasajeros
+              <i class="bi bi-arrow-left"></i> {{ 'reservation.summary.editPassengers' | translate }}
             </button>
             } @else if (router.url.includes('resumen-servicios') || router.url.includes('servicios')) {
             <button class="btn btn-link w-100 mt-2 text-decoration-none text-muted"
               (click)="router.navigate(['/reserva/pasajeros'])">
-              <i class="bi bi-arrow-left"></i> Editar pasajeros
+              <i class="bi bi-arrow-left"></i> {{ 'reservation.summary.editPassengers' | translate }}
             </button>
             } @else {
             <button class="btn btn-primary btn-lg w-100 py-3 fw-bold shadow-sm rounded-3"
               (click)="irAServiciosAdicionales()" [disabled]="!listaPasajerosArray.valid">
-              CONTINUAR <i class="bi bi-arrow-right ms-2"></i>
+              {{ 'reservation.summary.continue' | translate }} <i class="bi bi-arrow-right ms-2"></i>
             </button>
             }
           </div>

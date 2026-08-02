@@ -7,11 +7,12 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 
 import { faFacebookF } from '@fortawesome/free-brands-svg-icons';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule, TranslateModule],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.css'
 })
