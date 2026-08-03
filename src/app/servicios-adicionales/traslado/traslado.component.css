@@ -1,0 +1,11 @@
+.card h6 {
+	letter-spacing: 0.2px;
+}
+
+.form-check-input:disabled {
+	opacity: 0.45;
+}
+
+.small .fw-semibold {
+	color: #1f2937;
+}

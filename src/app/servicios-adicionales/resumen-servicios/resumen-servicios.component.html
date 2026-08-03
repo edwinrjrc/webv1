@@ -93,6 +93,66 @@
       </button>
     </div>
     <div class="card-body py-3 px-3">
+      @if (traslado.tramoIda) {
+      <div class="row g-2 small mb-3">
+        <div class="col-12">
+          <span class="badge bg-primary-subtle text-primary">Traslado 1</span>
+        </div>
+        <div class="col-6">
+          <span class="text-muted">Origen:</span>
+          <span class="fw-bold ms-1">{{ traslado.tramoIda.origen }}</span>
+        </div>
+        <div class="col-6">
+          <span class="text-muted">Destino:</span>
+          <span class="fw-bold ms-1">{{ traslado.tramoIda.destino }}</span>
+        </div>
+        <div class="col-6">
+          <span class="text-muted">Recojo sugerido:</span>
+          <span class="fw-bold ms-1">{{ traslado.tramoIda.fecha }} {{ traslado.tramoIda.horaRecojoSugerida }}</span>
+        </div>
+        <div class="col-6">
+          <span class="text-muted">Servicio:</span>
+          <span class="fw-bold ms-1">{{ traslado.tramoIda.tipoServicio }}</span>
+        </div>
+      </div>
+
+      @if (traslado.tramoVuelta) {
+      <div class="row g-2 small">
+        <div class="col-12">
+          <span class="badge bg-primary-subtle text-primary">Traslado 2</span>
+        </div>
+        <div class="col-6">
+          <span class="text-muted">Origen:</span>
+          <span class="fw-bold ms-1">{{ traslado.tramoVuelta.origen }}</span>
+        </div>
+        <div class="col-6">
+          <span class="text-muted">Destino:</span>
+          <span class="fw-bold ms-1">{{ traslado.tramoVuelta.destino }}</span>
+        </div>
+        <div class="col-6">
+          <span class="text-muted">Recojo sugerido:</span>
+          <span class="fw-bold ms-1">{{ traslado.tramoVuelta.fecha }} {{ traslado.tramoVuelta.horaRecojoSugerida }}</span>
+        </div>
+        <div class="col-6">
+          <span class="text-muted">Servicio:</span>
+          <span class="fw-bold ms-1">{{ traslado.tramoVuelta.tipoServicio }}</span>
+        </div>
+      </div>
+      }
+
+      @if (traslado.trasladosSeleccionados?.length > 0) {
+      <hr class="my-3">
+      <div class="small text-muted fw-semibold mb-2">Lista de traslados seleccionados</div>
+      @for (item of traslado.trasladosSeleccionados; track item.id) {
+      <div class="small d-flex justify-content-between py-1 border-bottom">
+        <span>{{ item.nombre }}</span>
+        <span class="fw-bold">USD {{ item.precio | number:'1.2-2' }}</span>
+      </div>
+      }
+      }
+      }
+
+      @if (!traslado.tramoIda) {
       <div class="row g-2 small">
         <div class="col-6">
           <span class="text-muted">Origen:</span>
@@ -115,6 +175,13 @@
           <span class="fw-bold ms-1">{{ traslado.tipoTraslado }}</span>
         </div>
       </div>
+      }
+
+      @if (traslado.empresaSeleccionada || traslado.tramoIda?.empresa) {
+      <div class="small mt-3 text-muted">
+        Empresa: <span class="fw-semibold text-dark">{{ traslado.tramoIda?.empresa || traslado.empresaSeleccionada }}</span>
+      </div>
+      }
       <div class="text-end mt-2">
         <span class="badge bg-success fs-6">USD {{ traslado.precio | number:'1.2-2' }}</span>
       </div>

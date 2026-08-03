@@ -10,64 +10,213 @@
     </div>
   </div>
 
-  <div class="row g-3">
-    <div class="col-md-6">
-      <label class="form-label small fw-bold text-uppercase">Origen *</label>
-      <input type="text" class="form-control border-2 shadow-sm" formControlName="origen"
-        placeholder="Ej: Aeropuerto Internacional"
-        [class.is-invalid]="trasladoForm.get('origen')?.invalid && trasladoForm.get('origen')?.touched">
-      @if (trasladoForm.get('origen')?.invalid && trasladoForm.get('origen')?.touched) {
-      <div class="invalid-feedback">El origen es requerido.</div>
-      }
-    </div>
+  <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 mb-4">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <label class="form-label small fw-bold text-uppercase">Empresa de traslado *</label>
+        <select class="form-select border-2 shadow-sm" formControlName="empresa"
+          [class.is-invalid]="trasladoForm.get('empresa')?.invalid && trasladoForm.get('empresa')?.touched">
+          @for (empresa of empresasEnroladas; track empresa.id) {
+          <option [value]="empresa.id">{{ empresa.nombre }}</option>
+          }
+        </select>
+      </div>
 
-    <div class="col-md-6">
-      <label class="form-label small fw-bold text-uppercase">Destino *</label>
-      <input type="text" class="form-control border-2 shadow-sm" formControlName="destino"
-        placeholder="Ej: Hotel Centro"
-        [class.is-invalid]="trasladoForm.get('destino')?.invalid && trasladoForm.get('destino')?.touched">
-      @if (trasladoForm.get('destino')?.invalid && trasladoForm.get('destino')?.touched) {
-      <div class="invalid-feedback">El destino es requerido.</div>
-      }
-    </div>
-
-    <div class="col-md-6">
-      <label class="form-label small fw-bold text-uppercase">Fecha *</label>
-      <input type="date" class="form-control border-2 shadow-sm" formControlName="fecha"
-        [class.is-invalid]="trasladoForm.get('fecha')?.invalid && trasladoForm.get('fecha')?.touched">
-      @if (trasladoForm.get('fecha')?.invalid && trasladoForm.get('fecha')?.touched) {
-      <div class="invalid-feedback">La fecha es requerida.</div>
-      }
-    </div>
-
-    <div class="col-md-6">
-      <label class="form-label small fw-bold text-uppercase">Hora *</label>
-      <input type="time" class="form-control border-2 shadow-sm" formControlName="hora"
-        [class.is-invalid]="trasladoForm.get('hora')?.invalid && trasladoForm.get('hora')?.touched">
-      @if (trasladoForm.get('hora')?.invalid && trasladoForm.get('hora')?.touched) {
-      <div class="invalid-feedback">La hora es requerida.</div>
-      }
-    </div>
-
-    <div class="col-md-12">
-      <label class="form-label small fw-bold text-uppercase">Tipo de Traslado *</label>
-      <select class="form-select border-2 shadow-sm" formControlName="tipoTraslado"
-        [class.is-invalid]="trasladoForm.get('tipoTraslado')?.invalid && trasladoForm.get('tipoTraslado')?.touched">
-        <option value="">Seleccione...</option>
-        @for (tipo of tiposTraslado; track tipo) {
-        <option [value]="tipo">{{ tipo }} — USD {{ preciosPorTipo[tipo] }}</option>
+      <div class="col-12 col-md-6">
+        <label class="form-label small fw-bold text-uppercase">Direccion de destino *</label>
+        <input type="text" class="form-control border-2 shadow-sm" formControlName="destinoDireccion"
+          placeholder="Busca o selecciona una direccion"
+          list="direcciones-datalist"
+          [class.is-invalid]="trasladoForm.get('destinoDireccion')?.invalid && trasladoForm.get('destinoDireccion')?.touched">
+        <datalist id="direcciones-datalist">
+          @for (item of direccionesSugeridas; track item.direccion) {
+          <option [value]="item.direccion"></option>
+          }
+        </datalist>
+        @if (trasladoForm.get('destinoDireccion')?.invalid && trasladoForm.get('destinoDireccion')?.touched) {
+        <div class="invalid-feedback">Debe elegir o ingresar una direccion de destino.</div>
         }
-      </select>
-      @if (trasladoForm.get('tipoTraslado')?.invalid && trasladoForm.get('tipoTraslado')?.touched) {
-      <div class="invalid-feedback">Seleccione el tipo de traslado.</div>
+      </div>
+    </div>
+
+    <div class="row g-3 mt-3">
+      <div class="col-12">
+        <label class="form-label small fw-bold text-uppercase">Tipo servicio ida *</label>
+        <select class="form-select border-2 shadow-sm" formControlName="tipoServicioIda"
+          [class.is-invalid]="trasladoForm.get('tipoServicioIda')?.invalid && trasladoForm.get('tipoServicioIda')?.touched">
+          <option value="">Seleccione...</option>
+          @for (tipo of tiposServicio; track tipo.id) {
+          <option [value]="tipo.id">{{ tipo.nombre }}</option>
+          }
+        </select>
+        @if (trasladoForm.get('tipoServicioIda')?.invalid && trasladoForm.get('tipoServicioIda')?.touched) {
+        <div class="invalid-feedback">Seleccione el tipo de servicio de ida.</div>
+        }
+      </div>
+    </div>
+
+    @if (trasladoForm.get('destinoDireccion')?.value) {
+    <div class="mt-4 p-3 rounded-3 bg-primary bg-opacity-10 border border-primary-subtle">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="switchVuelta"
+          formControlName="requiereVuelta" [disabled]="!permiteVuelta">
+        <label class="form-check-label fw-semibold" for="switchVuelta">
+          Agregar traslado de vuelta (direccion destino a aeropuerto)
+        </label>
+      </div>
+      @if (!permiteVuelta) {
+      <div class="small text-muted mt-2">
+        Tu itinerario actual no tiene tramo de vuelta detectado, por eso este traslado no se puede activar.
+      </div>
+      }
+    </div>
+    }
+
+    @if (trasladoForm.get('requiereVuelta')?.value && permiteVuelta) {
+    <div class="row g-3 mt-2">
+      <div class="col-12">
+        <label class="form-label small fw-bold text-uppercase">Tipo servicio vuelta *</label>
+        <select class="form-select border-2 shadow-sm" formControlName="tipoServicioVuelta"
+          [class.is-invalid]="trasladoForm.get('tipoServicioVuelta')?.invalid && trasladoForm.get('tipoServicioVuelta')?.touched">
+          <option value="">Seleccione...</option>
+          @for (tipo of tiposServicio; track tipo.id) {
+          <option [value]="tipo.id">{{ tipo.nombre }}</option>
+          }
+        </select>
+        @if (trasladoForm.get('tipoServicioVuelta')?.invalid && trasladoForm.get('tipoServicioVuelta')?.touched) {
+        <div class="invalid-feedback">Seleccione el tipo de servicio de vuelta.</div>
+        }
+      </div>
+    </div>
+    }
+
+    <div class="mt-4 d-flex flex-wrap gap-2">
+      <button class="btn btn-primary" type="button" (click)="agregarTrasladosFormulario()">
+        <i class="bi bi-plus-circle me-1"></i>Agregar traslados
+      </button>
+      <button class="btn btn-outline-primary" type="button" (click)="editarTrasladosFormulario()">
+        <i class="bi bi-pencil-square me-1"></i>Editar traslados
+      </button>
+      <button class="btn btn-outline-danger" type="button" (click)="eliminarTrasladosFormulario()"
+        [disabled]="!tieneTrasladosFormularioEnLista">
+        <i class="bi bi-trash me-1"></i>Eliminar traslados
+      </button>
+    </div>
+
+    @if (trasladoForm.get('destinoDireccion')?.value) {
+    <div class="mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="fw-bold mb-0">Traslados sugeridos</h6>
+        <span class="small text-muted">Selecciona y agrega a tu lista</span>
+      </div>
+
+      <div class="row g-3">
+        @for (sugerido of trasladosSugeridos; track sugerido.id) {
+        <div class="col-12 col-lg-6">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <h6 class="fw-bold mb-0 small text-uppercase">{{ sugerido.empresaNombre }}</h6>
+                <span class="badge bg-success-subtle text-success">USD {{ sugerido.precio | number:'1.2-2' }}</span>
+              </div>
+              <p class="small mb-2">{{ sugerido.nombre }}</p>
+              <div class="small text-muted">
+                <div>Recojo ida sugerido: <span class="fw-semibold text-dark">{{ sugerido.horaRecojoIda || '--' }}</span></div>
+                @if (sugerido.incluyeVuelta) {
+                <div>Recojo vuelta sugerido: <span class="fw-semibold text-dark">{{ sugerido.fechaRecojoVuelta || '--' }} {{ sugerido.horaRecojoVuelta || '' }}</span></div>
+                }
+              </div>
+              <button class="btn btn-sm w-100 mt-3"
+                [class.btn-outline-primary]="!existeEnLista(sugerido.id)"
+                [class.btn-outline-secondary]="existeEnLista(sugerido.id)"
+                type="button"
+                [disabled]="existeEnLista(sugerido.id)"
+                (click)="agregarTrasladoSugerido(sugerido)">
+                <i class="bi bi-plus-circle me-1"></i>
+                {{ existeEnLista(sugerido.id) ? 'Agregado' : 'Agregar' }}
+              </button>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+    <div class="mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="fw-bold mb-0">Lista de traslados</h6>
+        <span class="badge bg-primary-subtle text-primary">{{ trasladosSeleccionados.length }} seleccionados</span>
+      </div>
+
+      @if (tieneTrasladosFormularioEnLista) {
+      <div class="small text-success mb-2">
+        <i class="bi bi-check-circle me-1"></i>Los traslados de ida y vuelta del formulario ya estan agregados.
+      </div>
+      }
+
+      @if (trasladosSeleccionados.length === 0) {
+      <div class="alert alert-light border small mb-0">
+        Aun no agregaste traslados. Elige una sugerencia y pulsa Agregar.
+      </div>
+      }
+
+      @if (trasladosSeleccionados.length > 0) {
+      <div class="list-group shadow-sm rounded-3 overflow-hidden">
+        @for (item of trasladosSeleccionados; track item.id) {
+        <div class="list-group-item py-3">
+          <div class="d-flex justify-content-between align-items-start gap-3">
+            <div>
+              <div class="fw-semibold d-flex align-items-center gap-2">
+                <i
+                  class="bi"
+                  [class.bi-airplane-fill]="esTrasladoHaciaAeropuerto(item)"
+                  [class.bi-building]="!esTrasladoHaciaAeropuerto(item)"></i>
+                <span>{{ item.nombre }}</span>
+              </div>
+              @if (esTrasladoHaciaAeropuerto(item)) {
+              <div class="small text-muted">Recojo sugerido: {{ item.fechaRecojoVuelta || '--' }} {{ item.horaRecojoVuelta || '--' }}</div>
+              } @else {
+              <div class="small text-muted">Recojo sugerido: {{ item.horaRecojoIda || '--' }}</div>
+              }
+            </div>
+            <div class="text-end">
+              <div class="fw-bold text-success">USD {{ item.precio | number:'1.2-2' }}</div>
+              <div class="d-flex justify-content-end gap-1 mt-1">
+                <button
+                  class="btn btn-sm btn-outline-primary"
+                  type="button"
+                  (click)="editarTrasladoSeleccionado(item.id)"
+                  title="Editar traslado"
+                  aria-label="Editar traslado">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button
+                  class="btn btn-sm btn-outline-danger"
+                  type="button"
+                  (click)="quitarTrasladoSeleccionado(item.id)"
+                  title="Quitar traslado"
+                  aria-label="Quitar traslado">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+      }
+
+      @if (mensajeLista) {
+      <div class="alert alert-warning mt-3 mb-0 small">{{ mensajeLista }}</div>
       }
     </div>
   </div>
 
-  @if (precioEstimado > 0) {
+  @if (totalListaTraslados > 0) {
   <div class="alert alert-info border-0 mt-4 rounded-3 d-flex justify-content-between align-items-center">
-    <span><i class="bi bi-info-circle me-2"></i> Precio del traslado:</span>
-    <span class="fw-bold fs-5">USD {{ precioEstimado | number:'1.2-2' }}</span>
+    <span><i class="bi bi-info-circle me-2"></i> Total acumulado de tu lista de traslados:</span>
+    <span class="fw-bold fs-5">USD {{ totalListaTraslados | number:'1.2-2' }}</span>
   </div>
   }
 

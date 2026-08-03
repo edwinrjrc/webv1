@@ -10,38 +10,63 @@
     </div>
   </div>
 
-  <div class="row g-3 mb-4">
-    <div class="col-12 col-md-4">
-      <label class="form-label small fw-bold text-uppercase">Fecha de llegada</label>
-      <input type="date" class="form-control border-2 shadow-sm" formControlName="fechaLlegada"
-        [class.is-invalid]="hotelForm.get('fechaLlegada')?.invalid && hotelForm.get('fechaLlegada')?.touched">
+  <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <h6 class="fw-bold mb-1">Filtros de busqueda de hotel</h6>
+        <p class="text-muted small mb-0">Completa todos los criterios para buscar el hotel ideal</p>
+      </div>
+      <button class="btn btn-sm btn-outline-primary" type="button" (click)="toggleFiltros()">
+        <i class="bi me-1" [class.bi-chevron-up]="filtrosVisibles" [class.bi-chevron-down]="!filtrosVisibles"></i>
+        {{ filtrosVisibles ? 'Ocultar filtros' : 'Mostrar filtros' }}
+      </button>
     </div>
 
-    <div class="col-12 col-md-4">
-      <label class="form-label small fw-bold text-uppercase">Noches</label>
-      <input type="number" class="form-control border-2 shadow-sm" formControlName="noches" min="1"
-        [class.is-invalid]="hotelForm.get('noches')?.invalid && hotelForm.get('noches')?.touched">
-    </div>
+    @if (filtrosVisibles) {
+    <div class="travel-fields">
+      <div class="field-group field-group-date">
+        <label class="form-label small fw-bold text-uppercase">Fecha de llegada</label>
+        <input type="date" class="form-control form-control-sm border-2 shadow-sm field-date" formControlName="fechaLlegada"
+          [class.is-invalid]="hotelForm.get('fechaLlegada')?.invalid && hotelForm.get('fechaLlegada')?.touched">
+      </div>
 
-    <div class="col-12 col-md-4">
-      <label class="form-label small fw-bold text-uppercase">Adultos</label>
-      <input type="number" class="form-control border-2 shadow-sm" formControlName="adultos" min="1">
-    </div>
-  </div>
+      <div class="field-group field-group-count">
+        <label class="form-label small fw-bold text-uppercase">Noches</label>
+        <input type="number" class="form-control form-control-sm border-2 shadow-sm field-count" formControlName="noches" min="1"
+          [class.is-invalid]="hotelForm.get('noches')?.invalid && hotelForm.get('noches')?.touched">
+      </div>
 
-  <div class="row g-3 mb-4">
-    <div class="col-12 col-md-6">
-      <label class="form-label small fw-bold text-uppercase">Niños</label>
-      <input type="number" class="form-control border-2 shadow-sm" formControlName="ninos" min="0">
-    </div>
-    <div class="col-12 col-md-6">
-      <label class="form-label small fw-bold text-uppercase">Infantes</label>
-      <input type="number" class="form-control border-2 shadow-sm" formControlName="infantes" min="0">
-    </div>
-  </div>
+      <div class="field-group field-group-count">
+        <label class="form-label small fw-bold text-uppercase">Adultos</label>
+        <input type="number" class="form-control form-control-sm border-2 shadow-sm field-count" formControlName="adultos" min="1">
+      </div>
 
-  <div class="card border-0 bg-light rounded-4 p-3 mb-3">
+      <div class="field-group field-group-count">
+        <label class="form-label small fw-bold text-uppercase">Niños</label>
+        <input type="number" class="form-control form-control-sm border-2 shadow-sm field-count" formControlName="ninos" min="0">
+      </div>
+
+      <div class="field-group field-group-count">
+        <label class="form-label small fw-bold text-uppercase">Infantes</label>
+        <input type="number" class="form-control form-control-sm border-2 shadow-sm field-count" formControlName="infantes" min="0">
+      </div>
+    </div>
+    <div class="my-3"></div>
+
     <div class="row g-3 align-items-end">
+      <div class="col-12 col-md-3">
+        <label class="form-label small fw-bold text-uppercase">Tipo de Habitación *</label>
+        <select class="form-select border-2 shadow-sm" formControlName="tipoHabitacion"
+          [class.is-invalid]="hotelForm.get('tipoHabitacion')?.invalid && hotelForm.get('tipoHabitacion')?.touched">
+          <option value="">Seleccione...</option>
+          @for (tipo of tiposHabitacion; track tipo) {
+          <option [value]="tipo">{{ tipo }} — USD {{ preciosPorTipo[tipo] }}/noche</option>
+          }
+        </select>
+        @if (hotelForm.get('tipoHabitacion')?.invalid && hotelForm.get('tipoHabitacion')?.touched) {
+        <div class="invalid-feedback">Seleccione el tipo de habitación.</div>
+        }
+      </div>
       <div class="col-12 col-md-3">
         <label class="form-label small fw-bold text-uppercase">Categoría</label>
         <select class="form-select border-2 shadow-sm" formControlName="filtroCategoria">
@@ -62,6 +87,11 @@
         </button>
       </div>
     </div>
+    } @else {
+    <div class="alert alert-light border rounded-3 mb-0">
+      <i class="bi bi-funnel me-2 text-primary"></i>Filtros ocultos. Usa "Mostrar filtros" para editarlos.
+    </div>
+    }
   </div>
 
   <div class="d-flex justify-content-between align-items-center mb-3">
@@ -114,31 +144,6 @@
     }
   </div>
   }
-
-  <div class="row g-3 mb-4">
-    <div class="col-md-6">
-      <label class="form-label small fw-bold text-uppercase">Tipo de Habitación *</label>
-      <select class="form-select border-2 shadow-sm" formControlName="tipoHabitacion"
-        [class.is-invalid]="hotelForm.get('tipoHabitacion')?.invalid && hotelForm.get('tipoHabitacion')?.touched">
-        <option value="">Seleccione...</option>
-        @for (tipo of tiposHabitacion; track tipo) {
-        <option [value]="tipo">{{ tipo }} — USD {{ preciosPorTipo[tipo] }}/noche</option>
-        }
-      </select>
-      @if (hotelForm.get('tipoHabitacion')?.invalid && hotelForm.get('tipoHabitacion')?.touched) {
-      <div class="invalid-feedback">Seleccione el tipo de habitación.</div>
-      }
-    </div>
-
-    <div class="col-md-6">
-      <label class="form-label small fw-bold text-uppercase">Fechas de estadía</label>
-      <div class="form-control border-2 shadow-sm bg-light">
-        <span class="fw-semibold">Check-In:</span> {{ hotelForm.get('fechaCheckIn')?.value || '—' }}
-        <span class="mx-2">|</span>
-        <span class="fw-semibold">Check-Out:</span> {{ hotelForm.get('fechaCheckOut')?.value || '—' }}
-      </div>
-    </div>
-  </div>
 
   @if (precioEstimado > 0) {
   <div class="alert alert-info border-0 mt-4 rounded-3 d-flex justify-content-between align-items-center">

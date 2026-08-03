@@ -31,6 +31,7 @@ interface HotelDisponible {
 })
 export class HotelComponent implements OnInit {
   hotelForm!: FormGroup;
+  filtrosVisibles = true;
   tiposHabitacion = ['Simple', 'Doble', 'Suite', 'Familiar'];
   preciosPorTipo: Record<string, number> = {
     Simple: 80,
@@ -236,6 +237,10 @@ export class HotelComponent implements OnInit {
 
   aplicarFiltros() {
     this.buscarHoteles();
+  }
+
+  toggleFiltros(): void {
+    this.filtrosVisibles = !this.filtrosVisibles;
   }
 
   seleccionarHotel(hotel: HotelDisponible) {
