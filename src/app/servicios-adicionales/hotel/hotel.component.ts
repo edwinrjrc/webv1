@@ -9,16 +9,21 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ReservaService } from '../../_services/reserva.service';
+import {
+  BusquedaHotelRequest,
+  CatalogosService,
+  HotelDisponibleResponse,
+  ReservaHotelRequest,
+} from '../../_services/catalogos.service';
 
 interface HotelDisponible {
+  id?: string;
   nombre: string;
   categoria: string;
   precioPorNoche: number;
   ubicacion: string;
   descripcion: string;
   capacidad: number;
-  disponibleDesde: string;
-  disponibleHasta: string;
   rating: number;
 }
 
@@ -40,14 +45,16 @@ export class HotelComponent implements OnInit {
     Familiar: 180,
   };
   hotelesDisponibles: HotelDisponible[] = [];
-  hotelesBase: HotelDisponible[] = [];
   hotelSeleccionado: HotelDisponible | null = null;
   mensajeBusqueda = '';
+  buscandoHoteles = false;
+  validandoSeleccionHotel = false;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private reservaService: ReservaService,
+    private catalogosService: CatalogosService,
   ) {}
 
   ngOnInit(): void {
@@ -154,78 +161,59 @@ export class HotelComponent implements OnInit {
     const fechaLlegada = this.hotelForm.get('fechaLlegada')?.value || '';
     const noches = Number(this.hotelForm.get('noches')?.value || 1);
 
-    const hotelesBase: HotelDisponible[] = [
-      {
-        nombre: 'Hotel Costa Azul',
-        categoria: '5★',
-        precioPorNoche: 180,
-        ubicacion: 'Playas del Carmen',
-        descripcion: 'Hotel frente al mar con desayuno incluido y excelente conexión para familias.',
-        capacidad: 4,
-        disponibleDesde: '2026-01-01',
-        disponibleHasta: '2026-12-31',
-        rating: 4.9,
-      },
-      {
-        nombre: 'Hotel Sol y Mar',
-        categoria: '4★',
-        precioPorNoche: 140,
-        ubicacion: 'Centro Histórico',
-        descripcion: 'Ideal para viajeros que desean comodidad y fácil acceso a los puntos turísticos.',
-        capacidad: 3,
-        disponibleDesde: '2026-01-01',
-        disponibleHasta: '2026-12-31',
-        rating: 4.5,
-      },
-      {
-        nombre: 'Hotel Horizonte',
-        categoria: '4★',
-        precioPorNoche: 160,
-        ubicacion: 'Zona de negocios',
-        descripcion: 'Perfecto para estadías cortas y viajeros que priorizan la conectividad.',
-        capacidad: 5,
-        disponibleDesde: '2026-06-01',
-        disponibleHasta: '2026-10-31',
-        rating: 4.3,
-      },
-      {
-        nombre: 'Hotel El Bosque',
-        categoria: '3★',
-        precioPorNoche: 110,
-        ubicacion: 'Sur del distrito',
-        descripcion: 'Opción económica para estancias largas con servicios básicos y buen desayuno.',
-        capacidad: 2,
-        disponibleDesde: '2026-01-01',
-        disponibleHasta: '2026-12-31',
-        rating: 4.0,
-      },
-    ];
-
-    this.hotelesBase = hotelesBase;
-
-    const hotelesFiltrados = hotelesBase.filter((hotel) => {
-      const capacidadAdecuada = totalPersonas <= hotel.capacidad;
-      const dentroDelRango = (!fechaLlegada || (fechaLlegada >= hotel.disponibleDesde && fechaLlegada <= hotel.disponibleHasta));
-      const filtroCategoria = this.hotelForm.get('filtroCategoria')?.value || 'Todas';
-      const filtroPrecioMax = Number(this.hotelForm.get('filtroPrecioMax')?.value || 250);
-      const cumpleCategoria = filtroCategoria === 'Todas' || hotel.categoria === filtroCategoria;
-      const cumplePrecio = hotel.precioPorNoche <= filtroPrecioMax;
-      return capacidadAdecuada && dentroDelRango && cumpleCategoria && cumplePrecio;
-    });
-
-    const hotelesOrdenados = [...hotelesFiltrados].sort((a, b) => {
-      const diferenciaPrecio = a.precioPorNoche - b.precioPorNoche;
-      const diferenciaRating = b.rating - a.rating;
-      return diferenciaPrecio + diferenciaRating * 0.01;
-    });
-
-    this.hotelesDisponibles = hotelesOrdenados.length > 0 ? hotelesOrdenados : hotelesBase;
-
-    if (!this.hotelSeleccionado || !this.hotelesDisponibles.some((hotel) => hotel.nombre === this.hotelSeleccionado?.nombre)) {
-      this.hotelSeleccionado = null;
+    if (!fechaLlegada || noches <= 0) {
+      this.hotelesDisponibles = [];
+      this.mensajeBusqueda = 'Completa fecha de llegada y noches para buscar hoteles.';
+      return;
     }
 
-    this.mensajeBusqueda = `Se encontraron ${this.hotelesDisponibles.length} hoteles para ${totalPersonas} personas, ${noches} noche(s) y llegada el ${fechaLlegada || 'sin fecha'}.`;
+    const filtroCategoria = this.hotelForm.get('filtroCategoria')?.value || 'Todas';
+    const request: BusquedaHotelRequest = {
+      destino: this.hotelForm.get('nombreHotel')?.value || 'Lima',
+      fechaLlegada,
+      noches,
+      adultos: Math.max(1, Number(this.hotelForm.get('adultos')?.value || 1)),
+      ninos: Math.max(0, Number(this.hotelForm.get('ninos')?.value || 0)),
+      infantes: Math.max(0, Number(this.hotelForm.get('infantes')?.value || 0)),
+      categoria: filtroCategoria === 'Todas' ? '' : filtroCategoria,
+      precioMaximo: Number(this.hotelForm.get('filtroPrecioMax')?.value || 250),
+    };
+
+    this.buscandoHoteles = true;
+    this.catalogosService.buscarHoteles(request).subscribe({
+      next: (resp) => {
+        const hotelesApi: HotelDisponibleResponse[] = Array.isArray(resp?.data)
+          ? resp.data
+          : [];
+
+        this.hotelesDisponibles = hotelesApi.map((hotel) => ({
+          id: hotel.id,
+          nombre: hotel.nombre,
+          categoria: hotel.categoria,
+          precioPorNoche: Number(hotel.precioPorNoche || 0),
+          ubicacion: hotel.ubicacion,
+          descripcion: hotel.descripcion,
+          capacidad: Number(hotel.capacidad || 0),
+          rating: Number(hotel.rating || 0),
+        }));
+
+        if (
+          !this.hotelSeleccionado
+          || !this.hotelesDisponibles.some((hotel) => hotel.nombre === this.hotelSeleccionado?.nombre)
+        ) {
+          this.hotelSeleccionado = null;
+        }
+
+        this.mensajeBusqueda = `Se encontraron ${this.hotelesDisponibles.length} hoteles para ${totalPersonas} personas, ${noches} noche(s) y llegada el ${fechaLlegada}.`;
+        this.buscandoHoteles = false;
+      },
+      error: () => {
+        this.hotelesDisponibles = [];
+        this.hotelSeleccionado = null;
+        this.mensajeBusqueda = 'No se pudo consultar hoteles del backend. Intenta nuevamente.';
+        this.buscandoHoteles = false;
+      },
+    });
   }
 
   getTotalPersonas(): number {
@@ -246,6 +234,55 @@ export class HotelComponent implements OnInit {
   seleccionarHotel(hotel: HotelDisponible) {
     this.hotelSeleccionado = hotel;
     this.hotelForm.patchValue({ nombreHotel: hotel.nombre }, { emitEvent: false });
+
+    if (!hotel.id) {
+      this.mensajeBusqueda = 'Hotel seleccionado localmente, sin identificador para validar en backend.';
+      return;
+    }
+
+    const fechaCheckIn = this.hotelForm.get('fechaCheckIn')?.value;
+    const fechaCheckOut = this.hotelForm.get('fechaCheckOut')?.value;
+    const noches = Number(this.hotelForm.get('noches')?.value || 0);
+    const adultos = Math.max(1, Number(this.hotelForm.get('adultos')?.value || 1));
+    const ninos = Math.max(0, Number(this.hotelForm.get('ninos')?.value || 0));
+    const infantes = Math.max(0, Number(this.hotelForm.get('infantes')?.value || 0));
+    const tipoHabitacionActual = this.hotelForm.get('tipoHabitacion')?.value || 'Simple';
+
+    if (!this.hotelForm.get('tipoHabitacion')?.value) {
+      this.hotelForm.patchValue({ tipoHabitacion: tipoHabitacionActual }, { emitEvent: false });
+    }
+
+    if (!fechaCheckIn || !fechaCheckOut || noches <= 0) {
+      this.mensajeBusqueda = 'Hotel seleccionado. Completa fechas/noches para validar reserva en backend.';
+      return;
+    }
+
+    const request: ReservaHotelRequest = {
+      hotelId: hotel.id,
+      tipoHabitacion: tipoHabitacionActual,
+      fechaCheckIn,
+      fechaCheckOut,
+      noches,
+      adultos,
+      ninos,
+      infantes,
+      titularReserva: 'WEB-CLIENTE',
+    };
+
+    this.validandoSeleccionHotel = true;
+    this.catalogosService.reservarHotel(request).subscribe({
+      next: (resp) => {
+        const codigo = resp?.data?.codigoReserva;
+        this.mensajeBusqueda = codigo
+          ? `Hotel seleccionado y validado en backend. Codigo: ${codigo}.`
+          : 'Hotel seleccionado y validado en backend.';
+        this.validandoSeleccionHotel = false;
+      },
+      error: () => {
+        this.mensajeBusqueda = 'Hotel seleccionado, pero no se pudo validar la reserva en backend.';
+        this.validandoSeleccionHotel = false;
+      },
+    });
   }
 
   guardar() {
