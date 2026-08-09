@@ -44,6 +44,7 @@ import { ReservaService } from '../_services/reserva.service';
 import { Router } from '@angular/router';
 import { ServiciosAdicionalesComponent } from '../servicios-adicionales/servicios-adicionales.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { ServiciosBusquedaService } from '../_services/servicios-busqueda.service';
 
 @Component({
   selector: 'app-inicio',
@@ -113,6 +114,43 @@ export class InicioComponent implements OnInit {
 
   message: string | undefined;
 
+  // Renta de carro
+  modelRentaLugarRecogida: string = '';
+  modelRentaLugarDevolucion: string = '';
+  modelRentaFechaRecogida: NgbDateStruct | undefined;
+  modelRentaFechaDevolucion: NgbDateStruct | undefined;
+  modelRentaTipoVehiculo: string = 'Económico';
+  modelRentaAdultos: number = 1;
+  tiposVehiculo: string[] = ['Económico', 'Compacto', 'Sedán', 'SUV', 'Camioneta'];
+
+  // Paquetes
+  modelPaqueteOrigen: string = '';
+  modelPaqueteDestino: string = '';
+  modelPaqueteFechaSalida: NgbDateStruct | undefined;
+  modelPaqueteFechaRegreso: NgbDateStruct | undefined;
+  modelPaqueteAdultos: number = 1;
+  modelPaqueteNinos: number = 0;
+  modelPaqueteInfantes: number = 0;
+
+  // Tours
+  modelTourDestino: string = '';
+  modelTourFecha: NgbDateStruct | undefined;
+  modelTourAdultos: number = 1;
+  modelTourNinos: number = 0;
+
+  // Seguro de viaje
+  modelSegViajeDestino: string = '';
+  modelSegViajeFechaSalida: NgbDateStruct | undefined;
+  modelSegViajeFechaRegreso: NgbDateStruct | undefined;
+  modelSegViajeAdultos: number = 1;
+  modelSegViajeNinos: number = 0;
+
+  // Seguros
+  modelSeguroTipo: string = 'Vida';
+  modelSeguroFechaInicio: NgbDateStruct | undefined;
+  modelSeguroAdultos: number = 1;
+  tiposSeguros: string[] = ['Vida', 'Salud', 'Accidentes', 'Desempleo'];
+
   flgProceso!: string;
 
   ofertaSeleccionada!: OfertaSeleccionada;
@@ -164,6 +202,7 @@ export class InicioComponent implements OnInit {
     private router: Router,
     private reservaService: ReservaService,
     private modalService: NgbModal,
+    private serviciosBusquedaService: ServiciosBusquedaService,
   ) {
     this.iniciaClaseVuelo();
     this.idIdaVuela = '1';
@@ -478,6 +517,61 @@ export class InicioComponent implements OnInit {
     modal.close();
     this.router.navigate(['/reserva']);
   }
+  buscarRentaCarro() {
+    const params: any = {
+      lugarRecogida: this.modelRentaLugarRecogida,
+      lugarDevolucion: this.modelRentaLugarDevolucion,
+      fechaRecogida: this.modelRentaFechaRecogida ? this.formatDate(this.modelRentaFechaRecogida) : '',
+      fechaDevolucion: this.modelRentaFechaDevolucion ? this.formatDate(this.modelRentaFechaDevolucion) : '',
+      tipoVehiculo: this.modelRentaTipoVehiculo,
+      adultos: this.modelRentaAdultos,
+    };
+    this.router.navigate(['/resultados/rentacarro'], { queryParams: params });
+  }
+
+  buscarPaquetes() {
+    const params: any = {
+      origen: this.modelPaqueteOrigen,
+      destino: this.modelPaqueteDestino,
+      fechaSalida: this.modelPaqueteFechaSalida ? this.formatDate(this.modelPaqueteFechaSalida) : '',
+      fechaRegreso: this.modelPaqueteFechaRegreso ? this.formatDate(this.modelPaqueteFechaRegreso) : '',
+      adultos: this.modelPaqueteAdultos,
+      ninos: this.modelPaqueteNinos,
+      infantes: this.modelPaqueteInfantes,
+    };
+    this.router.navigate(['/resultados/paquetes'], { queryParams: params });
+  }
+
+  buscarTours() {
+    const params: any = {
+      destino: this.modelTourDestino,
+      fechaTour: this.modelTourFecha ? this.formatDate(this.modelTourFecha) : '',
+      adultos: this.modelTourAdultos,
+      ninos: this.modelTourNinos,
+    };
+    this.router.navigate(['/resultados/tours'], { queryParams: params });
+  }
+
+  buscarSeguroViaje() {
+    const params: any = {
+      destino: this.modelSegViajeDestino,
+      fechaSalida: this.modelSegViajeFechaSalida ? this.formatDate(this.modelSegViajeFechaSalida) : '',
+      fechaRegreso: this.modelSegViajeFechaRegreso ? this.formatDate(this.modelSegViajeFechaRegreso) : '',
+      adultos: this.modelSegViajeAdultos,
+      ninos: this.modelSegViajeNinos,
+    };
+    this.router.navigate(['/resultados/seguro-viaje'], { queryParams: params });
+  }
+
+  buscarSeguros() {
+    const params: any = {
+      tipoSeguro: this.modelSeguroTipo,
+      fechaInicio: this.modelSeguroFechaInicio ? this.formatDate(this.modelSeguroFechaInicio) : '',
+      adultos: this.modelSeguroAdultos,
+    };
+    this.router.navigate(['/resultados/seguros'], { queryParams: params });
+  }
+
   getPrecioPorTarifa(tipo: string): number {
     /*const precioBase =
       this.ofertaSeleccionada.OfertaVuelo.precioOfertaDto.totalRuta;*/

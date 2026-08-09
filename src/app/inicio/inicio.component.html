@@ -302,6 +302,391 @@
                     </div>
                 </ng-template>
             </li>
+
+            <!-- TAB: RENTA DE CARROS -->
+            <li [ngbNavItem]="3">
+                <button ngbNavLink class="rounded-top px-4 fw-bold shadow-sm">
+                    <i class="bi bi-car-front-fill me-2"></i>Renta de Carros
+                </button>
+                <ng-template ngbNavContent>
+                    <div class="card border-0 shadow-sm p-4 bg-white rounded-bottom-4 rounded-end-4 mb-4">
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-floating">
+                                        <input id="txtRentaLugarRecogida" type="text" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelRentaLugarRecogida" name="rentaLugarRecogida"
+                                            placeholder="Lugar de recogida" />
+                                        <label for="txtRentaLugarRecogida"><i class="bi bi-geo-alt me-1 text-primary"></i> Lugar de Recogida</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-floating">
+                                        <input id="txtRentaLugarDevolucion" type="text" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelRentaLugarDevolucion" name="rentaLugarDevolucion"
+                                            placeholder="Lugar de devolución" />
+                                        <label for="txtRentaLugarDevolucion"><i class="bi bi-geo-alt-fill me-1 text-primary"></i> Lugar de Devolución</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-3 mt-1">
+                                <div class="col-12 col-md-3">
+                                    <div class="form-floating position-relative">
+                                        <input type="text" class="form-control border-0 bg-light"
+                                            #dRentaRecogida="ngbDatepicker" ngbDatepicker
+                                            (dateSelect)="modelRentaFechaRecogida = $event"
+                                            (click)="dRentaRecogida.toggle()"
+                                            placeholder="Fecha recogida" readonly style="cursor:pointer;" />
+                                        <label><i class="bi bi-calendar me-1 text-primary"></i> Fecha Recogida</label>
+                                        @if (modelRentaFechaRecogida) {
+                                          <div class="position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center ps-3"
+                                              style="padding-top:1.25rem; z-index:2; pointer-events:none;">
+                                            <small class="text-dark fw-medium">{{ formatDate(modelRentaFechaRecogida) }}</small>
+                                          </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="form-floating position-relative">
+                                        <input type="text" class="form-control border-0 bg-light"
+                                            #dRentaDev="ngbDatepicker" ngbDatepicker
+                                            (dateSelect)="modelRentaFechaDevolucion = $event"
+                                            (click)="dRentaDev.toggle()"
+                                            placeholder="Fecha devolución" readonly style="cursor:pointer;" />
+                                        <label><i class="bi bi-calendar-check me-1 text-primary"></i> Fecha Devolución</label>
+                                        @if (modelRentaFechaDevolucion) {
+                                          <div class="position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center ps-3"
+                                              style="padding-top:1.25rem; z-index:2; pointer-events:none;">
+                                            <small class="text-dark fw-medium">{{ formatDate(modelRentaFechaDevolucion) }}</small>
+                                          </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="form-floating">
+                                        <select class="form-select border-0 bg-light" id="selTipoVehiculo"
+                                            [(ngModel)]="modelRentaTipoVehiculo" name="rentaTipoVehiculo">
+                                            @for (tipo of tiposVehiculo; track tipo) {
+                                              <option [value]="tipo">{{ tipo }}</option>
+                                            }
+                                        </select>
+                                        <label for="selTipoVehiculo">Tipo de Vehículo</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="form-floating">
+                                        <input id="txtRentaAdultos" type="number" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelRentaAdultos" name="rentaAdultos" min="1" />
+                                        <label for="txtRentaAdultos">Adultos</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-12 text-center">
+                                    <button type="button" (click)="buscarRentaCarro()"
+                                        class="btn btn-verde btn-lg px-5 shadow-sm"
+                                        style="border-radius: 50px; transition: transform 0.2s;">
+                                        <i class="bi bi-search me-2"></i> Buscar Vehículo
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+            </li>
+
+            <!-- TAB: PAQUETES -->
+            <li [ngbNavItem]="4">
+                <button ngbNavLink class="rounded-top px-4 fw-bold shadow-sm">
+                    <i class="bi bi-briefcase-fill me-2"></i>Paquetes
+                </button>
+                <ng-template ngbNavContent>
+                    <div class="card border-0 shadow-sm p-4 bg-white rounded-bottom-4 rounded-end-4 mb-4">
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-floating">
+                                        <input id="txtPaqOrigen" type="text" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelPaqueteOrigen" name="paqueteOrigen"
+                                            placeholder="Ciudad de origen" />
+                                        <label for="txtPaqOrigen"><i class="bi bi-geo-alt me-1 text-primary"></i> Origen</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-floating">
+                                        <input id="txtPaqDestino" type="text" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelPaqueteDestino" name="paqueteDestino"
+                                            placeholder="Ciudad de destino" />
+                                        <label for="txtPaqDestino"><i class="bi bi-send me-1 text-primary"></i> Destino</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-3 mt-1">
+                                <div class="col-12 col-md-3">
+                                    <div class="form-floating position-relative">
+                                        <input type="text" class="form-control border-0 bg-light"
+                                            #dPaqSalida="ngbDatepicker" ngbDatepicker
+                                            (dateSelect)="modelPaqueteFechaSalida = $event"
+                                            (click)="dPaqSalida.toggle()"
+                                            placeholder="Fecha salida" readonly style="cursor:pointer;" />
+                                        <label><i class="bi bi-calendar me-1 text-primary"></i> Fecha Salida</label>
+                                        @if (modelPaqueteFechaSalida) {
+                                          <div class="position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center ps-3"
+                                              style="padding-top:1.25rem; z-index:2; pointer-events:none;">
+                                            <small class="text-dark fw-medium">{{ formatDate(modelPaqueteFechaSalida) }}</small>
+                                          </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="form-floating position-relative">
+                                        <input type="text" class="form-control border-0 bg-light"
+                                            #dPaqRegreso="ngbDatepicker" ngbDatepicker
+                                            (dateSelect)="modelPaqueteFechaRegreso = $event"
+                                            (click)="dPaqRegreso.toggle()"
+                                            placeholder="Fecha regreso" readonly style="cursor:pointer;" />
+                                        <label><i class="bi bi-calendar-check me-1 text-primary"></i> Fecha Regreso</label>
+                                        @if (modelPaqueteFechaRegreso) {
+                                          <div class="position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center ps-3"
+                                              style="padding-top:1.25rem; z-index:2; pointer-events:none;">
+                                            <small class="text-dark fw-medium">{{ formatDate(modelPaqueteFechaRegreso) }}</small>
+                                          </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-2">
+                                    <div class="form-floating">
+                                        <input id="txtPaqAdultos" type="number" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelPaqueteAdultos" name="paqueteAdultos" min="1" />
+                                        <label for="txtPaqAdultos">Adultos</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-2">
+                                    <div class="form-floating">
+                                        <input id="txtPaqNinos" type="number" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelPaqueteNinos" name="paqueteNinos" min="0" />
+                                        <label for="txtPaqNinos">Niños</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-2">
+                                    <div class="form-floating">
+                                        <input id="txtPaqInfantes" type="number" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelPaqueteInfantes" name="paqueteInfantes" min="0" />
+                                        <label for="txtPaqInfantes">Infantes</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-12 text-center">
+                                    <button type="button" (click)="buscarPaquetes()"
+                                        class="btn btn-verde btn-lg px-5 shadow-sm"
+                                        style="border-radius: 50px; transition: transform 0.2s;">
+                                        <i class="bi bi-search me-2"></i> Buscar Paquetes
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+            </li>
+
+            <!-- TAB: TOURS -->
+            <li [ngbNavItem]="5">
+                <button ngbNavLink class="rounded-top px-4 fw-bold shadow-sm">
+                    <i class="bi bi-map-fill me-2"></i>Tours
+                </button>
+                <ng-template ngbNavContent>
+                    <div class="card border-0 shadow-sm p-4 bg-white rounded-bottom-4 rounded-end-4 mb-4">
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-floating">
+                                        <input id="txtTourDestino" type="text" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelTourDestino" name="tourDestino"
+                                            placeholder="Destino del tour" />
+                                        <label for="txtTourDestino"><i class="bi bi-geo-alt me-1 text-primary"></i> Destino</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="form-floating position-relative">
+                                        <input type="text" class="form-control border-0 bg-light"
+                                            #dTourFecha="ngbDatepicker" ngbDatepicker
+                                            (dateSelect)="modelTourFecha = $event"
+                                            (click)="dTourFecha.toggle()"
+                                            placeholder="Fecha del tour" readonly style="cursor:pointer;" />
+                                        <label><i class="bi bi-calendar me-1 text-primary"></i> Fecha del Tour</label>
+                                        @if (modelTourFecha) {
+                                          <div class="position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center ps-3"
+                                              style="padding-top:1.25rem; z-index:2; pointer-events:none;">
+                                            <small class="text-dark fw-medium">{{ formatDate(modelTourFecha) }}</small>
+                                          </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-1">
+                                    <div class="form-floating">
+                                        <input id="txtTourAdultos" type="number" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelTourAdultos" name="tourAdultos" min="1" />
+                                        <label for="txtTourAdultos">Adultos</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-2">
+                                    <div class="form-floating">
+                                        <input id="txtTourNinos" type="number" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelTourNinos" name="tourNinos" min="0" />
+                                        <label for="txtTourNinos">Niños</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-12 text-center">
+                                    <button type="button" (click)="buscarTours()"
+                                        class="btn btn-verde btn-lg px-5 shadow-sm"
+                                        style="border-radius: 50px; transition: transform 0.2s;">
+                                        <i class="bi bi-search me-2"></i> Buscar Tours
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+            </li>
+
+            <!-- TAB: SEGUROS DE VIAJE -->
+            <li [ngbNavItem]="6">
+                <button ngbNavLink class="rounded-top px-4 fw-bold shadow-sm">
+                    <i class="bi bi-shield-check me-2"></i>Seguros de Viaje
+                </button>
+                <ng-template ngbNavContent>
+                    <div class="card border-0 shadow-sm p-4 bg-white rounded-bottom-4 rounded-end-4 mb-4">
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-12 col-md-4">
+                                    <div class="form-floating">
+                                        <input id="txtSegViajeDestino" type="text" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelSegViajeDestino" name="segViajeDestino"
+                                            placeholder="Destino" />
+                                        <label for="txtSegViajeDestino"><i class="bi bi-geo-alt me-1 text-primary"></i> Destino</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="form-floating position-relative">
+                                        <input type="text" class="form-control border-0 bg-light"
+                                            #dSegViajeSalida="ngbDatepicker" ngbDatepicker
+                                            (dateSelect)="modelSegViajeFechaSalida = $event"
+                                            (click)="dSegViajeSalida.toggle()"
+                                            placeholder="Fecha salida" readonly style="cursor:pointer;" />
+                                        <label><i class="bi bi-calendar me-1 text-primary"></i> Fecha Salida</label>
+                                        @if (modelSegViajeFechaSalida) {
+                                          <div class="position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center ps-3"
+                                              style="padding-top:1.25rem; z-index:2; pointer-events:none;">
+                                            <small class="text-dark fw-medium">{{ formatDate(modelSegViajeFechaSalida) }}</small>
+                                          </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="form-floating position-relative">
+                                        <input type="text" class="form-control border-0 bg-light"
+                                            #dSegViajeRegreso="ngbDatepicker" ngbDatepicker
+                                            (dateSelect)="modelSegViajeFechaRegreso = $event"
+                                            (click)="dSegViajeRegreso.toggle()"
+                                            placeholder="Fecha regreso" readonly style="cursor:pointer;" />
+                                        <label><i class="bi bi-calendar-check me-1 text-primary"></i> Fecha Regreso</label>
+                                        @if (modelSegViajeFechaRegreso) {
+                                          <div class="position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center ps-3"
+                                              style="padding-top:1.25rem; z-index:2; pointer-events:none;">
+                                            <small class="text-dark fw-medium">{{ formatDate(modelSegViajeFechaRegreso) }}</small>
+                                          </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-1">
+                                    <div class="form-floating">
+                                        <input id="txtSegViajeAdultos" type="number" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelSegViajeAdultos" name="segViajeAdultos" min="1" />
+                                        <label for="txtSegViajeAdultos">Adultos</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-1">
+                                    <div class="form-floating">
+                                        <input id="txtSegViajeNinos" type="number" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelSegViajeNinos" name="segViajeNinos" min="0" />
+                                        <label for="txtSegViajeNinos">Niños</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-12 text-center">
+                                    <button type="button" (click)="buscarSeguroViaje()"
+                                        class="btn btn-verde btn-lg px-5 shadow-sm"
+                                        style="border-radius: 50px; transition: transform 0.2s;">
+                                        <i class="bi bi-search me-2"></i> Buscar Seguro de Viaje
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+            </li>
+
+            <!-- TAB: SEGUROS -->
+            <li [ngbNavItem]="7">
+                <button ngbNavLink class="rounded-top px-4 fw-bold shadow-sm">
+                    <i class="bi bi-shield-fill me-2"></i>Seguros
+                </button>
+                <ng-template ngbNavContent>
+                    <div class="card border-0 shadow-sm p-4 bg-white rounded-bottom-4 rounded-end-4 mb-4">
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-12 col-md-4">
+                                    <div class="form-floating">
+                                        <select class="form-select border-0 bg-light" id="selSeguroTipo"
+                                            [(ngModel)]="modelSeguroTipo" name="seguroTipo">
+                                            @for (tipo of tiposSeguros; track tipo) {
+                                              <option [value]="tipo">{{ tipo }}</option>
+                                            }
+                                        </select>
+                                        <label for="selSeguroTipo">Tipo de Seguro</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="form-floating position-relative">
+                                        <input type="text" class="form-control border-0 bg-light"
+                                            #dSeguroInicio="ngbDatepicker" ngbDatepicker
+                                            (dateSelect)="modelSeguroFechaInicio = $event"
+                                            (click)="dSeguroInicio.toggle()"
+                                            placeholder="Fecha inicio" readonly style="cursor:pointer;" />
+                                        <label><i class="bi bi-calendar me-1 text-primary"></i> Fecha Inicio</label>
+                                        @if (modelSeguroFechaInicio) {
+                                          <div class="position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center ps-3"
+                                              style="padding-top:1.25rem; z-index:2; pointer-events:none;">
+                                            <small class="text-dark fw-medium">{{ formatDate(modelSeguroFechaInicio) }}</small>
+                                          </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="form-floating">
+                                        <input id="txtSeguroAdultos" type="number" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelSeguroAdultos" name="seguroAdultos" min="1" />
+                                        <label for="txtSeguroAdultos">Personas a asegurar</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-12 text-center">
+                                    <button type="button" (click)="buscarSeguros()"
+                                        class="btn btn-verde btn-lg px-5 shadow-sm"
+                                        style="border-radius: 50px; transition: transform 0.2s;">
+                                        <i class="bi bi-search me-2"></i> Buscar Seguros
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+            </li>
         </ul>
         <div [ngbNavOutlet]="nav"></div>
     </div>
