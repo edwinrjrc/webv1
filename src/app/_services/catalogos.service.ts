@@ -74,15 +74,16 @@ export class CatalogosService {
   }
 
   buscarHoteles(request: BusquedaHotelRequest) {
+    console.log('Consulta servicio');
     return this.http.post<ApiResponse<HotelDisponibleResponse[]>>(
-      `${environment.apiUrl}/api/viajes/hotelservice/busqueda`,
+      `${environment.apiUrl}/api/hoteles/hotelservice/busqueda`,
       request,
     );
   }
 
   reservarHotel(request: ReservaHotelRequest) {
     return this.http.post<ApiResponse<ReservaHotelResponse>>(
-      `${environment.apiUrl}/api/viajes/hotelservice/reserva`,
+      `${environment.apiUrl}/api/hoteles/hotelservice/reserva`,
       request,
     );
   }

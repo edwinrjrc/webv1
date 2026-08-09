@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   FormBuilder,
   FormGroup,
@@ -36,6 +37,7 @@ interface HotelDisponible {
 })
 export class HotelComponent implements OnInit {
   hotelForm!: FormGroup;
+  private ofertaActual: any = null;
   filtrosVisibles = true;
   tiposHabitacion = ['Simple', 'Doble', 'Suite', 'Familiar'];
   preciosPorTipo: Record<string, number> = {
@@ -59,6 +61,7 @@ export class HotelComponent implements OnInit {
 
   ngOnInit(): void {
     const oferta = this.reservaService.getOfertaActual();
+    this.ofertaActual = oferta;
 
     let fechaIn = '';
     let fechaOut = '';
@@ -77,17 +80,38 @@ export class HotelComponent implements OnInit {
     }
 
     const hotelExistente = this.reservaService.getReservaHotel();
+    const destinoSugerido = this.obtenerDestinoBusqueda();
+    const fechaLlegadaInicial =
+      hotelExistente?.fechaCheckIn || fechaIn || this.obtenerFechaHoyIso();
 
     this.hotelForm = this.fb.group({
-      nombreHotel: [hotelExistente?.nombreHotel || '', Validators.required],
-      fechaLlegada: [hotelExistente?.fechaCheckIn || fechaIn, Validators.required],
-      noches: [hotelExistente?.noches || 2, [Validators.required, Validators.min(1)]],
-      adultos: [hotelExistente?.adultos || 1, [Validators.required, Validators.min(1)]],
+      nombreHotel: [hotelExistente?.nombreHotel || destinoSugerido, Validators.required],
+      fechaLlegada: [
+        fechaLlegadaInicial,
+        Validators.required,
+      ],
+      noches: [
+        hotelExistente?.noches || 2,
+        [Validators.required, Validators.min(1)],
+      ],
+      adultos: [
+        hotelExistente?.adultos || 1,
+        [Validators.required, Validators.min(1)],
+      ],
       ninos: [hotelExistente?.ninos || 0, [Validators.min(0)]],
       infantes: [hotelExistente?.infantes || 0, [Validators.min(0)]],
-      fechaCheckIn: [hotelExistente?.fechaCheckIn || fechaIn, Validators.required],
-      fechaCheckOut: [hotelExistente?.fechaCheckOut || fechaOut, Validators.required],
-      tipoHabitacion: [hotelExistente?.tipoHabitacion || '', Validators.required],
+      fechaCheckIn: [
+        hotelExistente?.fechaCheckIn || fechaLlegadaInicial,
+        Validators.required,
+      ],
+      fechaCheckOut: [
+        hotelExistente?.fechaCheckOut || fechaOut,
+        Validators.required,
+      ],
+      tipoHabitacion: [
+        hotelExistente?.tipoHabitacion || '',
+        Validators.required,
+      ],
       filtroCategoria: ['Todas'],
       filtroPrecioMax: [250],
     });
@@ -158,25 +182,36 @@ export class HotelComponent implements OnInit {
 
   buscarHoteles() {
     const totalPersonas = this.getTotalPersonas();
-    const fechaLlegada = this.hotelForm.get('fechaLlegada')?.value || '';
-    const noches = Number(this.hotelForm.get('noches')?.value || 1);
+    const fechaLlegadaRaw = String(
+      this.hotelForm.get('fechaLlegada')?.value || '',
+    ).trim();
+    const fechaLlegada = fechaLlegadaRaw || this.obtenerFechaHoyIso();
+    const noches = Math.max(1, Number(this.hotelForm.get('noches')?.value || 1));
+    const destino = this.obtenerDestinoBusqueda();
 
-    if (!fechaLlegada || noches <= 0) {
+    /*if (!destino || !fechaLlegada || noches <= 0) {
       this.hotelesDisponibles = [];
-      this.mensajeBusqueda = 'Completa fecha de llegada y noches para buscar hoteles.';
+      this.mensajeBusqueda =
+        'Completa destino, fecha de llegada y noches para buscar hoteles.';
       return;
-    }
+    }*/
 
-    const filtroCategoria = this.hotelForm.get('filtroCategoria')?.value || 'Todas';
+    const filtroCategoria =
+      this.hotelForm.get('filtroCategoria')?.value || 'Todas';
+    const precioMaximoValor = Number(this.hotelForm.get('filtroPrecioMax')?.value);
+    const precioMaximo = Number.isFinite(precioMaximoValor)
+      ? precioMaximoValor
+      : 999999;
+
     const request: BusquedaHotelRequest = {
-      destino: this.hotelForm.get('nombreHotel')?.value || 'Lima',
+      destino,
       fechaLlegada,
       noches,
       adultos: Math.max(1, Number(this.hotelForm.get('adultos')?.value || 1)),
       ninos: Math.max(0, Number(this.hotelForm.get('ninos')?.value || 0)),
       infantes: Math.max(0, Number(this.hotelForm.get('infantes')?.value || 0)),
       categoria: filtroCategoria === 'Todas' ? '' : filtroCategoria,
-      precioMaximo: Number(this.hotelForm.get('filtroPrecioMax')?.value || 250),
+      precioMaximo,
     };
 
     this.buscandoHoteles = true;
@@ -198,8 +233,10 @@ export class HotelComponent implements OnInit {
         }));
 
         if (
-          !this.hotelSeleccionado
-          || !this.hotelesDisponibles.some((hotel) => hotel.nombre === this.hotelSeleccionado?.nombre)
+          !this.hotelSeleccionado ||
+          !this.hotelesDisponibles.some(
+            (hotel) => hotel.nombre === this.hotelSeleccionado?.nombre,
+          )
         ) {
           this.hotelSeleccionado = null;
         }
@@ -207,19 +244,56 @@ export class HotelComponent implements OnInit {
         this.mensajeBusqueda = `Se encontraron ${this.hotelesDisponibles.length} hoteles para ${totalPersonas} personas, ${noches} noche(s) y llegada el ${fechaLlegada}.`;
         this.buscandoHoteles = false;
       },
-      error: () => {
+      error: (error: HttpErrorResponse) => {
         this.hotelesDisponibles = [];
         this.hotelSeleccionado = null;
-        this.mensajeBusqueda = 'No se pudo consultar hoteles del backend. Intenta nuevamente.';
+        this.mensajeBusqueda =
+          error?.error?.mensaje ||
+          'No se pudo consultar hoteles del backend. Intenta nuevamente.';
         this.buscandoHoteles = false;
       },
     });
   }
 
+  private obtenerDestinoBusqueda(): string {
+    const destinoFormulario = String(
+      this.hotelForm?.get('nombreHotel')?.value || '',
+    ).trim();
+
+    if (destinoFormulario) {
+      return destinoFormulario;
+    }
+
+    const tramos = this.ofertaActual?.tramosDto || this.ofertaActual?.tramos || [];
+    if (Array.isArray(tramos) && tramos.length > 0) {
+      const ultimoTramo = tramos[tramos.length - 1];
+      const destinoVuelo = String(
+        ultimoTramo?.destino?.nombreCiudad ||
+          ultimoTramo?.destino?.descripcion ||
+          '',
+      ).trim();
+      if (destinoVuelo) {
+        return destinoVuelo;
+      }
+    }
+
+    return 'Lima';
+  }
+
+  private obtenerFechaHoyIso(): string {
+    return new Date().toISOString().slice(0, 10);
+  }
+
   getTotalPersonas(): number {
-    const adultos = Math.max(1, Number(this.hotelForm.get('adultos')?.value || 1));
+    const adultos = Math.max(
+      1,
+      Number(this.hotelForm.get('adultos')?.value || 1),
+    );
     const ninos = Math.max(0, Number(this.hotelForm.get('ninos')?.value || 0));
-    const infantes = Math.max(0, Number(this.hotelForm.get('infantes')?.value || 0));
+    const infantes = Math.max(
+      0,
+      Number(this.hotelForm.get('infantes')?.value || 0),
+    );
     return adultos + ninos + infantes;
   }
 
@@ -233,27 +307,42 @@ export class HotelComponent implements OnInit {
 
   seleccionarHotel(hotel: HotelDisponible) {
     this.hotelSeleccionado = hotel;
-    this.hotelForm.patchValue({ nombreHotel: hotel.nombre }, { emitEvent: false });
+    this.hotelForm.patchValue(
+      { nombreHotel: hotel.nombre },
+      { emitEvent: false },
+    );
 
     if (!hotel.id) {
-      this.mensajeBusqueda = 'Hotel seleccionado localmente, sin identificador para validar en backend.';
+      this.mensajeBusqueda =
+        'Hotel seleccionado localmente, sin identificador para validar en backend.';
       return;
     }
 
     const fechaCheckIn = this.hotelForm.get('fechaCheckIn')?.value;
     const fechaCheckOut = this.hotelForm.get('fechaCheckOut')?.value;
     const noches = Number(this.hotelForm.get('noches')?.value || 0);
-    const adultos = Math.max(1, Number(this.hotelForm.get('adultos')?.value || 1));
+    const adultos = Math.max(
+      1,
+      Number(this.hotelForm.get('adultos')?.value || 1),
+    );
     const ninos = Math.max(0, Number(this.hotelForm.get('ninos')?.value || 0));
-    const infantes = Math.max(0, Number(this.hotelForm.get('infantes')?.value || 0));
-    const tipoHabitacionActual = this.hotelForm.get('tipoHabitacion')?.value || 'Simple';
+    const infantes = Math.max(
+      0,
+      Number(this.hotelForm.get('infantes')?.value || 0),
+    );
+    const tipoHabitacionActual =
+      this.hotelForm.get('tipoHabitacion')?.value || 'Simple';
 
     if (!this.hotelForm.get('tipoHabitacion')?.value) {
-      this.hotelForm.patchValue({ tipoHabitacion: tipoHabitacionActual }, { emitEvent: false });
+      this.hotelForm.patchValue(
+        { tipoHabitacion: tipoHabitacionActual },
+        { emitEvent: false },
+      );
     }
 
     if (!fechaCheckIn || !fechaCheckOut || noches <= 0) {
-      this.mensajeBusqueda = 'Hotel seleccionado. Completa fechas/noches para validar reserva en backend.';
+      this.mensajeBusqueda =
+        'Hotel seleccionado. Completa fechas/noches para validar reserva en backend.';
       return;
     }
 
@@ -279,7 +368,8 @@ export class HotelComponent implements OnInit {
         this.validandoSeleccionHotel = false;
       },
       error: () => {
-        this.mensajeBusqueda = 'Hotel seleccionado, pero no se pudo validar la reserva en backend.';
+        this.mensajeBusqueda =
+          'Hotel seleccionado, pero no se pudo validar la reserva en backend.';
         this.validandoSeleccionHotel = false;
       },
     });
