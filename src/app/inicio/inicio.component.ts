@@ -138,18 +138,19 @@ export class InicioComponent implements OnInit {
   modelTourAdultos: number = 1;
   modelTourNinos: number = 0;
 
+  // Traslados
+  modelTrasladoOrigen: string = '';
+  modelTrasladoDestino: string = '';
+  modelTrasladoFecha: NgbDateStruct | undefined;
+  modelTrasladoAdultos: number = 1;
+  modelTrasladoNinos: number = 0;
+
   // Seguro de viaje
   modelSegViajeDestino: string = '';
   modelSegViajeFechaSalida: NgbDateStruct | undefined;
   modelSegViajeFechaRegreso: NgbDateStruct | undefined;
   modelSegViajeAdultos: number = 1;
   modelSegViajeNinos: number = 0;
-
-  // Seguros
-  modelSeguroTipo: string = 'Vida';
-  modelSeguroFechaInicio: NgbDateStruct | undefined;
-  modelSeguroAdultos: number = 1;
-  tiposSeguros: string[] = ['Vida', 'Salud', 'Accidentes', 'Desempleo'];
 
   flgProceso!: string;
 
@@ -552,6 +553,17 @@ export class InicioComponent implements OnInit {
     this.router.navigate(['/resultados/tours'], { queryParams: params });
   }
 
+  buscarTraslados() {
+    const params: any = {
+      origen: this.modelTrasladoOrigen,
+      destino: this.modelTrasladoDestino,
+      fecha: this.modelTrasladoFecha ? this.formatDate(this.modelTrasladoFecha) : '',
+      adultos: this.modelTrasladoAdultos,
+      ninos: this.modelTrasladoNinos,
+    };
+    this.router.navigate(['/resultados/traslados'], { queryParams: params });
+  }
+
   buscarSeguroViaje() {
     const params: any = {
       destino: this.modelSegViajeDestino,
@@ -561,15 +573,6 @@ export class InicioComponent implements OnInit {
       ninos: this.modelSegViajeNinos,
     };
     this.router.navigate(['/resultados/seguro-viaje'], { queryParams: params });
-  }
-
-  buscarSeguros() {
-    const params: any = {
-      tipoSeguro: this.modelSeguroTipo,
-      fechaInicio: this.modelSeguroFechaInicio ? this.formatDate(this.modelSeguroFechaInicio) : '',
-      adultos: this.modelSeguroAdultos,
-    };
-    this.router.navigate(['/resultados/seguros'], { queryParams: params });
   }
 
   getPrecioPorTarifa(tipo: string): number {

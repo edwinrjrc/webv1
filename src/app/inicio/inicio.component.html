@@ -306,7 +306,7 @@
             <!-- TAB: RENTA DE CARROS -->
             <li [ngbNavItem]="3">
                 <button ngbNavLink class="rounded-top px-4 fw-bold shadow-sm">
-                    <i class="bi bi-car-front-fill me-2"></i>Renta de Carros
+                    <i class="bi bi-car-front-fill me-2"></i>{{ 'search.tabs.car_rental' | translate }}
                 </button>
                 <ng-template ngbNavContent>
                     <div class="card border-0 shadow-sm p-4 bg-white rounded-bottom-4 rounded-end-4 mb-4">
@@ -398,7 +398,7 @@
             <!-- TAB: PAQUETES -->
             <li [ngbNavItem]="4">
                 <button ngbNavLink class="rounded-top px-4 fw-bold shadow-sm">
-                    <i class="bi bi-briefcase-fill me-2"></i>Paquetes
+                    <i class="bi bi-briefcase-fill me-2"></i>{{ 'search.tabs.package' | translate }}
                 </button>
                 <ng-template ngbNavContent>
                     <div class="card border-0 shadow-sm p-4 bg-white rounded-bottom-4 rounded-end-4 mb-4">
@@ -493,7 +493,7 @@
             <!-- TAB: TOURS -->
             <li [ngbNavItem]="5">
                 <button ngbNavLink class="rounded-top px-4 fw-bold shadow-sm">
-                    <i class="bi bi-map-fill me-2"></i>Tours
+                    <i class="bi bi-map-fill me-2"></i>{{ 'search.tabs.tours' | translate }}
                 </button>
                 <ng-template ngbNavContent>
                     <div class="card border-0 shadow-sm p-4 bg-white rounded-bottom-4 rounded-end-4 mb-4">
@@ -552,10 +552,82 @@
                 </ng-template>
             </li>
 
-            <!-- TAB: SEGUROS DE VIAJE -->
+            <!-- TAB: TRASLADOS -->
             <li [ngbNavItem]="6">
                 <button ngbNavLink class="rounded-top px-4 fw-bold shadow-sm">
-                    <i class="bi bi-shield-check me-2"></i>Seguros de Viaje
+                    <i class="bi bi-bus-front-fill me-2"></i>{{ 'search.tabs.transfers' | translate }}
+                </button>
+                <ng-template ngbNavContent>
+                    <div class="card border-0 shadow-sm p-4 bg-white rounded-bottom-4 rounded-end-4 mb-4">
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-floating">
+                                        <input id="txtTrasladoOrigen" type="text" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelTrasladoOrigen" name="trasladoOrigen"
+                                            placeholder="Origen" />
+                                        <label for="txtTrasladoOrigen"><i class="bi bi-geo-alt me-1 text-primary"></i> Origen</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-floating">
+                                        <input id="txtTrasladoDestino" type="text" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelTrasladoDestino" name="trasladoDestino"
+                                            placeholder="Destino" />
+                                        <label for="txtTrasladoDestino"><i class="bi bi-send me-1 text-primary"></i> Destino</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-3 mt-1">
+                                <div class="col-12 col-md-4">
+                                    <div class="form-floating position-relative">
+                                        <input type="text" class="form-control border-0 bg-light"
+                                            #dTrasladoFecha="ngbDatepicker" ngbDatepicker
+                                            (dateSelect)="modelTrasladoFecha = $event"
+                                            (click)="dTrasladoFecha.toggle()"
+                                            placeholder="Fecha" readonly style="cursor:pointer;" />
+                                        <label><i class="bi bi-calendar me-1 text-primary"></i> Fecha</label>
+                                        @if (modelTrasladoFecha) {
+                                          <div class="position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center ps-3"
+                                              style="padding-top:1.25rem; z-index:2; pointer-events:none;">
+                                            <small class="text-dark fw-medium">{{ formatDate(modelTrasladoFecha) }}</small>
+                                          </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="form-floating">
+                                        <input id="txtTrasladoAdultos" type="number" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelTrasladoAdultos" name="trasladoAdultos" min="1" />
+                                        <label for="txtTrasladoAdultos">Adultos</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="form-floating">
+                                        <input id="txtTrasladoNinos" type="number" class="form-control border-0 bg-light"
+                                            [(ngModel)]="modelTrasladoNinos" name="trasladoNinos" min="0" />
+                                        <label for="txtTrasladoNinos">Niños</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-12 text-center">
+                                    <button type="button" (click)="buscarTraslados()"
+                                        class="btn btn-verde btn-lg px-5 shadow-sm"
+                                        style="border-radius: 50px; transition: transform 0.2s;">
+                                        <i class="bi bi-search me-2"></i> Buscar Traslados
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+            </li>
+
+            <!-- TAB: SEGUROS DE VIAJE -->
+            <li [ngbNavItem]="7">
+                <button ngbNavLink class="rounded-top px-4 fw-bold shadow-sm">
+                    <i class="bi bi-shield-check me-2"></i>{{ 'search.tabs.travel_insurance' | translate }}
                 </button>
                 <ng-template ngbNavContent>
                     <div class="card border-0 shadow-sm p-4 bg-white rounded-bottom-4 rounded-end-4 mb-4">
@@ -630,63 +702,6 @@
                 </ng-template>
             </li>
 
-            <!-- TAB: SEGUROS -->
-            <li [ngbNavItem]="7">
-                <button ngbNavLink class="rounded-top px-4 fw-bold shadow-sm">
-                    <i class="bi bi-shield-fill me-2"></i>Seguros
-                </button>
-                <ng-template ngbNavContent>
-                    <div class="card border-0 shadow-sm p-4 bg-white rounded-bottom-4 rounded-end-4 mb-4">
-                        <form>
-                            <div class="row g-3">
-                                <div class="col-12 col-md-4">
-                                    <div class="form-floating">
-                                        <select class="form-select border-0 bg-light" id="selSeguroTipo"
-                                            [(ngModel)]="modelSeguroTipo" name="seguroTipo">
-                                            @for (tipo of tiposSeguros; track tipo) {
-                                              <option [value]="tipo">{{ tipo }}</option>
-                                            }
-                                        </select>
-                                        <label for="selSeguroTipo">Tipo de Seguro</label>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-4">
-                                    <div class="form-floating position-relative">
-                                        <input type="text" class="form-control border-0 bg-light"
-                                            #dSeguroInicio="ngbDatepicker" ngbDatepicker
-                                            (dateSelect)="modelSeguroFechaInicio = $event"
-                                            (click)="dSeguroInicio.toggle()"
-                                            placeholder="Fecha inicio" readonly style="cursor:pointer;" />
-                                        <label><i class="bi bi-calendar me-1 text-primary"></i> Fecha Inicio</label>
-                                        @if (modelSeguroFechaInicio) {
-                                          <div class="position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center ps-3"
-                                              style="padding-top:1.25rem; z-index:2; pointer-events:none;">
-                                            <small class="text-dark fw-medium">{{ formatDate(modelSeguroFechaInicio) }}</small>
-                                          </div>
-                                        }
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-4">
-                                    <div class="form-floating">
-                                        <input id="txtSeguroAdultos" type="number" class="form-control border-0 bg-light"
-                                            [(ngModel)]="modelSeguroAdultos" name="seguroAdultos" min="1" />
-                                        <label for="txtSeguroAdultos">Personas a asegurar</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mt-4">
-                                <div class="col-12 text-center">
-                                    <button type="button" (click)="buscarSeguros()"
-                                        class="btn btn-verde btn-lg px-5 shadow-sm"
-                                        style="border-radius: 50px; transition: transform 0.2s;">
-                                        <i class="bi bi-search me-2"></i> Buscar Seguros
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </ng-template>
-            </li>
         </ul>
         <div [ngbNavOutlet]="nav"></div>
     </div>

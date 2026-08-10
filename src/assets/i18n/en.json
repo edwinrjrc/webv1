@@ -29,7 +29,12 @@
   "search": {
     "tabs": {
       "flights": "Flights",
-      "hotels": "Hotels"
+      "hotels": "Hotels",
+      "transfers": "Transfers",
+      "travel_insurance": "Travel Insurance",
+      "car_rental": "Car Rental",
+      "package": "Package",
+      "tours": "Tours"
     },
     "flightType": {
       "label": "Flight Type",
