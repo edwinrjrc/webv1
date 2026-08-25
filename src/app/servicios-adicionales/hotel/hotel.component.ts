@@ -376,25 +376,44 @@ export class HotelComponent implements OnInit {
   }
 
   guardar() {
-    if (this.hotelForm.invalid || !this.hotelSeleccionado) {
+    const hotelActual = this.reservaService.getReservaHotel();
+    const nombreHotelFormulario = String(
+      this.hotelForm.get('nombreHotel')?.value || '',
+    ).trim();
+    const hotelNombre =
+      this.hotelSeleccionado?.nombre ||
+      nombreHotelFormulario ||
+      hotelActual?.nombreHotel ||
+      '';
+
+    if (this.hotelForm.invalid && !hotelActual && !this.hotelSeleccionado) {
       this.hotelForm.markAllAsTouched();
-      this.mensajeBusqueda = 'Selecciona un hotel de la lista para continuar.';
+      this.mensajeBusqueda = 'Completa los datos del hotel para continuar.';
       return;
     }
 
     const val = this.hotelForm.value;
-    this.reservaService.setReservaHotel({
-      fechaCheckIn: val.fechaCheckIn,
-      fechaCheckOut: val.fechaCheckOut,
-      tipoHabitacion: val.tipoHabitacion,
-      cantidadHuespedes: Number(val.cantidadPersonas),
-      nombreHotel: this.hotelSeleccionado.nombre,
-      precio: this.precioEstimado,
-      noches: Number(val.noches),
-      adultos: Number(val.adultos),
-      ninos: Number(val.ninos),
-      infantes: Number(val.infantes),
-    });
+    const nombreHotel = hotelNombre || val.nombreHotel || 'Hotel seleccionado';
+    const precioHotel = this.precioEstimado || hotelActual?.precio || 0;
+    const nochesHotel = Number(val.noches || hotelActual?.noches || 1);
+    const adultosHotel = Number(val.adultos || hotelActual?.adultos || 1);
+    const ninosHotel = Number(val.ninos || hotelActual?.ninos || 0);
+    const infantesHotel = Number(val.infantes || hotelActual?.infantes || 0);
+
+    if (this.hotelSeleccionado || hotelActual) {
+      this.reservaService.setReservaHotel({
+        fechaCheckIn: val.fechaCheckIn,
+        fechaCheckOut: val.fechaCheckOut,
+        tipoHabitacion: val.tipoHabitacion,
+        cantidadHuespedes: Number(val.cantidadPersonas || 0),
+        nombreHotel,
+        precio: precioHotel,
+        noches: nochesHotel,
+        adultos: adultosHotel,
+        ninos: ninosHotel,
+        infantes: infantesHotel,
+      });
+    }
 
     this.navegarAlSiguiente();
   }

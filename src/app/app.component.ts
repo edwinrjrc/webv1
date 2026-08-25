@@ -15,7 +15,7 @@ import { LanguageService } from './_services/language.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = '..:: Innova Viajes';
+  title = 'Innova Viajes';
 
   constructor(private languageService: LanguageService) {
     this.languageService.init();
