@@ -20,6 +20,8 @@ export class ServiciosAdicionalesComponent implements OnInit {
     tours: false,
   };
 
+  isNavegando = false;
+
   constructor(
     private router: Router,
     private reservaService: ReservaService,
@@ -29,6 +31,11 @@ export class ServiciosAdicionalesComponent implements OnInit {
   ngOnInit(): void {}
 
   continuar() {
+    if (this.isNavegando) {
+      return;
+    }
+    this.isNavegando = true;
+
     const seleccionados = Object.entries(this.servicios)
       .filter(([, val]) => val)
       .map(([key]) => key);

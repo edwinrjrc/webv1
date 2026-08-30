@@ -4,35 +4,33 @@
             <img src="../../assets/resources/img/logo_iv_web.png" alt="Innova Viajes" height="45" class="me-2">
             <span class="h4 mb-0 fw-bold text-primary tracking-tight">{{ 'header.brand' | translate }}</span>
         </a>
-        
+
         <div class="ms-auto d-none d-md-flex align-items-center gap-3">
             <span class="text-muted small border-end pe-3">{{ 'header.attention' | translate }}</span>
             <div class="d-flex align-items-center text-primary fw-semibold">
-                <span class="material-symbols-outlined me-1 fs-5">phone_in_talk</span>
-                +51 999 888 777
+                <a [href]="telUrl" class="d-flex align-items-center text-primary fw-semibold text-decoration-none">
+                    <i class="bi bi-telephone-outbound me-1 fs-5"></i>
+                    {{ phoneNumber }}
+                </a>
             </div>
 
             <!-- Language selector -->
             <div class="dropdown">
                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle d-flex align-items-center gap-1"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                        [attr.aria-label]="'header.language' | translate">
+                    type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                    [attr.aria-label]="'header.language' | translate">
                     <span class="fw-semibold text-uppercase small">{{ languageService.currentLang }}</span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
                     <li>
                         <button class="dropdown-item d-flex align-items-center gap-2"
-                                [class.active]="languageService.currentLang === 'es'"
-                                (click)="switchLanguage('es')">
+                            [class.active]="languageService.currentLang === 'es'" (click)="switchLanguage('es')">
                             🇪🇸 Español
                         </button>
                     </li>
                     <li>
                         <button class="dropdown-item d-flex align-items-center gap-2"
-                                [class.active]="languageService.currentLang === 'en'"
-                                (click)="switchLanguage('en')">
+                            [class.active]="languageService.currentLang === 'en'" (click)="switchLanguage('en')">
                             🇺🇸 English
                         </button>
                     </li>

@@ -10,7 +10,14 @@ import { LanguageService } from '../_services/language.service';
   styleUrl: './cabecera.component.css'
 })
 export class CabeceraComponent {
+
+  phoneNumber: string = '+51 999 888 777';
+
   constructor(public languageService: LanguageService) {}
+
+  get telUrl(): string {
+    return 'tel:' + this.phoneNumber.replace(/\s+/g, '');
+  }
 
   switchLanguage(lang: string): void {
     this.languageService.use(lang);

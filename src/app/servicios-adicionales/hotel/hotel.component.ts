@@ -75,7 +75,7 @@ export class HotelComponent implements OnInit {
           fechaOut = ultimoTramo?.fechaLlegada?.substring(0, 10) || '';
         }
       } catch {
-        // use empty dates if parsing fails
+        // Manejo silencioso en caso de fallo al extraer tramos
       }
     }
 
@@ -86,10 +86,7 @@ export class HotelComponent implements OnInit {
 
     this.hotelForm = this.fb.group({
       nombreHotel: [hotelExistente?.nombreHotel || destinoSugerido, Validators.required],
-      fechaLlegada: [
-        fechaLlegadaInicial,
-        Validators.required,
-      ],
+      fechaLlegada: [fechaLlegadaInicial, Validators.required],
       noches: [
         hotelExistente?.noches || 2,
         [Validators.required, Validators.min(1)],
@@ -145,9 +142,7 @@ export class HotelComponent implements OnInit {
     const fechaLlegada = this.hotelForm.get('fechaLlegada')?.value;
     const noches = Number(this.hotelForm.get('noches')?.value || 1);
 
-    if (!fechaLlegada) {
-      return;
-    }
+    if (!fechaLlegada) return;
 
     const fechaInicio = new Date(`${fechaLlegada}T00:00:00`);
     const fechaSalida = new Date(fechaInicio);
@@ -164,18 +159,14 @@ export class HotelComponent implements OnInit {
     );
   }
 
-  private actualizarCantidadPersonas(): void {
-    // No se necesita un control adicional para personas; el total se calcula solo para filtrado.
-  }
+  private actualizarCantidadPersonas(): void {}
 
   get precioEstimado(): number {
     const tipo = this.hotelForm.get('tipoHabitacion')?.value;
     const noches = Number(this.hotelForm.get('noches')?.value || 1);
     const precioBase = this.hotelSeleccionado?.precioPorNoche ?? 0;
 
-    if (!tipo || !noches) {
-      return 0;
-    }
+    if (!tipo || !noches) return 0;
 
     return (this.preciosPorTipo[tipo] + precioBase) * noches;
   }
@@ -188,13 +179,6 @@ export class HotelComponent implements OnInit {
     const fechaLlegada = fechaLlegadaRaw || this.obtenerFechaHoyIso();
     const noches = Math.max(1, Number(this.hotelForm.get('noches')?.value || 1));
     const destino = this.obtenerDestinoBusqueda();
-
-    /*if (!destino || !fechaLlegada || noches <= 0) {
-      this.hotelesDisponibles = [];
-      this.mensajeBusqueda =
-        'Completa destino, fecha de llegada y noches para buscar hoteles.';
-      return;
-    }*/
 
     const filtroCategoria =
       this.hotelForm.get('filtroCategoria')?.value || 'Todas';
@@ -260,9 +244,7 @@ export class HotelComponent implements OnInit {
       this.hotelForm?.get('nombreHotel')?.value || '',
     ).trim();
 
-    if (destinoFormulario) {
-      return destinoFormulario;
-    }
+    if (destinoFormulario) return destinoFormulario;
 
     const tramos = this.ofertaActual?.tramosDto || this.ofertaActual?.tramos || [];
     if (Array.isArray(tramos) && tramos.length > 0) {
@@ -272,9 +254,7 @@ export class HotelComponent implements OnInit {
           ultimoTramo?.destino?.descripcion ||
           '',
       ).trim();
-      if (destinoVuelo) {
-        return destinoVuelo;
-      }
+      if (destinoVuelo) return destinoVuelo;
     }
 
     return 'Lima';
@@ -285,15 +265,9 @@ export class HotelComponent implements OnInit {
   }
 
   getTotalPersonas(): number {
-    const adultos = Math.max(
-      1,
-      Number(this.hotelForm.get('adultos')?.value || 1),
-    );
+    const adultos = Math.max(1, Number(this.hotelForm.get('adultos')?.value || 1));
     const ninos = Math.max(0, Number(this.hotelForm.get('ninos')?.value || 0));
-    const infantes = Math.max(
-      0,
-      Number(this.hotelForm.get('infantes')?.value || 0),
-    );
+    const infantes = Math.max(0, Number(this.hotelForm.get('infantes')?.value || 0));
     return adultos + ninos + infantes;
   }
 
@@ -321,15 +295,9 @@ export class HotelComponent implements OnInit {
     const fechaCheckIn = this.hotelForm.get('fechaCheckIn')?.value;
     const fechaCheckOut = this.hotelForm.get('fechaCheckOut')?.value;
     const noches = Number(this.hotelForm.get('noches')?.value || 0);
-    const adultos = Math.max(
-      1,
-      Number(this.hotelForm.get('adultos')?.value || 1),
-    );
+    const adultos = Math.max(1, Number(this.hotelForm.get('adultos')?.value || 1));
     const ninos = Math.max(0, Number(this.hotelForm.get('ninos')?.value || 0));
-    const infantes = Math.max(
-      0,
-      Number(this.hotelForm.get('infantes')?.value || 0),
-    );
+    const infantes = Math.max(0, Number(this.hotelForm.get('infantes')?.value || 0));
     const tipoHabitacionActual =
       this.hotelForm.get('tipoHabitacion')?.value || 'Simple';
 
@@ -413,6 +381,15 @@ export class HotelComponent implements OnInit {
         ninos: ninosHotel,
         infantes: infantesHotel,
       });
+
+      // LÓGICA DE TRASLADOS POR DEFECTO
+      const servicios = this.reservaService.getServiciosSeleccionados();
+      if (servicios.includes('traslado')) {
+        this.reservaService.generarTrasladosPorDefecto(
+          nombreHotel,
+          this.hotelSeleccionado?.ubicacion,
+        );
+      }
     }
 
     this.navegarAlSiguiente();

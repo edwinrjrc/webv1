@@ -19,7 +19,8 @@ export class ReservaService {
   // 1. Definimos los "sujetos" (privados, donde metemos la información)
   private ofertaSource = new BehaviorSubject<any>(null);
   private consultaSource = new BehaviorSubject<any>(null);
-  private serviciosAdicionalesSource = new BehaviorSubject<ServiciosAdicionales | null>(null);
+  private serviciosAdicionalesSource =
+    new BehaviorSubject<ServiciosAdicionales | null>(null);
 
   private datosReservaSource = new BehaviorSubject<DatosCompraTotal | null>(
     null,
@@ -47,7 +48,6 @@ export class ReservaService {
   private metodoPagoForm: any = null;
 
   // 2. Definimos los "observables" (públicos, de donde los componentes leen)
-  // Agregamos el filter para que no emitan el "null" inicial que rompe la navegación
   ofertaActual$ = this.ofertaSource
     .asObservable()
     .pipe(filter((valor) => valor !== null));
@@ -129,6 +129,28 @@ export class ReservaService {
     return this.trasladoSource.getValue();
   }
 
+  /**
+   * Helper para obtener la lista de ítems de traslado consumida por TrasladoComponent
+   */
+  getTraslados(): any[] {
+    const trasladoActual: any = this.trasladoSource.getValue();
+    if (!trasladoActual) return [];
+    if (Array.isArray(trasladoActual)) return trasladoActual;
+    return trasladoActual.items || [trasladoActual];
+  }
+
+  /**
+   * Helper para actualizar los ítems de traslado desde TrasladoComponent
+   */
+  setTraslados(traslados: any[]): void {
+    const totalPrecio = traslados.reduce((acc, t) => acc + (t.precio || 0), 0);
+    const payload: any = {
+      items: traslados,
+      precio: totalPrecio,
+    };
+    this.trasladoSource.next(payload);
+  }
+
   setTours(tours: Tour[]) {
     this.toursSource.next(tours);
   }
@@ -147,7 +169,7 @@ export class ReservaService {
     if (hotel) total += hotel.precio;
     if (carro) total += carro.precio;
     if (traslado) total += traslado.precio;
-    tours.filter(t => t.seleccionado).forEach(t => total += t.precio);
+    tours.filter((t) => t.seleccionado).forEach((t) => (total += t.precio));
 
     return total;
   }
@@ -157,16 +179,77 @@ export class ReservaService {
     const hotel = this.getReservaHotel();
     const carro = this.getRentaCarro();
     const traslado = this.getTraslado();
-    const tours = this.getTours().filter(t => t.seleccionado);
+    const tours = this.getTours().filter((t) => t.seleccionado);
 
-    if (hotel) resumen.push({ tipo: 'hotel', nombre: 'Hotel', precio: hotel.precio, completado: true });
-    if (carro) resumen.push({ tipo: 'rentacarro', nombre: 'Renta de Carro', precio: carro.precio, completado: true });
-    if (traslado) resumen.push({ tipo: 'traslado', nombre: 'Traslado', precio: traslado.precio, completado: true });
+    if (hotel)
+      resumen.push({
+        tipo: 'hotel',
+        nombre: 'Hotel',
+        precio: hotel.precio,
+        completado: true,
+      });
+    if (carro)
+      resumen.push({
+        tipo: 'rentacarro',
+        nombre: 'Renta de Carro',
+        precio: carro.precio,
+        completado: true,
+      });
+    if (traslado)
+      resumen.push({
+        tipo: 'traslado',
+        nombre: 'Traslado',
+        precio: traslado.precio,
+        completado: true,
+      });
     if (tours.length > 0) {
       const totalTours = tours.reduce((sum, t) => sum + t.precio, 0);
-      resumen.push({ tipo: 'tours', nombre: 'Tours', precio: totalTours, completado: true });
+      resumen.push({
+        tipo: 'tours',
+        nombre: 'Tours',
+        precio: totalTours,
+        completado: true,
+      });
     }
 
     return resumen;
+  }
+
+  /**
+   * Genera automáticamente traslados sugeridos/predeterminados basados en la selección de hotel.
+   * @param nombreHotel Nombre del hotel seleccionado
+   * @param ubicacion Dirección o zona del hotel
+   */
+  generarTrasladosPorDefecto(nombreHotel: string, ubicacion?: string): void {
+    const destino = ubicacion ? `${nombreHotel} - ${ubicacion}` : nombreHotel;
+
+    const trasladosDefecto = [
+      {
+        id: 'def-ida-' + Date.now(),
+        nombre: `Traslado Estándar - Aeropuerto a ${nombreHotel}`,
+        empresaId: 'movego',
+        empresaNombre: 'MoveGo Transfers',
+        destinoDireccion: destino,
+        tipoServicio: 'economico',
+        precio: 35.0,
+        horaRecojoIda: '18:00',
+        esVuelta: false,
+      },
+      {
+        id: 'def-vuelta-' + Date.now(),
+        nombre: `Traslado Estándar - ${nombreHotel} a Aeropuerto`,
+        empresaId: 'movego',
+        empresaNombre: 'MoveGo Transfers',
+        destinoDireccion: destino,
+        tipoServicio: 'economico',
+        precio: 35.0,
+        fechaRecojoVuelta: '2026-09-20',
+        horaRecojoVuelta: '10:00',
+        esVuelta: true,
+      },
+    ];
+
+    // Guarda los traslados generados en el Subject de traslados
+    this.setTraslados(trasladosDefecto);
   }
 }
