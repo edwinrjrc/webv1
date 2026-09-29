@@ -15,6 +15,7 @@ import { ReservaService } from '../_services/reserva.service';
 export class ServiciosAdicionalesComponent implements OnInit {
   servicios = {
     hotel: false,
+    vuelo: false,
     rentacarro: false,
     traslado: false,
     tours: false,
@@ -28,7 +29,14 @@ export class ServiciosAdicionalesComponent implements OnInit {
     @Optional() private modalRef?: NgbActiveModal,
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const seleccionados = this.reservaService.getServiciosSeleccionados();
+    this.servicios.hotel = seleccionados.includes('hotel');
+    this.servicios.vuelo = seleccionados.includes('vuelo');
+    this.servicios.rentacarro = seleccionados.includes('rentacarro');
+    this.servicios.traslado = seleccionados.includes('traslado');
+    this.servicios.tours = seleccionados.includes('tours');
+  }
 
   continuar() {
     if (this.isNavegando) {
@@ -67,10 +75,34 @@ export class ServiciosAdicionalesComponent implements OnInit {
       return;
     }
     const servicio = servicios[indice];
+
+    if (servicio === 'vuelo') {
+      if (this.reservaService.tieneVueloComplementario()) {
+        this.navegarAlSiguienteServicio(servicios, indice + 1);
+      } else {
+        this.router.navigate(['/busqueda'], {
+          queryParams: { returnTo: 'servicios' },
+        });
+      }
+      return;
+    }
+
     this.router.navigate(['/reserva/servicios', servicio]);
   }
 
+  get esReservaHotel(): boolean {
+    return this.reservaService.getTipoReserva() === 'hotel';
+  }
+
   get haySeleccion(): boolean {
-    return Object.values(this.servicios).some((v) => v);
+    return this.esReservaHotel
+      ? this.servicios.vuelo ||
+          this.servicios.traslado ||
+          this.servicios.rentacarro ||
+          this.servicios.tours
+      : this.servicios.hotel ||
+          this.servicios.traslado ||
+          this.servicios.rentacarro ||
+          this.servicios.tours;
   }
 }

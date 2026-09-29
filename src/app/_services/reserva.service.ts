@@ -21,12 +21,18 @@ export class ReservaService {
   private consultaSource = new BehaviorSubject<any>(null);
   private serviciosAdicionalesSource =
     new BehaviorSubject<ServiciosAdicionales | null>(null);
+  private tipoReservaSource = new BehaviorSubject<'vuelo' | 'hotel' | null>(
+    null,
+  );
+  private vueloComplementarioSource = new BehaviorSubject(false);
 
   private datosReservaSource = new BehaviorSubject<DatosCompraTotal | null>(
     null,
   );
   datosReserva$ = this.datosReservaSource.asObservable();
   serviciosAdicionales$ = this.serviciosAdicionalesSource.asObservable();
+  tipoReserva$ = this.tipoReservaSource.asObservable();
+  vueloComplementario$ = this.vueloComplementarioSource.asObservable();
 
   // Servicios adicionales seleccionados
   private serviciosSeleccionadosSource = new BehaviorSubject<string[]>([]);
@@ -78,6 +84,8 @@ export class ReservaService {
     this.rentaCarroSource.next(null);
     this.trasladoSource.next(null);
     this.toursSource.next([]);
+    this.tipoReservaSource.next(null);
+    this.vueloComplementarioSource.next(false);
   }
 
   actualizarDatosCompra(datos: DatosCompraTotal) {
@@ -94,6 +102,22 @@ export class ReservaService {
 
   getDatosReservaActual() {
     return this.datosReservaSource.getValue();
+  }
+
+  setTipoReserva(tipo: 'vuelo' | 'hotel'): void {
+    this.tipoReservaSource.next(tipo);
+  }
+
+  getTipoReserva(): 'vuelo' | 'hotel' | null {
+    return this.tipoReservaSource.getValue();
+  }
+
+  setVueloComplementario(seleccionado: boolean): void {
+    this.vueloComplementarioSource.next(seleccionado);
+  }
+
+  tieneVueloComplementario(): boolean {
+    return this.vueloComplementarioSource.getValue();
   }
 
   // Servicios adicionales

@@ -14,9 +14,9 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Clasevuelo } from '../modelo/clasevuelo';
-import { Observable, OperatorFunction } from 'rxjs';
-import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { CatalogosService } from '../_services/catalogos.service';
+import { Observable, OperatorFunction, of } from 'rxjs';
+import { map, debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
+import { CatalogosService, CiudadResponse, HotelDisponibleResponse } from '../_services/catalogos.service';
 import { InterDestino } from '../modelo/interDestino';
 import { InterDataRptaDestino } from '../modelo/InterDataRptaDestino';
 import { ConsultaViaje } from '../modelo/consultaViaje';
@@ -33,6 +33,7 @@ import {
   NgbModal,
   NgbNavModule,
   NgbTypeaheadModule,
+  NgbTypeaheadSelectItemEvent,
 } from '@ng-bootstrap/ng-bootstrap';
 import { VuelosEncontrados } from '../modelo/vueltosEncontrados';
 import { UtilconversionsService } from '../_services/utilconversions.service';
@@ -41,7 +42,7 @@ import { OfertaSeleccionada } from '../modelo/ofertaSeleccionada';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../_services/auth.service'; // Ajusta la ruta si es necesario
 import { ReservaService } from '../_services/reserva.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ServiciosAdicionalesComponent } from '../servicios-adicionales/servicios-adicionales.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { ServiciosBusquedaService } from '../_services/servicios-busqueda.service';
@@ -111,6 +112,20 @@ export class InicioComponent implements OnInit {
   modelNinosHotel: number = 0;
   modelInfantesHotel: number = 0;
   modelTotalPersonasHotel: number = 2;
+  mensajeHotel = '';
+  buscandoCiudadesHotel = false;
+  buscandoHoteles = false;
+  busquedaHotelRealizada = false;
+  hotelesEncontrados: HotelDisponibleResponse[] = [];
+  hotelSeleccionadoInicio: HotelDisponibleResponse | null = null;
+  tiposHabitacionHotel = ['Simple', 'Doble', 'Suite', 'Familiar'];
+  modelTipoHabitacionHotel = 'Simple';
+  private preciosPorTipoHabitacion: Record<string, number> = {
+    Simple: 80,
+    Doble: 120,
+    Suite: 250,
+    Familiar: 180,
+  };
 
   message: string | undefined;
 
@@ -201,6 +216,7 @@ export class InicioComponent implements OnInit {
     private authService: AuthService,
     @Inject(PLATFORM_ID) private platformId: Object, // 3. Inyectar el ID de plataforma
     private router: Router,
+    private route: ActivatedRoute,
     private reservaService: ReservaService,
     private modalService: NgbModal,
     private serviciosBusquedaService: ServiciosBusquedaService,
@@ -472,6 +488,36 @@ export class InicioComponent implements OnInit {
     return `${date.day}/${date.month}/${date.year}`;
   }
 
+  searchCiudadesHotel: OperatorFunction<string, readonly CiudadResponse[]> = (
+    text$: Observable<string>,
+  ) =>
+    text$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((term) => {
+        if (term.trim().length < 2) {
+          return of([]);
+        }
+        this.buscandoCiudadesHotel = true;
+        return this.catalogoService.consultarCiudades(term.trim()).pipe(
+          map((resp) => resp?.data ?? []),
+          catchError(() => of([])),
+        );
+      }),
+      map((ciudades) => {
+        this.buscandoCiudadesHotel = false;
+        return ciudades;
+      }),
+    );
+
+  formatterCiudadHotel = (ciudad: CiudadResponse) =>
+    ciudad ? [ciudad.nombre, ciudad.region, ciudad.pais].filter(Boolean).join(', ') : '';
+
+  onSeleccionarCiudadHotel(event: NgbTypeaheadSelectItemEvent<CiudadResponse>) {
+    event.preventDefault();
+    this.modelHotel = this.formatterCiudadHotel(event.item);
+  }
+
   recalcularTotalPersonasHotel() {
     this.modelAdultosHotel = Math.max(1, Number(this.modelAdultosHotel || 0));
     this.modelNinosHotel = Math.max(0, Number(this.modelNinosHotel || 0));
@@ -483,20 +529,100 @@ export class InicioComponent implements OnInit {
 
   buscarHoteles() {
     this.recalcularTotalPersonasHotel();
+    this.mensajeHotel = '';
 
-    const filtrosHoteles = {
-      hotel: this.modelHotel,
-      fechaLlegada: this.modelFechaLlegadaHotel
-        ? this.formatDate(this.modelFechaLlegadaHotel)
-        : '',
-      numeroNoches: this.modelNochesHotel,
+    if (!this.modelHotel.trim() || !this.modelFechaLlegadaHotel) {
+      this.mensajeHotel = 'Ingresa el destino y la fecha de llegada para buscar hoteles.';
+      return;
+    }
+
+    const fechaLlegada = this.formatearFechaIso(this.modelFechaLlegadaHotel);
+    const noches = Math.max(1, Number(this.modelNochesHotel || 1));
+
+    const request = {
+      destino: this.modelHotel.trim(),
+      fechaLlegada,
+      noches,
       adultos: this.modelAdultosHotel,
       ninos: this.modelNinosHotel,
       infantes: this.modelInfantesHotel,
-      cantidadPersonas: this.modelTotalPersonasHotel,
+      categoria: '',
+      precioMaximo: 999999,
     };
 
-    console.log('Busqueda de hoteles:', filtrosHoteles);
+    this.hotelSeleccionadoInicio = null;
+    this.buscandoHoteles = true;
+    this.catalogoService.buscarHoteles(request).subscribe({
+      next: (resp) => {
+        this.hotelesEncontrados = Array.isArray(resp?.data) ? resp.data : [];
+        this.busquedaHotelRealizada = true;
+        this.buscandoHoteles = false;
+        if (this.hotelesEncontrados.length === 0) {
+          this.mensajeHotel = 'No se encontraron hoteles disponibles para tu búsqueda.';
+        }
+      },
+      error: () => {
+        this.hotelesEncontrados = [];
+        this.busquedaHotelRealizada = true;
+        this.buscandoHoteles = false;
+        this.mensajeHotel = 'No se pudo completar la búsqueda de hoteles. Intenta nuevamente.';
+      },
+    });
+  }
+
+  seleccionarHotelInicio(hotel: HotelDisponibleResponse) {
+    this.hotelSeleccionadoInicio = hotel;
+  }
+
+  precioEstimadoHotelInicio(hotel: HotelDisponibleResponse): number {
+    const precioBase = this.preciosPorTipoHabitacion[this.modelTipoHabitacionHotel] || 0;
+    const noches = Math.max(1, Number(this.modelNochesHotel || 1));
+    return (precioBase + Number(hotel.precioPorNoche || 0)) * noches;
+  }
+
+  confirmarReservaHotelInicio() {
+    if (!this.hotelSeleccionadoInicio || !this.modelFechaLlegadaHotel) {
+      return;
+    }
+
+    const fechaCheckIn = this.formatearFechaIso(this.modelFechaLlegadaHotel);
+    const noches = Math.max(1, Number(this.modelNochesHotel || 1));
+    const fechaCheckInDate = new Date(`${fechaCheckIn}T00:00:00`);
+    const fechaCheckOutDate = new Date(fechaCheckInDate);
+    fechaCheckOutDate.setDate(fechaCheckInDate.getDate() + noches);
+    const fechaCheckOut = fechaCheckOutDate.toISOString().slice(0, 10);
+
+    const hotel = this.hotelSeleccionadoInicio;
+
+    this.reservaService.limpiarReserva();
+    this.reservaService.setTipoReserva('hotel');
+    this.reservaService.setReservaHotel({
+      hotelId: hotel.id,
+      fechaCheckIn,
+      fechaCheckOut,
+      tipoHabitacion: this.modelTipoHabitacionHotel,
+      cantidadHuespedes: this.modelTotalPersonasHotel,
+      nombreHotel: hotel.nombre,
+      precio: this.precioEstimadoHotelInicio(hotel),
+      noches,
+      adultos: this.modelAdultosHotel,
+      ninos: this.modelNinosHotel,
+      infantes: this.modelInfantesHotel,
+      categoria: hotel.categoria,
+      precioPorNoche: hotel.precioPorNoche,
+      ubicacion: hotel.ubicacion,
+      descripcion: hotel.descripcion,
+      capacidad: hotel.capacidad,
+      rating: hotel.rating,
+    });
+
+    this.router.navigate(['/reserva/pasajeros']);
+  }
+
+  private formatearFechaIso(fecha: NgbDateStruct): string {
+    const mes = String(fecha.month).padStart(2, '0');
+    const dia = String(fecha.day).padStart(2, '0');
+    return `${fecha.year}-${mes}-${dia}`;
   }
 
   abrirModalTarifas() {
@@ -516,6 +642,12 @@ export class InicioComponent implements OnInit {
     this.reservaService.setDatosReserva(this.consultaViaje, datosFinales);
 
     modal.close();
+    if (this.route.snapshot.queryParamMap.get('returnTo') === 'servicios') {
+      this.reservaService.setVueloComplementario(true);
+      this.router.navigate(['/reserva/servicios']);
+      return;
+    }
+
     this.router.navigate(['/reserva']);
   }
   buscarRentaCarro() {

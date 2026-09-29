@@ -1,4 +1,5 @@
 export interface ReservaHotel {
+  hotelId?: string;
   fechaCheckIn: string;
   fechaCheckOut: string;
   tipoHabitacion: string;
@@ -9,4 +10,10 @@ export interface ReservaHotel {
   adultos?: number;
   ninos?: number;
   infantes?: number;
+  categoria?: string;
+  precioPorNoche?: number;
+  ubicacion?: string;
+  descripcion?: string;
+  capacidad?: number;
+  rating?: number;
 }

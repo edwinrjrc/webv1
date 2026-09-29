@@ -1,4 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { PLATFORM_ID } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { InicioComponent } from './inicio.component';
 
 describe('InicioComponent', () => {
@@ -7,7 +11,26 @@ describe('InicioComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InicioComponent]
+      imports: [
+        InicioComponent,
+        HttpClientTestingModule,
+        TranslateModule.forRoot(),
+      ],
+      providers: [
+        {
+          provide: Router,
+          useValue: { navigate: jasmine.createSpy('navigate') },
+        },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              queryParamMap: { get: () => null },
+            },
+          },
+        },
+        { provide: PLATFORM_ID, useValue: 'server' },
+      ],
     })
     .compileComponents();
     

@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReservaService } from '../../_services/reserva.service';
 
 @Component({
@@ -27,14 +27,18 @@ export class RentacarroComponent implements OnInit {
     Camioneta: 110,
   };
   ubicaciones = ['Aeropuerto', 'Centro de la ciudad', 'Hotel'];
+  private returnTo: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private route: ActivatedRoute,
     private reservaService: ReservaService,
   ) {}
 
   ngOnInit(): void {
+    this.returnTo = this.route.snapshot.queryParamMap.get('returnTo');
+
     const rentaExistente = this.reservaService.getRentaCarro();
 
     this.rentaCarroForm = this.fb.group({
@@ -72,6 +76,11 @@ export class RentacarroComponent implements OnInit {
   }
 
   navegarAlSiguiente() {
+    if (this.returnTo === 'resumen') {
+      this.router.navigate(['/reserva/resumen-servicios']);
+      return;
+    }
+
     const servicios = this.reservaService.getServiciosSeleccionados();
     const idx = servicios.indexOf('rentacarro');
     const siguiente = servicios[idx + 1];
@@ -83,6 +92,11 @@ export class RentacarroComponent implements OnInit {
   }
 
   volver() {
+    if (this.returnTo === 'resumen') {
+      this.router.navigate(['/reserva/resumen-servicios']);
+      return;
+    }
+
     const servicios = this.reservaService.getServiciosSeleccionados();
     const idx = servicios.indexOf('rentacarro');
     const anterior = servicios[idx - 1];

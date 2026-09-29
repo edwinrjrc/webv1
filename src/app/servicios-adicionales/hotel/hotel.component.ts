@@ -8,7 +8,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReservaService } from '../../_services/reserva.service';
 import {
   BusquedaHotelRequest,
@@ -51,15 +51,19 @@ export class HotelComponent implements OnInit {
   mensajeBusqueda = '';
   buscandoHoteles = false;
   validandoSeleccionHotel = false;
+  private returnTo: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private route: ActivatedRoute,
     private reservaService: ReservaService,
     private catalogosService: CatalogosService,
   ) {}
 
   ngOnInit(): void {
+    this.returnTo = this.route.snapshot.queryParamMap.get('returnTo');
+
     const oferta = this.reservaService.getOfertaActual();
     this.ofertaActual = oferta;
 
@@ -113,6 +117,7 @@ export class HotelComponent implements OnInit {
       filtroPrecioMax: [250],
     });
 
+    this.hotelSeleccionado = this.crearHotelSeleccionado(hotelExistente);
     this.actualizarCantidadPersonas();
     this.hotelForm.get('fechaLlegada')?.valueChanges.subscribe(() => {
       this.actualizarFechas();
@@ -216,13 +221,16 @@ export class HotelComponent implements OnInit {
           rating: Number(hotel.rating || 0),
         }));
 
-        if (
-          !this.hotelSeleccionado ||
-          !this.hotelesDisponibles.some(
-            (hotel) => hotel.nombre === this.hotelSeleccionado?.nombre,
-          )
-        ) {
-          this.hotelSeleccionado = null;
+        if (this.hotelSeleccionado) {
+          const hotelEncontrado = this.hotelesDisponibles.find(
+            (hotel) =>
+              hotel.id === this.hotelSeleccionado?.id ||
+              hotel.nombre === this.hotelSeleccionado?.nombre,
+          );
+
+          if (hotelEncontrado) {
+            this.hotelSeleccionado = hotelEncontrado;
+          }
         }
 
         this.mensajeBusqueda = `Se encontraron ${this.hotelesDisponibles.length} hoteles para ${totalPersonas} personas, ${noches} noche(s) y llegada el ${fechaLlegada}.`;
@@ -262,6 +270,23 @@ export class HotelComponent implements OnInit {
 
   private obtenerFechaHoyIso(): string {
     return new Date().toISOString().slice(0, 10);
+  }
+
+  private crearHotelSeleccionado(
+    reserva: ReturnType<ReservaService['getReservaHotel']>,
+  ): HotelDisponible | null {
+    if (!reserva?.nombreHotel) return null;
+
+    return {
+      id: reserva.hotelId,
+      nombre: reserva.nombreHotel,
+      categoria: reserva.categoria || '',
+      precioPorNoche: reserva.precioPorNoche || 0,
+      ubicacion: reserva.ubicacion || '',
+      descripcion: reserva.descripcion || '',
+      capacidad: reserva.capacidad || reserva.cantidadHuespedes || 0,
+      rating: reserva.rating || 0,
+    };
   }
 
   getTotalPersonas(): number {
@@ -370,6 +395,7 @@ export class HotelComponent implements OnInit {
 
     if (this.hotelSeleccionado || hotelActual) {
       this.reservaService.setReservaHotel({
+        hotelId: this.hotelSeleccionado?.id,
         fechaCheckIn: val.fechaCheckIn,
         fechaCheckOut: val.fechaCheckOut,
         tipoHabitacion: val.tipoHabitacion,
@@ -380,6 +406,12 @@ export class HotelComponent implements OnInit {
         adultos: adultosHotel,
         ninos: ninosHotel,
         infantes: infantesHotel,
+        categoria: this.hotelSeleccionado?.categoria,
+        precioPorNoche: this.hotelSeleccionado?.precioPorNoche,
+        ubicacion: this.hotelSeleccionado?.ubicacion,
+        descripcion: this.hotelSeleccionado?.descripcion,
+        capacidad: this.hotelSeleccionado?.capacidad,
+        rating: this.hotelSeleccionado?.rating,
       });
 
       // LÓGICA DE TRASLADOS POR DEFECTO
@@ -396,6 +428,20 @@ export class HotelComponent implements OnInit {
   }
 
   navegarAlSiguiente() {
+    if (
+      this.returnTo !== 'resumen' &&
+      this.reservaService.getTipoReserva() === 'hotel' &&
+      this.route.snapshot.queryParamMap.get('from') === 'inicio-hotel'
+    ) {
+      this.router.navigate(['/reserva/pasajeros']);
+      return;
+    }
+
+    if (this.returnTo === 'resumen') {
+      this.router.navigate(['/reserva/resumen-servicios']);
+      return;
+    }
+
     const servicios = this.reservaService.getServiciosSeleccionados();
     const idx = servicios.indexOf('hotel');
     const siguiente = servicios[idx + 1];
@@ -407,6 +453,11 @@ export class HotelComponent implements OnInit {
   }
 
   volver() {
+    if (this.returnTo === 'resumen') {
+      this.router.navigate(['/reserva/resumen-servicios']);
+      return;
+    }
+
     this.router.navigate(['/reserva/servicios']);
   }
 }

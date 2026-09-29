@@ -16,7 +16,13 @@ describe('ServiciosAdicionalesComponent', () => {
     routerSpy.navigate.and.resolveTo(true);
     reservaServiceSpy = jasmine.createSpyObj('ReservaService', [
       'setServiciosSeleccionados',
+      'getServiciosSeleccionados',
+      'getTipoReserva',
+      'tieneVueloComplementario',
     ]);
+    reservaServiceSpy.getServiciosSeleccionados.and.returnValue([]);
+    reservaServiceSpy.getTipoReserva.and.returnValue('vuelo');
+    reservaServiceSpy.tieneVueloComplementario.and.returnValue(false);
     modalSpy = jasmine.createSpyObj('NgbActiveModal', ['close']);
 
     await TestBed.configureTestingModule({
@@ -66,5 +72,19 @@ describe('ServiciosAdicionalesComponent', () => {
     expect(modalSpy.close).toHaveBeenCalled();
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/reserva/pago']);
     expect(modalSpy.close).toHaveBeenCalledBefore(routerSpy.navigate);
+  });
+
+  it('debe omitir el vuelo adicional ya seleccionado', () => {
+    reservaServiceSpy.getTipoReserva.and.returnValue('hotel');
+    reservaServiceSpy.tieneVueloComplementario.and.returnValue(true);
+    component.servicios.vuelo = true;
+    component.servicios.traslado = true;
+
+    component.continuar();
+
+    expect(routerSpy.navigate).toHaveBeenCalledWith([
+      '/reserva/servicios',
+      'traslado',
+    ]);
   });
 });

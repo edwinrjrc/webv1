@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReservaService } from '../../_services/reserva.service';
 import { Tour } from '../../modelo/tour';
 
@@ -22,13 +22,17 @@ export class ToursComponent implements OnInit {
   ];
 
   fechasTours: Record<number, string> = {};
+  private returnTo: string | null = null;
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private reservaService: ReservaService,
   ) {}
 
   ngOnInit(): void {
+    this.returnTo = this.route.snapshot.queryParamMap.get('returnTo');
+
     const toursGuardados = this.reservaService.getTours();
     if (toursGuardados.length > 0) {
       toursGuardados.forEach((tGuardado) => {
@@ -63,6 +67,11 @@ export class ToursComponent implements OnInit {
   }
 
   navegarAlSiguiente() {
+    if (this.returnTo === 'resumen') {
+      this.router.navigate(['/reserva/resumen-servicios']);
+      return;
+    }
+
     const servicios = this.reservaService.getServiciosSeleccionados();
     const idx = servicios.indexOf('tours');
     const siguiente = servicios[idx + 1];
@@ -74,6 +83,11 @@ export class ToursComponent implements OnInit {
   }
 
   volver() {
+    if (this.returnTo === 'resumen') {
+      this.router.navigate(['/reserva/resumen-servicios']);
+      return;
+    }
+
     const servicios = this.reservaService.getServiciosSeleccionados();
     const idx = servicios.indexOf('tours');
     const anterior = servicios[idx - 1];

@@ -6,7 +6,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReservaService } from '../../_services/reserva.service';
 import type { EmpresaTraslado } from '../../modelo/empresaTraslado';
 import type { TipoServicio } from '../../modelo/tipoServicio';
@@ -77,14 +77,17 @@ export class TrasladoComponent implements OnInit {
   ];
 
   trasladosSeleccionados: TrasladoItem[] = [];
+  private returnTo: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private route: ActivatedRoute,
     private reservaService: ReservaService,
   ) {}
 
   ngOnInit(): void {
+    this.returnTo = this.route.snapshot.queryParamMap.get('returnTo');
     this.initForm();
 
     const trasladosGuardados = this.reservaService.getTraslados();
@@ -255,6 +258,11 @@ export class TrasladoComponent implements OnInit {
    * Navega a la vista anterior.
    */
   volver(): void {
+    if (this.returnTo === 'resumen') {
+      this.router.navigate(['/reserva/resumen-servicios']);
+      return;
+    }
+
     this.router.navigate(['/reserva/servicios']);
   }
 
@@ -262,6 +270,11 @@ export class TrasladoComponent implements OnInit {
    * Navega dinámicamente al siguiente servicio según la lista contratada.
    */
   navegarAlSiguiente(): void {
+    if (this.returnTo === 'resumen') {
+      this.router.navigate(['/reserva/resumen-servicios']);
+      return;
+    }
+
     const servicios = this.reservaService.getServiciosSeleccionados();
     const idx = servicios.indexOf('traslado');
     const siguiente = servicios[idx + 1];

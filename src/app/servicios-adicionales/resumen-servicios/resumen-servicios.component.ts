@@ -34,7 +34,9 @@ export class ResumenServiciosComponent implements OnInit {
   }
 
   editarServicio(tipo: string) {
-    this.router.navigate(['/reserva/servicios', tipo]);
+    this.router.navigate(['/reserva/servicios', tipo], {
+      queryParams: { returnTo: 'resumen' },
+    });
   }
 
   irAPago() {

@@ -31,6 +31,15 @@ export interface ApiResponse<T> {
   data: T;
 }
 
+export interface CiudadResponse {
+  geonameId: number;
+  nombre: string;
+  pais: string;
+  region: string;
+  lat: string;
+  lng: string;
+}
+
 export interface ReservaHotelRequest {
   hotelId: string;
   tipoHabitacion: string;
@@ -85,6 +94,14 @@ export class CatalogosService {
     return this.http.post<ApiResponse<ReservaHotelResponse>>(
       `${environment.apiUrl}/api/hoteles/hotelservice/reserva`,
       request,
+    );
+  }
+
+  consultarCiudades(nombre: string) {
+    const params = new HttpParams().set('nombre', nombre);
+    return this.http.get<ApiResponse<CiudadResponse[]>>(
+      `${environment.apiUrl}/api/hoteles/hotelservice/ciudades`,
+      { params },
     );
   }
 }
