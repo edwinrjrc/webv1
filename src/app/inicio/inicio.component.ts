@@ -267,12 +267,6 @@ export class InicioComponent implements OnInit {
     //this.consultarVuelo2();
   }
 
-  /*recibeMensaje($event: string) {
-    const ofertaSelect = JSON.parse($event);
-    this.ofertaSeleccionada = Object.assign(new OfertaSeleccionada(),ofertaSelect);
-    this.flgProceso = this.ofertaSeleccionada.FlgProceso;
-  }*/
-
   recibeMensaje(oferta: any) {
     // Primero, procesamos la oferta (convertimos a objeto si viene como string JSON)
     const ofertaData = typeof oferta === 'string' ? JSON.parse(oferta) : oferta;

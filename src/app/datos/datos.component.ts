@@ -110,6 +110,23 @@ export class DatosComponent implements OnInit {
         }
       }
     });
+
+    // Flujo solo hotel: no hay vuelo, los pasajeros salen de la reserva de hotel.
+    this.reservaService.reservaHotel$.subscribe((hotel) => {
+      if (
+        hotel &&
+        this.reservaService.getTipoReserva() === 'hotel' &&
+        !this.consultaViaje &&
+        this.listaPasajerosArray.length === 0
+      ) {
+        this.consultaViaje = {
+          adultos: hotel.adultos || 1,
+          ninos: hotel.ninos || 0,
+          infantes: hotel.infantes || 0,
+        };
+        this.generarFormularioPasajeros();
+      }
+    });
   }
 
   generarFormularioPasajeros() {
